@@ -1,6 +1,11 @@
 'use client';
 
-import CustomPlayer from '@/components/CustomPlayer';
+import dynamic from 'next/dynamic';
+
+const CustomPlayer = dynamic(() => import('@/components/CustomPlayer'), { 
+  ssr: false,
+  loading: () => <div className="w-full aspect-video bg-gray-900 rounded-xl flex items-center justify-center border border-gray-800"><span className="text-gray-400">Loading Player...</span></div>
+});
 
 export default function MoneyHeistPlayer() {
   // Using a standard test HLS stream to verify Plyr + HLS.js controls and audio switcher UI
