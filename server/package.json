@@ -1,0 +1,25 @@
+{
+  "name": "fan-hub-plus-server",
+  "version": "1.0.0",
+  "description": "Fan Hub Plus — Express.js REST API backend",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [
+    "fanhubplus",
+    "express",
+    "api"
+  ],
+  "author": "Fan Hub Plus",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.3",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
