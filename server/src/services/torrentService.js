@@ -1,29 +1,46 @@
-const WebTorrent = require('webtorrent');
-const client = new WebTorrent();
+let clientInstance = null;
 
 class TorrentService {
+  /**
+   * Initializes or returns the global WebTorrent client dynamically.
+   */
+  static async getClient() {
+    if (!clientInstance) {
+      const { default: WebTorrent } = await import('webtorrent');
+      clientInstance = new WebTorrent();
+    }
+    return clientInstance;
+  }
+
   /**
    * Streams the largest media file from a torrent magnet URI via HTTP Range requests.
    * 
    * @param {Object} req - Express request object
    * @param {Object} res - Express response object
    */
-  static streamMagnet(req, res) {
+  static async streamMagnet(req, res) {
     const magnetURI = req.query.magnet;
 
     if (!magnetURI) {
       return res.status(400).send('Magnet URI is required');
     }
 
-    // Check if torrent already exists in the client to avoid duplicate downloads
-    let torrent = client.get(magnetURI);
+    try {
+      const client = await TorrentService.getClient();
 
-    if (torrent) {
-      TorrentService.handleTorrentStream(torrent, req, res);
-    } else {
-      client.add(magnetURI, (newTorrent) => {
-        TorrentService.handleTorrentStream(newTorrent, req, res);
-      });
+      // Check if torrent already exists in the client to avoid duplicate downloads
+      let torrent = client.get(magnetURI);
+
+      if (torrent) {
+        TorrentService.handleTorrentStream(torrent, req, res);
+      } else {
+        client.add(magnetURI, (newTorrent) => {
+          TorrentService.handleTorrentStream(newTorrent, req, res);
+        });
+      }
+    } catch (error) {
+      console.error('[TorrentService] Initialization error:', error.message);
+      res.status(500).send('Failed to initialize WebTorrent engine');
     }
   }
 
