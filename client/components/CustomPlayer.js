@@ -14,9 +14,23 @@ export default function CustomPlayer({ videoSrc }) {
     let hls = null;
     const player = ref.current?.plyr;
 
+    const handleLanguageChange = (event) => {
+      if (hls) {
+        const selectedIndex = event.detail?.index ?? event.detail?.plyr?.language ?? -1;
+        if (selectedIndex !== -1) {
+          hls.audioTrack = selectedIndex;
+        }
+      }
+    };
+
     const initHls = () => {
-      const video = player?.elements?.original;
+      const video = ref.current?.plyr?.elements?.original;
+      const currentPlayer = ref.current?.plyr;
       if (!video) return;
+
+      if (currentPlayer?.elements?.container) {
+        currentPlayer.elements.container.addEventListener('languagechange', handleLanguageChange);
+      }
 
       if (Hls.isSupported()) {
         hls = new Hls({ enableWorker: true });
@@ -110,26 +124,11 @@ export default function CustomPlayer({ videoSrc }) {
 
     const timeout = setTimeout(initHls, 100);
 
-    // Event listener on the Plyr instance for the languagechange event
-    const handleLanguageChange = (event) => {
-      if (hls) {
-        // Some Plyr versions expose the selected value via event.detail.plyr.language or similar
-        // For our manual DOM implementation, we pass the index via detail.index
-        const selectedIndex = event.detail?.index ?? event.detail?.plyr?.language ?? -1;
-        if (selectedIndex !== -1) {
-          hls.audioTrack = selectedIndex;
-        }
-      }
-    };
-
-    if (player && player.elements.container) {
-      player.elements.container.addEventListener('languagechange', handleLanguageChange);
-    }
-
     return () => {
       clearTimeout(timeout);
-      if (player && player.elements.container) {
-        player.elements.container.removeEventListener('languagechange', handleLanguageChange);
+      const currentPlayer = ref.current?.plyr;
+      if (currentPlayer?.elements?.container) {
+        currentPlayer.elements.container.removeEventListener('languagechange', handleLanguageChange);
       }
       if (hls) {
         hls.destroy();
