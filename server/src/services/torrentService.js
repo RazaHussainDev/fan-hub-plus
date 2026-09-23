@@ -19,6 +19,15 @@ class TorrentService {
    * @param {Object} res - Express response object
    */
   static async streamMagnet(req, res) {
+    // 1. Strict CORS Headers
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Range');
+
+    // Handle preflight OPTIONS request
+    if (req.method === 'OPTIONS') {
+      return res.status(200).end();
+    }
+
     const magnetURI = req.query.magnet;
 
     if (!magnetURI) {
@@ -27,24 +36,52 @@ class TorrentService {
 
     try {
       const client = await TorrentService.getClient();
-
-      // Check if torrent already exists in the client to avoid duplicate downloads
       let torrent = client.get(magnetURI);
 
       if (torrent) {
-        TorrentService.handleTorrentStream(torrent, req, res);
+        if (torrent.ready) {
+          TorrentService.handleTorrentStream(torrent, req, res);
+        } else {
+          torrent.on('ready', () => {
+            TorrentService.handleTorrentStream(torrent, req, res);
+          });
+        }
       } else {
+        console.log(`[TorrentService] Connecting to swarm for: ${magnetURI.substring(0, 40)}...`);
+        
+        let timeoutFired = false;
+        
+        // 10-second timeout fallback
+        const timeoutId = setTimeout(() => {
+          timeoutFired = true;
+          console.log(`[TorrentService] Timeout: No peers found for ${magnetURI.substring(0, 40)}`);
+          client.remove(magnetURI, (err) => {
+            if (err) console.error('Error removing torrent:', err);
+          });
+          if (!res.headersSent) {
+            res.status(504).send('Gateway Timeout: Torrent swarm unreachable');
+          }
+        }, 10000);
+
         client.add(magnetURI, (newTorrent) => {
+          if (timeoutFired) return;
+          
+          clearTimeout(timeoutId);
+          console.log(`[TorrentService] Torrent metadata fetched!`);
           TorrentService.handleTorrentStream(newTorrent, req, res);
         });
       }
     } catch (error) {
       console.error('[TorrentService] Initialization error:', error.message);
-      res.status(500).send('Failed to initialize WebTorrent engine');
+      if (!res.headersSent) {
+        res.status(500).send('Failed to initialize WebTorrent engine');
+      }
     }
   }
 
   static handleTorrentStream(torrent, req, res) {
+    if (res.headersSent) return;
+    
     // Find the largest file (typically the main media file)
     const file = torrent.files.reduce((a, b) => a.length > b.length ? a : b);
 

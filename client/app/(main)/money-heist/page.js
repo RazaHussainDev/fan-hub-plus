@@ -89,7 +89,14 @@ export default function MoneyHeistPlayer() {
               />
             </div>
           ) : videoSrc ? (
-            <CustomPlayer isTorrent={isTorrent} videoSrc={videoSrc} />
+            <CustomPlayer 
+              isTorrent={isTorrent} 
+              videoSrc={videoSrc} 
+              onError={() => {
+                console.warn("Player stream failed (likely timeout). Falling back to iframe...");
+                setFallbackUrl(`https://autoembed.co/tv/tmdb/${tmdbId}-${season}-${episode}`);
+              }}
+            />
           ) : error ? (
              <div className="w-full aspect-video bg-gray-900 rounded-xl flex items-center justify-center border border-red-800 shadow-2xl">
               <span className="text-red-400 font-medium">{error}</span>
