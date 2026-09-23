@@ -45,7 +45,7 @@ export default function CustomPlayer({ videoSrc }) {
           // Force update DOM if Plyr didn't render the audio menu natively
           // Undocumented Plyr DOM manipulation to inject audio tracks into the settings menu
           setTimeout(() => {
-            if (!player || !player.elements.settings.menu) return;
+            if (!player?.elements?.settings?.menu) return;
             const settingsMenu = player.elements.settings.menu;
             
             // Check if audio tab already exists natively
@@ -102,7 +102,7 @@ export default function CustomPlayer({ videoSrc }) {
                     const idx = Number(e.currentTarget.getAttribute('data-value'));
                     // Fire custom language change event on the player
                     const event = new CustomEvent('languagechange', { detail: { index: idx } });
-                    player.elements.container.dispatchEvent(event);
+                    player?.elements?.container?.dispatchEvent(event);
                     
                     // Update UI states
                     choices.forEach(c => c.removeAttribute('aria-checked'));
