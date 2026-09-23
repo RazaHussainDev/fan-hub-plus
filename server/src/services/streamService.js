@@ -20,12 +20,22 @@ class StreamAggregator {
         episode: Number(episode)
       });
 
-      if (dbStream && dbStream.streamUrl) {
-        console.log(`[StreamAggregator] Found DB Override for TMDB ${tmdbId} S${season}E${episode}`);
-        return {
-          streamUrl: dbStream.streamUrl,
-          subtitles: [] 
-        };
+      if (dbStream) {
+        if (dbStream.magnetURI) {
+          console.log(`[StreamAggregator] Found Torrent DB Override for TMDB ${tmdbId} S${season}E${episode}`);
+          return {
+            isTorrent: true,
+            streamUrl: "http://localhost:5000/api/content/stream/engine?magnet=" + encodeURIComponent(dbStream.magnetURI),
+            subtitles: []
+          };
+        } else if (dbStream.streamUrl) {
+          console.log(`[StreamAggregator] Found Direct DB Override for TMDB ${tmdbId} S${season}E${episode}`);
+          return {
+            isTorrent: false,
+            streamUrl: dbStream.streamUrl,
+            subtitles: [] 
+          };
+        }
       }
 
       // 2. Extractor Service (Public APIs & Scrapers)

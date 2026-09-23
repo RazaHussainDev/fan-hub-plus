@@ -12,6 +12,7 @@ export default function MoneyHeistPlayer() {
   const [season, setSeason] = useState(1);
   const [episode, setEpisode] = useState(1);
   const [videoSrc, setVideoSrc] = useState(null);
+  const [isTorrent, setIsTorrent] = useState(false);
   const [fallbackUrl, setFallbackUrl] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -25,6 +26,7 @@ export default function MoneyHeistPlayer() {
       setLoading(true);
       setError(null);
       setVideoSrc(null);
+      setIsTorrent(false);
       setFallbackUrl(null);
       
       try {
@@ -33,6 +35,7 @@ export default function MoneyHeistPlayer() {
         
         if (data.success && data.data && data.data.streamUrl) {
           setVideoSrc(data.data.streamUrl);
+          setIsTorrent(data.data.isTorrent || false);
         } else {
           // Trigger fallback gracefully
           setFallbackUrl(`https://autoembed.co/tv/tmdb/${tmdbId}-${season}-${episode}`);
@@ -86,7 +89,7 @@ export default function MoneyHeistPlayer() {
               />
             </div>
           ) : videoSrc ? (
-            <CustomPlayer videoSrc={videoSrc} />
+            <CustomPlayer isTorrent={isTorrent} videoSrc={videoSrc} />
           ) : error ? (
              <div className="w-full aspect-video bg-gray-900 rounded-xl flex items-center justify-center border border-red-800 shadow-2xl">
               <span className="text-red-400 font-medium">{error}</span>

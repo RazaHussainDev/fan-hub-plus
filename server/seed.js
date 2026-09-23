@@ -10,7 +10,7 @@ const seedDatabase = async () => {
 
     const targetTmdbId = "71446";
     const targetSeason = 1;
-    const targetEpisode = 4;
+    const targetEpisode = 1;
 
     // 2. Delete any existing records for this specific episode
     await EpisodeStream.deleteMany({
@@ -20,13 +20,14 @@ const seedDatabase = async () => {
     });
     console.log(`🧹 Cleared existing records for TMDB: ${targetTmdbId} S${targetSeason}E${targetEpisode}`);
 
-    // 3. Insert the Apple Advanced Multi-Audio HLS test stream
+    // 3. Insert the WebTorrent test stream
     const newStream = await EpisodeStream.create({
       tmdbId: targetTmdbId,
       season: targetSeason,
       episode: targetEpisode,
-      streamUrl: "https://d2zihajmogu5jn.cloudfront.net/bipbop-advanced/bipbop_16x9_variant.m3u8",
-      isMultiAudio: true
+      streamUrl: "http://dummy", // not used when magnet is present, but required by schema
+      isMultiAudio: true,
+      magnetURI: "magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&dn=Sintel"
     });
 
     console.log('🎉 Successfully seeded EpisodeStream database override:');

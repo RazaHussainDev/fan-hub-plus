@@ -5,7 +5,7 @@ import { Plyr } from 'plyr-react';
 import 'plyr-react/plyr.css';
 import Hls from 'hls.js';
 
-export default function CustomPlayer({ videoSrc }) {
+export default function CustomPlayer({ videoSrc, isTorrent }) {
   const ref = useRef(null);
   const [audioTracks, setAudioTracks] = useState([]);
   const [currentAudio, setCurrentAudio] = useState(0);
@@ -16,8 +16,23 @@ export default function CustomPlayer({ videoSrc }) {
     let hls = null;
 
     const initHls = () => {
-      const video = ref.current?.plyr?.elements?.original;
+      const player = ref.current?.plyr;
+      const video = player?.elements?.original;
       if (!video) return;
+
+      if (isTorrent) {
+        // Bypass HLS.js for direct WebTorrent HTTP pipes
+        player.source = {
+          type: 'video',
+          sources: [
+            {
+              src: videoSrc,
+              type: 'video/mp4',
+            }
+          ]
+        };
+        return;
+      }
 
       if (Hls.isSupported()) {
         hls = new Hls({ enableWorker: true });
