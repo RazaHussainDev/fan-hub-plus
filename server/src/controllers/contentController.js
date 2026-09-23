@@ -43,3 +43,14 @@ exports.getStream = async (req, res) => {
     });
   }
 };
+
+const TorrentService = require('../services/torrentService');
+
+exports.streamMagnet = (req, res) => {
+  try {
+    TorrentService.streamMagnet(req, res);
+  } catch (error) {
+    console.error('[ContentController] streamMagnet error:', error.message);
+    res.status(500).send('Internal server error while streaming magnet');
+  }
+};

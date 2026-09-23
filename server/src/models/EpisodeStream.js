@@ -23,6 +23,10 @@ const episodeStreamSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    magnetURI: {
+      type: String,
+      default: null,
+    },
   },
   {
     timestamps: true,
