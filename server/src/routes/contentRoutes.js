@@ -3,5 +3,6 @@ const router = express.Router();
 const contentController = require('../controllers/contentController');
 
 router.get('/', contentController.getContent);
+router.get('/stream/:tmdbId', contentController.getStream);
 
 module.exports = router;
