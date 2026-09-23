@@ -5,7 +5,7 @@ import { Plyr } from 'plyr-react';
 import 'plyr-react/plyr.css';
 import Hls from 'hls.js';
 
-export default function CustomPlayer({ src }) {
+export default function CustomPlayer({ videoSrc }) {
   const ref = useRef(null);
   const [audioTracks, setAudioTracks] = useState([]);
   const [activeTrack, setActiveTrack] = useState(-1);
@@ -24,7 +24,7 @@ export default function CustomPlayer({ src }) {
           enableWorker: true,
         });
 
-        hls.loadSource(src);
+        hls.loadSource(videoSrc);
         hls.attachMedia(video);
 
         hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
@@ -39,7 +39,7 @@ export default function CustomPlayer({ src }) {
 
       } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
         // Native HLS support (Safari)
-        video.src = src;
+        video.src = videoSrc;
       }
     };
 
@@ -52,7 +52,7 @@ export default function CustomPlayer({ src }) {
         hls.destroy();
       }
     };
-  }, [src]);
+  }, [videoSrc]);
 
   const switchAudioTrack = (index) => {
     if (hlsInstance) {
@@ -69,7 +69,7 @@ export default function CustomPlayer({ src }) {
           type: 'video',
           sources: [
             {
-              src: src,
+              src: videoSrc,
               provider: 'html5',
             },
           ],
