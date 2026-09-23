@@ -1,8 +1,10 @@
 const axios = require('axios');
+const EpisodeStream = require('../models/EpisodeStream');
 
 class StreamAggregator {
   /**
    * Fetches the raw .m3u8 HLS streaming link and associated subtitles for a given TMDB ID.
+   * Checks the MongoDB override first, then falls back to public API/scrapers.
    * 
    * @param {string|number} tmdbId 
    * @param {string|number} season 
@@ -11,7 +13,22 @@ class StreamAggregator {
    */
   static async fetchStreamLinks(tmdbId, season, episode) {
     try {
-      // Primary Source: Consumet API (TMDB Meta Provider)
+      // 1. Database Override Check (Highest Priority)
+      const dbStream = await EpisodeStream.findOne({
+        tmdbId: String(tmdbId),
+        season: Number(season),
+        episode: Number(episode)
+      });
+
+      if (dbStream && dbStream.streamUrl) {
+        console.log(`[StreamAggregator] Found DB Override for TMDB ${tmdbId} S${season}E${episode}`);
+        return {
+          streamUrl: dbStream.streamUrl,
+          subtitles: [] // Optionally, subtitles could also be added to the DB model later
+        };
+      }
+
+      // 2. Primary Source: Consumet API (TMDB Meta Provider)
       try {
         const consumetUrl = `https://api.consumet.org/meta/tmdb/info/${tmdbId}?type=tv`;
         const { data } = await axios.get(consumetUrl, { timeout: 5000 });
@@ -40,7 +57,7 @@ class StreamAggregator {
         console.warn(`[StreamAggregator] Primary API (Consumet) failed for TMDB ${tmdbId}:`, consumetError.message);
       }
 
-      // Secondary Source: Scraping public embedded network (e.g., autoembed)
+      // 3. Secondary Source: Scraping public embedded network (e.g., autoembed)
       try {
         const fallbackUrl = `https://autoembed.co/tv/tmdb/${tmdbId}-${season}-${episode}`;
         const fallbackRes = await axios.get(fallbackUrl, {
@@ -56,7 +73,7 @@ class StreamAggregator {
         if (m3u8Match && m3u8Match[1]) {
           return {
             streamUrl: m3u8Match[1],
-            subtitles: [] // Generic scrapers rarely expose subtitles natively without deep evaluation
+            subtitles: []
           };
         }
       } catch (scraperError) {
