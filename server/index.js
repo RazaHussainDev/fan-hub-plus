@@ -3,6 +3,9 @@ require('dotenv').config();
 const express = require('express');
 const cors    = require('cors');
 
+// Import Database Connection
+const connectDB = require('./src/config/db');
+
 // Import Route Handlers
 const authRoutes = require('./src/routes/authRoutes');
 const adminRoutes = require('./src/routes/adminRoutes');
@@ -10,6 +13,9 @@ const contentRoutes = require('./src/routes/contentRoutes');
 
 const app  = express();
 const PORT = process.env.PORT || 5000;
+
+// Connect to MongoDB
+connectDB();
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
 
