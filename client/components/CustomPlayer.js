@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { Plyr } from 'plyr-react';
 import 'plyr-react/plyr.css';
 import Hls from 'hls.js';
@@ -8,58 +8,134 @@ import Hls from 'hls.js';
 export default function CustomPlayer({ videoSrc }) {
   const ref = useRef(null);
   const [audioTracks, setAudioTracks] = useState([]);
-  const [activeTrack, setActiveTrack] = useState(-1);
   const [hlsInstance, setHlsInstance] = useState(null);
 
   useEffect(() => {
     let hls = null;
+    const player = ref.current?.plyr;
 
     const initHls = () => {
-      // Plyr-react exposes the original video element via ref.current.plyr.elements.original
-      const video = ref.current?.plyr?.elements?.original;
+      const video = player?.elements?.original;
       if (!video) return;
 
       if (Hls.isSupported()) {
-        hls = new Hls({
-          enableWorker: true,
-        });
-
+        hls = new Hls({ enableWorker: true });
         hls.loadSource(videoSrc);
         hls.attachMedia(video);
 
-        hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
-          setAudioTracks(hls.audioTracks || []);
-          setActiveTrack(hls.audioTrack);
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          const tracks = hls.audioTracks || [];
+          setAudioTracks(tracks);
           setHlsInstance(hls);
-        });
 
-        hls.on(Hls.Events.AUDIO_TRACK_SWITCHED, (event, data) => {
-          setActiveTrack(data.id);
+          // Force update DOM if Plyr didn't render the audio menu natively
+          // Undocumented Plyr DOM manipulation to inject audio tracks into the settings menu
+          setTimeout(() => {
+            if (!player || !player.elements.settings.menu) return;
+            const settingsMenu = player.elements.settings.menu;
+            
+            // Check if audio tab already exists natively
+            if (!settingsMenu.querySelector('[data-plyr="audio"]')) {
+              // Create the Audio menu entry in the home settings panel
+              const homeSettings = settingsMenu.querySelector('#plyr-settings-' + player.id + '-home');
+              if (homeSettings && tracks.length > 1) {
+                const audioTabHTML = `
+                  <div class="plyr__menu__container" id="plyr-settings-${player.id}-audio" hidden>
+                    <div class="plyr__menu__value">
+                      <button data-plyr="back" type="button" class="plyr__control plyr__control--back">
+                        <span class="plyr__menu__value">Audio</span>
+                      </button>
+                    </div>
+                    <div class="plyr__menu__choices">
+                      ${tracks.map((t, i) => `
+                        <button data-plyr="language" type="button" class="plyr__control" data-value="${i}" ${hls.audioTrack === i ? 'aria-checked="true"' : ''}>
+                          <span>${t.name || t.lang || `Track ${i + 1}`}</span>
+                        </button>
+                      `).join('')}
+                    </div>
+                  </div>
+                `;
+                
+                const audioMenuBtnHTML = `
+                  <button data-plyr="audio" type="button" class="plyr__control plyr__control--forward" aria-haspopup="true" aria-expanded="false" aria-controls="plyr-settings-${player.id}-audio">
+                    <span>Audio</span>
+                    <span class="plyr__menu__value">${tracks[hls.audioTrack]?.name || tracks[hls.audioTrack]?.lang || 'Default'}</span>
+                  </button>
+                `;
+
+                // Append the nested menu and the button
+                homeSettings.insertAdjacentHTML('beforeend', audioMenuBtnHTML);
+                settingsMenu.insertAdjacentHTML('beforeend', audioTabHTML);
+
+                // Add event listeners to the newly injected DOM elements
+                const newTab = settingsMenu.querySelector(`#plyr-settings-${player.id}-audio`);
+                const newBtn = homeSettings.querySelector('[data-plyr="audio"]');
+                
+                newBtn.addEventListener('click', () => {
+                  homeSettings.hidden = true;
+                  newTab.hidden = false;
+                });
+
+                const backBtn = newTab.querySelector('[data-plyr="back"]');
+                backBtn.addEventListener('click', () => {
+                  newTab.hidden = true;
+                  homeSettings.hidden = false;
+                });
+
+                const choices = newTab.querySelectorAll('[data-plyr="language"]');
+                choices.forEach(choice => {
+                  choice.addEventListener('click', (e) => {
+                    const idx = Number(e.currentTarget.getAttribute('data-value'));
+                    // Fire custom language change event on the player
+                    const event = new CustomEvent('languagechange', { detail: { index: idx } });
+                    player.elements.container.dispatchEvent(event);
+                    
+                    // Update UI states
+                    choices.forEach(c => c.removeAttribute('aria-checked'));
+                    e.currentTarget.setAttribute('aria-checked', 'true');
+                    newBtn.querySelector('.plyr__menu__value').innerText = e.currentTarget.innerText;
+                    newTab.hidden = true;
+                    homeSettings.hidden = false;
+                  });
+                });
+              }
+            }
+          }, 300);
         });
 
       } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        // Native HLS support (Safari)
         video.src = videoSrc;
       }
     };
 
-    // Delay slightly to ensure Plyr DOM is fully mounted before attaching Hls.js
     const timeout = setTimeout(initHls, 100);
+
+    // Event listener on the Plyr instance for the languagechange event
+    const handleLanguageChange = (event) => {
+      if (hls) {
+        // Some Plyr versions expose the selected value via event.detail.plyr.language or similar
+        // For our manual DOM implementation, we pass the index via detail.index
+        const selectedIndex = event.detail?.index ?? event.detail?.plyr?.language ?? -1;
+        if (selectedIndex !== -1) {
+          hls.audioTrack = selectedIndex;
+        }
+      }
+    };
+
+    if (player && player.elements.container) {
+      player.elements.container.addEventListener('languagechange', handleLanguageChange);
+    }
 
     return () => {
       clearTimeout(timeout);
+      if (player && player.elements.container) {
+        player.elements.container.removeEventListener('languagechange', handleLanguageChange);
+      }
       if (hls) {
         hls.destroy();
       }
     };
   }, [videoSrc]);
-
-  const switchAudioTrack = (index) => {
-    if (hlsInstance) {
-      hlsInstance.audioTrack = index;
-      setActiveTrack(index);
-    }
-  };
 
   return (
     <div className="relative w-full rounded-xl overflow-hidden shadow-2xl border border-gray-800 bg-black aspect-video custom-plyr-container">
@@ -79,31 +155,9 @@ export default function CustomPlayer({ videoSrc }) {
             'play-large', 'play', 'progress', 'current-time',
             'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen'
           ],
-          settings: ['quality', 'speed'],
+          settings: ['quality', 'speed', 'audio'],
         }}
       />
-      
-      {/* Custom Audio Track Switcher Overlay */}
-      {audioTracks && audioTracks.length > 1 && (
-        <div className="absolute top-4 left-4 z-[50] bg-gray-900/90 backdrop-blur border border-gray-700 rounded-lg p-3 shadow-xl transition-opacity hover:opacity-100 opacity-80">
-          <label className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2 block">Audio Track</label>
-          <div className="flex flex-col gap-1">
-            {audioTracks.map((track, idx) => (
-              <button
-                key={idx}
-                onClick={() => switchAudioTrack(idx)}
-                className={`text-left px-3 py-1.5 rounded text-sm transition-all duration-200 ${
-                  activeTrack === idx
-                    ? 'bg-indigo-600 text-white font-medium shadow-md'
-                    : 'bg-transparent text-gray-300 hover:bg-gray-800'
-                }`}
-              >
-                {track.name || track.lang || `Track ${idx + 1}`}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Global CSS override to hide default Plyr background to prevent double backgrounds */}
       <style jsx global>{`
