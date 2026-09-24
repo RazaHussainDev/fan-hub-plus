@@ -25,5 +25,13 @@ export const fetchActionMovies = async () => {
 export const fetchDetails = async (id, type = 'tv') => {
   const res = await fetch(`${BASE_URL}/${type}/${id}?api_key=${API_KEY}&language=en-US`);
   if (!res.ok) throw new Error(`Failed to fetch details for ${type} ${id}`);
+  const data = await res.json();
+  data.media_type = type; // Inject type so frontend knows if it's movie or tv
+  return data;
+};
+
+export const fetchExternalIds = async (id, type = 'tv') => {
+  const res = await fetch(`${BASE_URL}/${type}/${id}/external_ids?api_key=${API_KEY}`);
+  if (!res.ok) throw new Error(`Failed to fetch external IDs for ${type} ${id}`);
   return res.json();
 };

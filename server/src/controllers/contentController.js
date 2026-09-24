@@ -8,18 +8,18 @@ exports.getContent = (req, res) => {
 // Stream API endpoint
 exports.getStream = async (req, res) => {
   try {
-    const { tmdbId } = req.params;
-    const { season, episode } = req.query;
+    const { tmdbId } = req.params; // Using tmdbId as param name, but it is now imdbId
+    const { type, season, episode } = req.query;
 
     if (!tmdbId) {
       return res.status(400).json({ 
         success: false, 
         data: null, 
-        message: 'TMDB ID is required' 
+        message: 'ID is required' 
       });
     }
 
-    const streamData = await StreamAggregator.fetchStreamLinks(tmdbId, season, episode);
+    const streamData = await StreamAggregator.fetchStreamLinks(tmdbId, type, season, episode);
 
     if (!streamData || (!streamData.streamUrl && !streamData.primary)) {
       return res.status(404).json({ 

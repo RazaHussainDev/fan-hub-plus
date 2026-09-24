@@ -10,13 +10,16 @@ class ExtractorService {
    * @param {string|number} episode 
    * @returns {Promise<Object>} { streamUrl: string, subtitles: Array }
    */
-  static async extractRealStream(tmdbId, season, episode) {
-    // For PoC: Money Heist TMDB 71446 corresponds to IMDB tt6468322
-    const imdbId = tmdbId.toString() === '71446' ? 'tt6468322' : tmdbId;
-
+  static async extractRealStream(imdbId, type, season, episode) {
     try {
-      console.log(`[ExtractorService] Querying Torrentio for ${imdbId} S${season}E${episode}`);
-      const torrentioUrl = `https://torrentio.strem.fun/stream/series/${imdbId}:${season}:${episode}.json`;
+      console.log(`[ExtractorService] Querying Torrentio for ${imdbId} (${type})`);
+      
+      let torrentioUrl = '';
+      if (type === 'movie') {
+        torrentioUrl = `https://torrentio.strem.fun/stream/movie/${imdbId}.json`;
+      } else {
+        torrentioUrl = `https://torrentio.strem.fun/stream/series/${imdbId}:${season}:${episode}.json`;
+      }
       
       const { data } = await axios.get(torrentioUrl, { timeout: 10000 });
 
@@ -42,9 +45,15 @@ class ExtractorService {
         if (primaryUrl) {
           return {
             primary: primaryUrl,
-            backup1: `https://vidsrc.pro/embed/tv/${tmdbId}/${season}/${episode}`,
-            backup2: `https://multiembed.mov/directstream.php?video_id=${tmdbId}&tmdb=1&s=${season}&e=${episode}`,
-            backup3: `https://autoembed.co/tv/tmdb/${tmdbId}-${season}-${episode}`
+            backup1: type === 'movie' 
+              ? `https://vidsrc.pro/embed/movie/${imdbId}` 
+              : `https://vidsrc.pro/embed/tv/${imdbId}/${season}/${episode}`,
+            backup2: type === 'movie' 
+              ? `https://multiembed.mov/directstream.php?video_id=${imdbId}` 
+              : `https://multiembed.mov/directstream.php?video_id=${imdbId}&tmdb=1&s=${season}&e=${episode}`,
+            backup3: type === 'movie' 
+              ? `https://autoembed.co/movie/imdb/${imdbId}` 
+              : `https://autoembed.co/tv/imdb/${imdbId}-${season}-${episode}`
           };
         }
       }

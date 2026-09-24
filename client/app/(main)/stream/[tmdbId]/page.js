@@ -2,7 +2,7 @@
 
 import { useState, useEffect, use } from 'react';
 import dynamic from 'next/dynamic';
-import { fetchDetails, BASE_IMG_URL } from '@/utils/tmdb';
+import { fetchDetails, fetchExternalIds, BASE_IMG_URL } from '@/utils/tmdb';
 
 const CustomPlayer = dynamic(() => import('@/components/CustomPlayer'), { 
   ssr: false,
@@ -19,6 +19,7 @@ export default function StreamPage({ params }) {
   const [error, setError] = useState(null);
   
   const [metadata, setMetadata] = useState(null);
+  const [imdbId, setImdbId] = useState(null);
 
   const seasons = [1, 2, 3, 4, 5];
   const episodes = Array.from({ length: 10 }, (_, i) => i + 1);
@@ -34,12 +35,18 @@ export default function StreamPage({ params }) {
   useEffect(() => {
     const fetchMeta = async () => {
       try {
-        // Try fetching as TV show first, if fails, fetch as movie
         let data = await fetchDetails(tmdbId, 'tv').catch(() => null);
         if (!data || data.success === false) {
           data = await fetchDetails(tmdbId, 'movie').catch(() => null);
         }
-        if (data) setMetadata(data);
+        if (data) {
+          setMetadata(data);
+          
+          const ext = await fetchExternalIds(tmdbId, data.media_type).catch(() => null);
+          if (ext && ext.imdb_id) {
+            setImdbId(ext.imdb_id);
+          }
+        }
       } catch (err) {
         console.error("Failed to fetch metadata", err);
       }
@@ -49,13 +56,16 @@ export default function StreamPage({ params }) {
 
   useEffect(() => {
     const fetchStream = async () => {
+      if (!metadata || !imdbId) return; // Wait until metadata and imdbId are loaded
+
       setLoading(true);
       setError(null);
       setSources(null);
       setActiveLayer('primary');
       
       try {
-        const response = await fetch(`http://localhost:5000/api/content/stream/${tmdbId}?season=${season}&episode=${episode}`);
+        const contentType = metadata.media_type;
+        const response = await fetch(`http://localhost:5000/api/content/stream/${imdbId}?type=${contentType}&season=${season}&episode=${episode}`);
         const data = await response.json();
         
         if (data.success && data.data && data.data.primary) {
@@ -74,7 +84,7 @@ export default function StreamPage({ params }) {
     };
 
     fetchStream();
-  }, [tmdbId, season, episode]);
+  }, [tmdbId, imdbId, metadata, season, episode]);
 
   const title = metadata?.name || metadata?.title || 'Loading...';
   const backdrop = metadata?.backdrop_path ? `https://image.tmdb.org/t/p/original${metadata.backdrop_path}` : null;
@@ -139,54 +149,56 @@ export default function StreamPage({ params }) {
         </div>
 
         {/* Controls Section */}
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-lg space-y-6">
-          {/* Season Selector */}
-          <div>
-            <h2 className="text-sm uppercase tracking-wider text-gray-400 font-semibold mb-3">
-              Select Season
-            </h2>
-            <div className="flex flex-wrap gap-2">
-              {seasons.map((s) => (
-                <button
-                  key={`season-${s}`}
-                  onClick={() => {
-                    setSeason(s);
-                    setEpisode(1); // Reset to ep 1 on season change
-                  }}
-                  className={`px-6 py-2 rounded-lg font-medium transition-all duration-200 ${
-                    season === s
-                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-900/50 scale-105'
-                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
-                  }`}
-                >
-                  Season {s}
-                </button>
-              ))}
+        {metadata?.media_type !== 'movie' && (
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-lg space-y-6">
+            {/* Season Selector */}
+            <div>
+              <h2 className="text-sm uppercase tracking-wider text-gray-400 font-semibold mb-3">
+                Select Season
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                {seasons.map((s) => (
+                  <button
+                    key={`season-${s}`}
+                    onClick={() => {
+                      setSeason(s);
+                      setEpisode(1); // Reset to ep 1 on season change
+                    }}
+                    className={`px-6 py-2 rounded-lg font-medium transition-all duration-200 ${
+                      season === s
+                        ? 'bg-indigo-600 text-white shadow-md shadow-indigo-900/50 scale-105'
+                        : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
+                    }`}
+                  >
+                    Season {s}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* Episode Selector */}
-          <div>
-            <h2 className="text-sm uppercase tracking-wider text-gray-400 font-semibold mb-3">
-              Select Episode
-            </h2>
-            <div className="flex flex-wrap gap-2">
-              {episodes.map((ep) => (
-                <button
-                  key={`episode-${ep}`}
-                  onClick={() => setEpisode(ep)}
-                  className={`w-12 h-12 flex items-center justify-center rounded-lg font-medium transition-all duration-200 ${
-                    episode === ep
-                      ? 'bg-red-600 text-white shadow-md shadow-red-900/50 scale-105'
-                      : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
-                  }`}
-                >
-                  {ep}
-                </button>
-              ))}
+            {/* Episode Selector */}
+            <div>
+              <h2 className="text-sm uppercase tracking-wider text-gray-400 font-semibold mb-3">
+                Select Episode
+              </h2>
+              <div className="flex flex-wrap gap-2">
+                {episodes.map((ep) => (
+                  <button
+                    key={`episode-${ep}`}
+                    onClick={() => setEpisode(ep)}
+                    className={`w-12 h-12 flex items-center justify-center rounded-lg font-medium transition-all duration-200 ${
+                      episode === ep
+                        ? 'bg-red-600 text-white shadow-md shadow-red-900/50 scale-105'
+                        : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
+                    }`}
+                  >
+                    {ep}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </main>
   );
