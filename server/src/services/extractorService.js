@@ -30,23 +30,21 @@ class ExtractorService {
         // Pick the best stream (fallback to first if no multi-audio found)
         const targetStream = multiAudioStreams.length > 0 ? multiAudioStreams[0] : data.streams[0];
 
+        let primaryUrl = '';
         if (targetStream.infoHash) {
           console.log(`[ExtractorService] Extracted infoHash: ${targetStream.infoHash}`);
-          
-          // Use our own internal FFmpeg transcode pipeline to convert MKV torrents to HLS instantly
-          const streamUrl = `http://localhost:5000/api/stream/transcode?infoHash=${targetStream.infoHash}`;
-          
-          return {
-            streamUrl,
-            isTorrent: true,
-            subtitles: []
-          };
+          primaryUrl = `https://webtor.io/api/watch/torrent/${targetStream.infoHash}/download`;
         } else if (targetStream.url) {
           console.log(`[ExtractorService] Extracted direct HTTP URL from Torrentio.`);
+          primaryUrl = targetStream.url;
+        }
+
+        if (primaryUrl) {
           return {
-            streamUrl: targetStream.url,
-            isTorrent: false,
-            subtitles: []
+            primary: primaryUrl,
+            backup1: `https://vidsrc.pro/embed/tv/${tmdbId}/${season}/${episode}`,
+            backup2: `https://multiembed.mov/directstream.php?video_id=${tmdbId}&tmdb=1&s=${season}&e=${episode}`,
+            backup3: `https://autoembed.co/tv/tmdb/${tmdbId}-${season}-${episode}`
           };
         }
       }

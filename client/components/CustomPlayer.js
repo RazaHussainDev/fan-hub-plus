@@ -30,7 +30,16 @@ export default function CustomPlayer({ videoSrc, isTorrent, onError }) {
       // Add error listener for 404/500 backend timeouts
       video.addEventListener('error', handleError);
 
-      // Removed bypass logic, all videoSrc (including transcode routes) go through HLS.js
+      if (!videoSrc.includes('.m3u8')) {
+        // Fallback for non-HLS direct proxy streams (e.g., Webtor.io MKV/MP4)
+        player.source = {
+          type: 'video',
+          sources: [{ src: videoSrc, type: 'video/mp4' }]
+        };
+        player.play().catch(e => console.log("Autoplay blocked:", e));
+        return;
+      }
+
       if (Hls.isSupported()) {
         hls = new Hls({ enableWorker: true });
         hls.loadSource(videoSrc);
@@ -45,6 +54,13 @@ export default function CustomPlayer({ videoSrc, isTorrent, onError }) {
 
         hls.on(Hls.Events.AUDIO_TRACK_SWITCHED, (event, data) => {
           setCurrentAudio(data.id);
+        });
+
+        hls.on(Hls.Events.ERROR, function (event, data) {
+          if (data.fatal) {
+            console.error('HLS error:', data);
+            if (onError) onError(data);
+          }
         });
 
       } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
