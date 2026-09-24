@@ -36,41 +36,52 @@ class TorrentService {
 
     try {
       const client = await TorrentService.getClient();
+
       let torrent = client.get(magnetURI);
-
-      if (torrent) {
-        if (torrent.ready) {
-          TorrentService.handleTorrentStream(torrent, req, res);
-        } else {
-          torrent.on('ready', () => {
-            TorrentService.handleTorrentStream(torrent, req, res);
-          });
-        }
-      } else {
+      if (!torrent) {
         console.log(`[TorrentService] Connecting to swarm for: ${magnetURI.substring(0, 40)}...`);
-        
-        let timeoutFired = false;
-        
-        // 10-second timeout fallback
-        const timeoutId = setTimeout(() => {
-          timeoutFired = true;
-          console.log(`[TorrentService] Timeout: No peers found for ${magnetURI.substring(0, 40)}`);
-          client.remove(magnetURI, (err) => {
-            if (err) console.error('Error removing torrent:', err);
-          });
-          if (!res.headersSent) {
-            res.status(504).send('Gateway Timeout: Torrent swarm unreachable');
-          }
-        }, 10000);
-
-        client.add(magnetURI, (newTorrent) => {
-          if (timeoutFired) return;
-          
-          clearTimeout(timeoutId);
-          console.log(`[TorrentService] Torrent metadata fetched!`);
-          TorrentService.handleTorrentStream(newTorrent, req, res);
-        });
+        torrent = client.add(magnetURI);
       }
+
+      if (!torrent || typeof torrent.on !== 'function') {
+        console.error("Engine failed to initialize torrent object.");
+        if (!res.headersSent) {
+          return res.status(500).json({ success: false, message: "Engine failure" });
+        }
+        return;
+      }
+
+      // If the torrent is already ready, handle it immediately
+      if (torrent.ready) {
+        TorrentService.handleTorrentStream(torrent, req, res);
+        return;
+      }
+
+      let timeoutFired = false;
+      
+      // 10-second timeout fallback
+      const timeoutId = setTimeout(() => {
+        timeoutFired = true;
+        console.log(`[TorrentService] Timeout: No peers found for ${magnetURI.substring(0, 40)}`);
+        client.remove(magnetURI, (err) => {
+          if (err) console.error('Error removing torrent:', err);
+        });
+        if (!res.headersSent) {
+          res.status(504).send('Gateway Timeout: Torrent swarm unreachable');
+        }
+      }, 10000);
+
+      torrent.on('ready', () => {
+        if (timeoutFired) return;
+        clearTimeout(timeoutId);
+        console.log(`[TorrentService] Torrent metadata fetched! Starting stream...`);
+        TorrentService.handleTorrentStream(torrent, req, res);
+      });
+
+      torrent.on('error', (err) => {
+        console.error("Torrent Error:", err);
+      });
+
     } catch (error) {
       console.error('[TorrentService] Initialization error:', error.message);
       if (!res.headersSent) {
