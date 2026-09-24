@@ -187,23 +187,38 @@ class TorrentService {
     const file = torrent.files.reduce((a, b) => a.length > b.length ? a : b);
     
     const ffmpeg = require('fluent-ffmpeg');
+    const path = require('path');
     
     // Set the ffmpeg path from the ffmpeg-static package
     const ffmpegPath = require('ffmpeg-static');
     ffmpeg.setFfmpegPath(ffmpegPath);
 
-    res.contentType('application/vnd.apple.mpegurl');
+    const hlsDir = path.join(__dirname, '../../../tmp_hls');
+    const outputPath = path.join(hlsDir, 'stream.m3u8');
+
     ffmpeg(file.createReadStream())
-      .videoCodec('libx264')
-      .audioCodec('aac')
-      .format('hls')
       .outputOptions([
+        '-map 0:v',      // Target the video track
+        '-map 0:a',      // Target ALL audio tracks (crucial for dual-audio)
+        '-c:v copy',     // Copy video directly (avoids massive CPU rendering lag)
+        '-c:a aac',      // Convert Dolby/MKV audio to browser-supported AAC
+        '-f hls',
         '-hls_time 10',
         '-hls_list_size 0',
-        '-f hls'
+        '-hls_segment_filename', path.join(hlsDir, 'segment_%03d.ts')
       ])
-      .on('error', (err) => console.log('Transcoding error:', err))
-      .pipe(res);
+      .save(outputPath)
+      .on('start', () => {
+         // Wait 5 seconds to let FFmpeg generate the .m3u8 manifest and first few chunks
+         setTimeout(() => {
+             if (!res.headersSent) {
+                 // Rather than sending a JSON payload, redirect directly to the generated M3U8 payload
+                 // so the frontend's hls.js can consume it directly!
+                 res.redirect('http://localhost:5000/hls/stream.m3u8');
+             }
+         }, 5000);
+      })
+      .on('error', (err) => console.log('Transcoder error:', err));
   }
 }
 

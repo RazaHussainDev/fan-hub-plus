@@ -17,7 +17,17 @@ const PORT = process.env.PORT || 5000;
 // Connect to MongoDB
 connectDB();
 
+const fs = require('fs');
+const path = require('path');
+
+// Ensure tmp_hls directory exists
+const hlsDir = path.join(__dirname, 'tmp_hls');
+if (!fs.existsSync(hlsDir)) {
+  fs.mkdirSync(hlsDir);
+}
+
 // ─── Middleware ───────────────────────────────────────────────────────────────
+app.use('/hls', express.static(hlsDir));
 
 app.use(
   cors({
