@@ -9,7 +9,9 @@ exports.getContent = (req, res) => {
 exports.getStream = async (req, res) => {
   try {
     const { tmdbId } = req.params;
-    const { type, season, episode } = req.query;
+    const type = req.query.type || 'movie';
+    const season = req.query.season ? parseInt(req.query.season) : 1;
+    const episode = req.query.episode ? parseInt(req.query.episode) : 1;
 
     if (!tmdbId) {
       return res.status(400).json({ 

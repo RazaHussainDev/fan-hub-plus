@@ -13,28 +13,30 @@ class StreamAggregator {
    */
   static async fetchStreamLinks(tmdbId, type, season, episode) {
     try {
-      // 1. Database Override Check (Highest Priority)
-      const dbStream = await EpisodeStream.findOne({
-        tmdbId: String(tmdbId),
-        season: Number(season),
-        episode: Number(episode)
-      });
+      // 1. Database Override Check (Highest Priority) - Skip for movies since EpisodeStream is for TV
+      if (type !== 'movie') {
+        const dbStream = await EpisodeStream.findOne({
+          tmdbId: String(tmdbId),
+          season: Number(season),
+          episode: Number(episode)
+        });
 
-      if (dbStream) {
-        if (dbStream.magnetURI) {
-          console.log(`[StreamAggregator] Found Torrent DB Override for ${tmdbId} S${season}E${episode}`);
-          return {
-            isTorrent: true,
-            streamUrl: "http://localhost:5000/api/content/stream/engine?magnet=" + encodeURIComponent(dbStream.magnetURI),
-            subtitles: []
-          };
-        } else if (dbStream.streamUrl) {
-          console.log(`[StreamAggregator] Found Direct DB Override for ${tmdbId} S${season}E${episode}`);
-          return {
-            isTorrent: false,
-            streamUrl: dbStream.streamUrl,
-            subtitles: [] 
-          };
+        if (dbStream) {
+          if (dbStream.magnetURI) {
+            console.log(`[StreamAggregator] Found Torrent DB Override for ${tmdbId} S${season}E${episode}`);
+            return {
+              isTorrent: true,
+              streamUrl: "http://localhost:5000/api/content/stream/engine?magnet=" + encodeURIComponent(dbStream.magnetURI),
+              subtitles: []
+            };
+          } else if (dbStream.streamUrl) {
+            console.log(`[StreamAggregator] Found Direct DB Override for ${tmdbId} S${season}E${episode}`);
+            return {
+              isTorrent: false,
+              streamUrl: dbStream.streamUrl,
+              subtitles: [] 
+            };
+          }
         }
       }
 
