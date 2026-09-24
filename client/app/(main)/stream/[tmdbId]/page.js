@@ -77,7 +77,7 @@ export default function StreamPage({ params, searchParams }) {
 
   // Dynamic Seasons & Episodes
   const validSeasons = metadata?.seasons?.filter(s => s.season_number > 0) || [];
-  const currentSeasonData = validSeasons.find(s => s.season_number === season);
+  const currentSeasonData = validSeasons.find(s => Number(s.season_number) === Number(season));
   const episodeCount = currentSeasonData ? currentSeasonData.episode_count : 0;
   const episodesArray = Array.from({ length: episodeCount }, (_, i) => i + 1);
 
@@ -169,11 +169,11 @@ export default function StreamPage({ params, searchParams }) {
                   <button
                     key={`season-${s.season_number}`}
                     onClick={() => {
-                      setSeason(s.season_number);
+                      setSeason(Number(s.season_number));
                       setEpisode(1); // Reset to ep 1 on season change
                     }}
                     className={`px-6 py-2 rounded-lg font-medium transition-all duration-200 ${
-                      season === s.season_number
+                      Number(season) === Number(s.season_number)
                         ? 'bg-indigo-600 text-white shadow-md shadow-indigo-900/50 scale-105'
                         : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
                     }`}
@@ -196,7 +196,7 @@ export default function StreamPage({ params, searchParams }) {
                       key={`episode-${ep}`}
                       onClick={() => setEpisode(ep)}
                       className={`w-12 h-12 flex items-center justify-center rounded-lg font-medium transition-all duration-200 ${
-                        episode === ep
+                        Number(episode) === ep
                           ? 'bg-red-600 text-white shadow-md shadow-red-900/50 scale-105'
                           : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
                       }`}
