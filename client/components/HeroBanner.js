@@ -57,24 +57,22 @@ const HeroBanner = () => {
       
       {/* Background Image (Ken Burns Effect) */}
       <AnimatePresence>
-        <motion.div
+        <motion.img
           key={currentMovie.id}
           initial={{ opacity: 0, scale: 1 }}
           animate={{ opacity: 1, scale: 1.05 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1.5, ease: "easeInOut" }}
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat -z-10"
-          style={{ backgroundImage: `url(${currentMovie.image})` }}
+          src={currentMovie.image}
+          alt={currentMovie.title}
+          className="absolute inset-0 w-full h-full object-cover -z-10"
         />
       </AnimatePresence>
 
-      {/* Cinematic Gradient Overlays */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#FBFBFD] dark:from-[#050505] via-[#FBFBFD]/80 dark:via-[#050505]/70 to-transparent z-0 transition-colors duration-500" />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#FBFBFD] dark:from-[#050505] via-transparent to-transparent z-0 transition-colors duration-500" />
+      {/* Sleek Cinematic Gradient Overlays */}
+      <div className="absolute inset-0 bg-gradient-to-r from-white via-white/50 dark:from-[#0a0a0a] dark:via-[#0a0a0a]/50 to-transparent z-0 transition-colors duration-500" />
+      <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent dark:from-[#0a0a0a] dark:via-transparent to-transparent z-0 transition-colors duration-500" />
       
-      {/* Premium OTT Vignette */}
-      <div className="absolute inset-0 shadow-[inset_0_0_100px_rgba(0,0,0,0.3)] dark:shadow-[inset_0_0_200px_rgba(0,0,0,0.9)] z-0 pointer-events-none transition-shadow duration-500" />
-
       {/* Content Container */}
       <div className="relative z-10 max-w-2xl w-full">
         <AnimatePresence mode="wait">
@@ -85,7 +83,7 @@ const HeroBanner = () => {
             exit="exit"
             className="space-y-5"
           >
-            {/* Badge */}
+            {/* Sleek Premium Badge */}
             {currentMovie.badge && (
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
@@ -94,7 +92,7 @@ const HeroBanner = () => {
                 transition={{ duration: 0.8, delay: 0.1 }}
                 className="flex items-center gap-2 mb-2"
               >
-                <div className="px-3 py-1.5 bg-brand-primary/20 border border-brand-primary/40 text-brand-primary dark:text-purple-300 rounded-md text-xs font-bold uppercase tracking-widest backdrop-blur-md shadow-[0_0_20px_rgba(168,85,247,0.3)]">
+                <div className="px-3 py-1 bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/20 text-black dark:text-white rounded-md text-xs font-bold uppercase tracking-widest backdrop-blur-md shadow-sm">
                   {currentMovie.badge}
                 </div>
               </motion.div>
@@ -105,7 +103,7 @@ const HeroBanner = () => {
               animate={{ opacity: 1, y: 0 }} 
               exit={{ opacity: 0, y: -20, transition: { duration: 0.3 } }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-5xl md:text-7xl font-heading font-black text-gray-900 dark:text-white tracking-tight drop-shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
+              className="text-5xl md:text-7xl font-heading font-black text-gray-900 dark:text-white tracking-tight drop-shadow-md"
             >
               {currentMovie.title}
             </motion.h1>
@@ -115,7 +113,7 @@ const HeroBanner = () => {
               animate={{ opacity: 1, y: 0 }} 
               exit={{ opacity: 0, y: -20, transition: { duration: 0.3 } }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-gray-800 dark:text-gray-300 text-lg md:text-xl font-medium max-w-xl leading-relaxed drop-shadow-lg"
+              className="text-gray-800 dark:text-gray-200 text-lg md:text-xl font-medium max-w-xl leading-relaxed drop-shadow-sm"
             >
               {currentMovie.description}
             </motion.p>
@@ -129,13 +127,13 @@ const HeroBanner = () => {
             >
               <Link
                 href={`/stream/${currentMovie.id}?type=${currentMovie.type}`}
-                className="flex items-center gap-2 bg-brand-primary text-white px-8 py-3.5 rounded-full font-bold text-lg hover:bg-brand-primary/80 transition-all hover:scale-105 shadow-[0_0_30px_rgba(168,85,247,0.4)] hover:shadow-[0_0_40px_rgba(168,85,247,0.7)]"
+                className="flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-8 py-3.5 rounded-full font-bold text-lg hover:scale-105 hover:bg-gray-800 dark:hover:bg-gray-200 transition-all shadow-lg"
               >
                 <Play fill="currentColor" size={22} />
                 Watch Now
               </Link>
               
-              <button className="flex items-center gap-2 bg-black/5 dark:bg-white/10 backdrop-blur-xl border border-black/10 dark:border-white/20 text-gray-900 dark:text-white px-8 py-3.5 rounded-full font-bold text-lg hover:bg-black/10 dark:hover:bg-white/20 transition-all shadow-xl">
+              <button className="flex items-center gap-2 bg-black/5 dark:bg-white/10 backdrop-blur-xl border border-black/10 dark:border-white/20 text-gray-900 dark:text-white px-8 py-3.5 rounded-full font-bold text-lg hover:bg-black/10 dark:hover:bg-white/20 transition-all shadow-lg">
                 <Info size={22} />
                 More Info
               </button>
@@ -159,7 +157,7 @@ const HeroBanner = () => {
                 initial={{ width: '0%' }}
                 animate={{ width: '100%' }}
                 transition={{ duration: 8, ease: "linear" }}
-                className="h-full bg-brand-primary shadow-[0_0_15px_rgba(168,85,247,0.8)]"
+                className="h-full bg-black dark:bg-white"
               />
             )}
           </div>
