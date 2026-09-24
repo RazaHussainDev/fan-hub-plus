@@ -60,14 +60,21 @@ class TorrentService {
       let timeoutFired = false;
       
       // 10-second timeout fallback
-      const timeoutId = setTimeout(() => {
+      const timeoutId = setTimeout(async () => {
         timeoutFired = true;
         console.log(`[TorrentService] Timeout: No peers found for ${magnetURI.substring(0, 40)}`);
-        client.remove(magnetURI, (err) => {
-          if (err) console.error('Error removing torrent:', err);
-        });
+        
+        try {
+          const existingTorrent = await client.get(magnetURI);
+          if (existingTorrent) {
+            existingTorrent.destroy(); // Safely destroy the torrent instance directly
+          }
+        } catch (err) {
+          console.error("Safely caught torrent removal error:", err.message);
+        }
+        
         if (!res.headersSent) {
-          res.status(504).send('Gateway Timeout: Torrent swarm unreachable');
+          return res.status(504).json({ success: false, message: "Timeout: No peers found, falling back to iframe." });
         }
       }, 10000);
 
