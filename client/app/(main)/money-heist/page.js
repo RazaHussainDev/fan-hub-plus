@@ -41,6 +41,8 @@ export default function MoneyHeistPlayer() {
         
         if (data.success && data.data && data.data.primary) {
           setSources(data.data);
+          setActiveLayer('primary');
+          setError(null);
         } else {
           setError("Failed to fetch stream sources.");
         }
