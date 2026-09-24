@@ -11,26 +11,25 @@ class StreamAggregator {
    * @param {string|number} episode 
    * @returns {Promise<Object>} { streamUrl: string, subtitles: Array }
    */
-  static async fetchStreamLinks(imdbId, type, season, episode) {
+  static async fetchStreamLinks(tmdbId, type, season, episode) {
     try {
       // 1. Database Override Check (Highest Priority)
-      // Note: DB schema might still use tmdbId name, passing imdbId for now
       const dbStream = await EpisodeStream.findOne({
-        tmdbId: String(imdbId),
+        tmdbId: String(tmdbId),
         season: Number(season),
         episode: Number(episode)
       });
 
       if (dbStream) {
         if (dbStream.magnetURI) {
-          console.log(`[StreamAggregator] Found Torrent DB Override for ${imdbId} S${season}E${episode}`);
+          console.log(`[StreamAggregator] Found Torrent DB Override for ${tmdbId} S${season}E${episode}`);
           return {
             isTorrent: true,
             streamUrl: "http://localhost:5000/api/content/stream/engine?magnet=" + encodeURIComponent(dbStream.magnetURI),
             subtitles: []
           };
         } else if (dbStream.streamUrl) {
-          console.log(`[StreamAggregator] Found Direct DB Override for ${imdbId} S${season}E${episode}`);
+          console.log(`[StreamAggregator] Found Direct DB Override for ${tmdbId} S${season}E${episode}`);
           return {
             isTorrent: false,
             streamUrl: dbStream.streamUrl,
@@ -40,7 +39,7 @@ class StreamAggregator {
       }
 
       // 2. Extractor Service (Public APIs & Scrapers)
-      const extractedData = await ExtractorService.extractRealStream(imdbId, type, season, episode);
+      const extractedData = await ExtractorService.extractRealStream(tmdbId, type, season, episode);
       return extractedData;
 
     } catch (error) {

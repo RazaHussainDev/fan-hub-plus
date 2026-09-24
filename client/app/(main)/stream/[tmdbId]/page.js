@@ -2,12 +2,9 @@
 
 import { useState, useEffect, use } from 'react';
 import dynamic from 'next/dynamic';
-import { fetchDetails, fetchExternalIds, BASE_IMG_URL } from '@/utils/tmdb';
+import { fetchDetails, BASE_IMG_URL } from '@/utils/tmdb';
 
-const CustomPlayer = dynamic(() => import('@/components/CustomPlayer'), { 
-  ssr: false,
-  loading: () => <div className="w-full aspect-video bg-gray-900 rounded-xl flex items-center justify-center border border-gray-800"><span className="text-gray-400">Loading Player Component...</span></div>
-});
+
 
 export default function StreamPage({ params }) {
   const { tmdbId } = use(params);
@@ -19,18 +16,11 @@ export default function StreamPage({ params }) {
   const [error, setError] = useState(null);
   
   const [metadata, setMetadata] = useState(null);
-  const [imdbId, setImdbId] = useState(null);
 
   const seasons = [1, 2, 3, 4, 5];
   const episodes = Array.from({ length: 10 }, (_, i) => i + 1);
 
-  const handleFallback = () => {
-    console.warn(`Layer ${activeLayer} failed. Cascading down...`);
-    if (activeLayer === 'primary') setActiveLayer('backup1');
-    else if (activeLayer === 'backup1') setActiveLayer('backup2');
-    else if (activeLayer === 'backup2') setActiveLayer('backup3');
-    else setError("All streaming layers failed to load.");
-  };
+
 
   useEffect(() => {
     const fetchMeta = async () => {
@@ -41,11 +31,6 @@ export default function StreamPage({ params }) {
         }
         if (data) {
           setMetadata(data);
-          
-          const ext = await fetchExternalIds(tmdbId, data.media_type).catch(() => null);
-          if (ext && ext.imdb_id) {
-            setImdbId(ext.imdb_id);
-          }
         }
       } catch (err) {
         console.error("Failed to fetch metadata", err);
@@ -56,7 +41,7 @@ export default function StreamPage({ params }) {
 
   useEffect(() => {
     const fetchStream = async () => {
-      if (!metadata || !imdbId) return; // Wait until metadata and imdbId are loaded
+      if (!metadata) return;
 
       setLoading(true);
       setError(null);
@@ -65,7 +50,7 @@ export default function StreamPage({ params }) {
       
       try {
         const contentType = metadata.media_type;
-        const response = await fetch(`http://localhost:5000/api/content/stream/${imdbId}?type=${contentType}&season=${season}&episode=${episode}`);
+        const response = await fetch(`http://localhost:5000/api/content/stream/${tmdbId}?type=${contentType}&season=${season}&episode=${episode}`);
         const data = await response.json();
         
         if (data.success && data.data && data.data.primary) {
@@ -84,7 +69,7 @@ export default function StreamPage({ params }) {
     };
 
     fetchStream();
-  }, [tmdbId, imdbId, metadata, season, episode]);
+  }, [tmdbId, metadata, season, episode]);
 
   const title = metadata?.name || metadata?.title || 'Loading...';
   const backdrop = metadata?.backdrop_path ? `https://image.tmdb.org/t/p/original${metadata.backdrop_path}` : null;
@@ -111,14 +96,6 @@ export default function StreamPage({ params }) {
 
         {/* Video Player Container */}
         <div className="mb-8 w-full">
-          {activeLayer !== 'primary' && !loading && !error && (
-            <div className="mb-2 text-right">
-              <span className="bg-amber-600/20 text-amber-500 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide border border-amber-500/30">
-                ⚠️ Playing via Fallback Server ({activeLayer})
-              </span>
-            </div>
-          )}
-
           {loading ? (
             <div className="w-full aspect-video bg-gray-900 rounded-xl flex flex-col gap-4 items-center justify-center border border-gray-800 shadow-2xl">
               <div className="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
@@ -128,24 +105,48 @@ export default function StreamPage({ params }) {
             <div className="w-full aspect-video bg-gray-900 rounded-xl flex items-center justify-center border border-red-800 shadow-2xl">
               <span className="text-red-400 font-medium">{error}</span>
             </div>
-          ) : sources ? (
-            activeLayer === 'primary' ? (
-              <CustomPlayer 
-                videoSrc={sources.primary} 
-                onError={handleFallback}
+          ) : sources && sources[activeLayer] ? (
+            <div className="w-full bg-black rounded-xl overflow-hidden shadow-2xl border border-gray-800 relative aspect-video">
+              <iframe
+                src={sources[activeLayer]}
+                title={`${title} - Video Player`}
+                className="absolute top-0 left-0 w-full h-full border-0"
+                allowFullScreen
+                referrerPolicy="origin"
               />
-            ) : (
-              <div className="w-full bg-black rounded-xl overflow-hidden shadow-2xl border border-amber-800/50 relative aspect-video">
-                <iframe
-                  src={sources[activeLayer]}
-                  title={`Money Heist Season ${season} Episode ${episode}`}
-                  className="absolute top-0 left-0 w-full h-full border-0"
-                  allowFullScreen
-                  referrerPolicy="origin"
-                />
-              </div>
-            )
+            </div>
           ) : null}
+
+          {/* Server Switching UI */}
+          {sources && (
+            <div className="mt-4 flex flex-wrap gap-3 justify-center">
+              <span className="text-sm text-gray-400 font-medium flex items-center mr-2">If video is buffering, change server:</span>
+              <button
+                onClick={() => setActiveLayer('primary')}
+                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+                  activeLayer === 'primary' ? 'bg-brand-primary text-white shadow-lg' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                }`}
+              >
+                Server 1 (Primary)
+              </button>
+              <button
+                onClick={() => setActiveLayer('backup1')}
+                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+                  activeLayer === 'backup1' ? 'bg-brand-primary text-white shadow-lg' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                }`}
+              >
+                Server 2 (Backup)
+              </button>
+              <button
+                onClick={() => setActiveLayer('backup2')}
+                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
+                  activeLayer === 'backup2' ? 'bg-brand-primary text-white shadow-lg' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                }`}
+              >
+                Server 3 (Alt)
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Controls Section */}

@@ -8,7 +8,7 @@ exports.getContent = (req, res) => {
 // Stream API endpoint
 exports.getStream = async (req, res) => {
   try {
-    const { tmdbId } = req.params; // Using tmdbId as param name, but it is now imdbId
+    const { tmdbId } = req.params;
     const { type, season, episode } = req.query;
 
     if (!tmdbId) {
