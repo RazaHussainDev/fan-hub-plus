@@ -129,6 +129,7 @@ class TorrentService {
       });
       file.createReadStream().pipe(res);
     }
+  }
 }
 
 module.exports = TorrentService;
