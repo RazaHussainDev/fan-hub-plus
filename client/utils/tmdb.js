@@ -35,3 +35,21 @@ export const fetchExternalIds = async (id, type = 'tv') => {
   if (!res.ok) throw new Error(`Failed to fetch external IDs for ${type} ${id}`);
   return res.json();
 };
+
+// Fetch Bollywood Movies (Hindi)
+export const fetchBollywood = async () => {
+  const res = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_original_language=hi&sort_by=popularity.desc`);
+  return res.json();
+};
+
+// Fetch Anime (Japanese + Animation Genre 16)
+export const fetchAnime = async () => {
+  const res = await fetch(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ja&with_genres=16&sort_by=popularity.desc`);
+  return res.json();
+};
+
+// Fetch K-Dramas (Korean)
+export const fetchKDramas = async () => {
+  const res = await fetch(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ko&sort_by=popularity.desc`);
+  return res.json();
+};

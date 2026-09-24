@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 import { BASE_IMG_URL } from '@/utils/tmdb';
 
-const MovieRow = ({ title, movies }) => {
+const MovieRow = ({ title, movies, fallbackType = 'movie' }) => {
   if (!movies || movies.length === 0) return null;
 
   return (
@@ -16,7 +16,7 @@ const MovieRow = ({ title, movies }) => {
         {movies.map((movie) => {
           if (!movie.poster_path) return null;
           return (
-            <Link href={`/stream/${movie.id}?type=${movie.media_type || 'movie'}`} key={movie.id} target="_blank" rel="noopener noreferrer" className="shrink-0 block">
+            <Link href={`/stream/${movie.id}?type=${movie.media_type || fallbackType}`} key={movie.id} target="_blank" rel="noopener noreferrer" className="shrink-0 block">
               <img 
                 src={`${BASE_IMG_URL}${movie.poster_path}`} 
                 alt={movie.title || movie.name} 
