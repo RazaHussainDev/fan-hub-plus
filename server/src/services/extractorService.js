@@ -1,81 +1,60 @@
 const axios = require('axios');
-const cheerio = require('cheerio');
 
 class ExtractorService {
   /**
-   * Attempts to extract a real, playable .m3u8 stream from public aggregators and APIs.
-   * Built robustly to try multiple endpoints and HTML scraping techniques.
+   * Fetches streams using the Stremio Addon Protocol (Torrentio)
+   * focusing on aggressive multi-audio and Hindi dubs.
    * 
-   * @param {string|number} tmdbId 
+   * @param {string|number} tmdbId - We will convert this to IMDB ID manually for the PoC.
    * @param {string|number} season 
    * @param {string|number} episode 
    * @returns {Promise<Object>} { streamUrl: string, subtitles: Array }
    */
   static async extractRealStream(tmdbId, season, episode) {
-    // 1. Attempt Primary API Source: Consumet (TMDB Info -> Watch endpoint)
+    // For PoC: Money Heist TMDB 71446 corresponds to IMDB tt6468322
+    const imdbId = tmdbId.toString() === '71446' ? 'tt6468322' : tmdbId;
+
     try {
-      const consumetInfoUrl = `https://api.consumet.org/meta/tmdb/info/${tmdbId}?type=tv`;
-      const { data: infoData } = await axios.get(consumetInfoUrl, { timeout: 6000 });
+      console.log(`[ExtractorService] Querying Torrentio for ${imdbId} S${season}E${episode}`);
+      const torrentioUrl = `https://torrentio.strem.fun/stream/series/${imdbId}:${season}:${episode}.json`;
       
-      if (infoData && infoData.episodes) {
-        const targetEp = infoData.episodes.find(
-          e => e.season === Number(season) && e.number === Number(episode)
-        );
-        
-        if (targetEp) {
-          const watchUrl = `https://api.consumet.org/meta/tmdb/watch/${targetEp.id}?id=${tmdbId}`;
-          const { data: watchData } = await axios.get(watchUrl, { timeout: 6000 });
+      const { data } = await axios.get(torrentioUrl, { timeout: 10000 });
+
+      if (data && data.streams && data.streams.length > 0) {
+        // Filter for Multi-Audio or Hindi
+        const multiAudioStreams = data.streams.filter(stream => {
+          const title = stream.title || stream.name || '';
+          return /hindi|multi|dual/i.test(title);
+        });
+
+        // Pick the best stream (fallback to first if no multi-audio found)
+        const targetStream = multiAudioStreams.length > 0 ? multiAudioStreams[0] : data.streams[0];
+
+        if (targetStream.infoHash) {
+          console.log(`[ExtractorService] Extracted infoHash: ${targetStream.infoHash}`);
           
-          if (watchData && watchData.sources) {
-            const source = watchData.sources.find(s => s.isM3U8 || s.url.includes('.m3u8'));
-            if (source) {
-              console.log(`[ExtractorService] Successfully extracted stream from Consumet API for TMDB ${tmdbId}`);
-              return {
-                streamUrl: source.url,
-                subtitles: watchData.subtitles || []
-              };
-            }
-          }
+          // Construct a public HTTP torrent relay URL to bypass local WebTorrent downloading
+          const streamUrl = `https://webtor.io/api/watch/torrent/${targetStream.infoHash}/download`;
+          
+          return {
+            streamUrl,
+            subtitles: []
+          };
+        } else if (targetStream.url) {
+          console.log(`[ExtractorService] Extracted direct HTTP URL from Torrentio.`);
+          return {
+            streamUrl: targetStream.url,
+            subtitles: []
+          };
         }
       }
-    } catch (consumetError) {
-      console.warn(`[ExtractorService] Consumet API failed for TMDB ${tmdbId}:`, consumetError.message);
+
+    } catch (error) {
+      console.warn(`[ExtractorService] Stremio Protocol (Torrentio) extraction failed:`, error.message);
     }
 
-    // 2. Attempt Scraper Source: AutoEmbed / Vidsrc clones
-    // We scrape the HTML payload looking for exposed .m3u8 links in source tags or config JSON
-    try {
-      const fallbackUrl = `https://autoembed.co/tv/tmdb/${tmdbId}-${season}-${episode}`;
-      const { data: html } = await axios.get(fallbackUrl, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36',
-          'Referer': 'https://autoembed.co/'
-        },
-        timeout: 6000
-      });
-
-      const $ = cheerio.load(html);
-      
-      // Look for standard source tags
-      const sourceTag = $('source').attr('src');
-      if (sourceTag && sourceTag.includes('.m3u8')) {
-        console.log(`[ExtractorService] Extracted .m3u8 from <source> tag on AutoEmbed`);
-        return { streamUrl: sourceTag, subtitles: [] };
-      }
-
-      // Regex fallback: Search the raw JS bundle strings for a master m3u8 playlist
-      const m3u8Regex = /(https:\/\/[^"']*\.m3u8[^"']*)/i;
-      const match = html.match(m3u8Regex);
-      if (match && match[1]) {
-        console.log(`[ExtractorService] Extracted .m3u8 via Regex on AutoEmbed`);
-        return { streamUrl: match[1], subtitles: [] };
-      }
-    } catch (scraperError) {
-      console.warn(`[ExtractorService] HTML Scraper failed for TMDB ${tmdbId}:`, scraperError.message);
-    }
-
-    // If all extraction attempts fail, throw an error to trigger frontend iframe fallback
-    const notFoundError = new Error('No playable .m3u8 streams found across all extractor engines.');
+    // If extraction fails, throw 404 to trigger frontend AutoEmbed iframe fallback
+    const notFoundError = new Error('No playable streams found via Stremio Addon Protocol.');
     notFoundError.status = 404;
     throw notFoundError;
   }

@@ -20,14 +20,14 @@ const seedDatabase = async () => {
     });
     console.log(`🧹 Cleared existing records for TMDB: ${targetTmdbId} S${targetSeason}E${targetEpisode}`);
 
-    // 3. Insert the WebTorrent test stream
+    // 3. Insert the WebTorrent test stream (Fallback for UI stability)
     const newStream = await EpisodeStream.create({
       tmdbId: targetTmdbId,
       season: targetSeason,
       episode: targetEpisode,
-      streamUrl: "http://dummy", // not used when magnet is present, but required by schema
+      streamUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
       isMultiAudio: true,
-      magnetURI: "magnet:?xt=urn:btih:08ada5a7a6183aae1e09d831df6748d566095a10&dn=Sintel"
+      magnetURI: null
     });
 
     console.log('🎉 Successfully seeded EpisodeStream database override:');
