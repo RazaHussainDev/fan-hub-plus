@@ -97,7 +97,6 @@ export default function CustomPlayer({ videoSrc, isTorrent, onError }) {
           videoElement.removeEventListener('playing', clearWatchdog);
         }
       }
-      }
       if (hls) {
         hls.destroy();
       }
