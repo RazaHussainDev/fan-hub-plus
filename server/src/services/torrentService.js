@@ -130,6 +130,81 @@ class TorrentService {
       file.createReadStream().pipe(res);
     }
   }
+
+  static async transcodeMagnet(req, res) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Range');
+    if (req.method === 'OPTIONS') {
+      return res.status(200).end();
+    }
+
+    const infoHash = req.query.infoHash;
+    if (!infoHash) return res.status(400).send('infoHash is required');
+
+    // we use infoHash as magnet directly since WebTorrent supports it
+    const magnetURI = `magnet:?xt=urn:btih:${infoHash}`;
+    
+    try {
+      const client = await TorrentService.getClient();
+      let torrent = await client.get(magnetURI);
+      
+      if (!torrent) {
+        console.log(`[TorrentService] Connecting to swarm for transcoding: ${infoHash}...`);
+        torrent = client.add(magnetURI);
+      }
+
+      if (!torrent || typeof torrent.on !== 'function') {
+        return res.status(500).json({ success: false, message: "Engine failure" });
+      }
+
+      if (torrent.ready) {
+        TorrentService.handleTranscodingStream(torrent, req, res);
+        return;
+      }
+
+      let timeoutFired = false;
+      const timeoutId = setTimeout(async () => {
+        timeoutFired = true;
+        try {
+          const existingTorrent = await client.get(magnetURI);
+          if (existingTorrent) existingTorrent.destroy();
+        } catch (err) {}
+        if (!res.headersSent) res.status(504).send('Gateway Timeout');
+      }, 10000);
+
+      torrent.on('ready', () => {
+        if (timeoutFired) return;
+        clearTimeout(timeoutId);
+        TorrentService.handleTranscodingStream(torrent, req, res);
+      });
+    } catch (error) {
+      if (!res.headersSent) res.status(500).send('Transcoding init failed');
+    }
+  }
+
+  static handleTranscodingStream(torrent, req, res) {
+    if (res.headersSent) return;
+    const file = torrent.files.reduce((a, b) => a.length > b.length ? a : b);
+    
+    const ffmpeg = require('fluent-ffmpeg');
+    
+    // Set the ffmpeg path from the ffmpeg-static package
+    const ffmpegPath = require('ffmpeg-static');
+    ffmpeg.setFfmpegPath(ffmpegPath);
+
+    res.contentType('application/vnd.apple.mpegurl');
+    ffmpeg(file.createReadStream())
+      .videoCodec('libx264')
+      .audioCodec('aac')
+      .format('hls')
+      .outputOptions([
+        '-hls_time 10',
+        '-hls_list_size 0',
+        '-f hls'
+      ])
+      .on('error', (err) => console.log('Transcoding error:', err))
+      .pipe(res);
+  }
 }
 
 module.exports = TorrentService;

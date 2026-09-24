@@ -30,21 +30,7 @@ export default function CustomPlayer({ videoSrc, isTorrent, onError }) {
       // Add error listener for 404/500 backend timeouts
       video.addEventListener('error', handleError);
 
-      if (!videoSrc.includes('.m3u8')) {
-        // Bypass HLS.js for direct proxy links and force native Plyr playback
-        player.source = {
-          type: 'video',
-          sources: [
-            {
-              src: videoSrc,
-              type: 'video/mp4',
-            }
-          ]
-        };
-        player.play().catch(e => console.log("Autoplay blocked:", e));
-        return;
-      }
-
+      // Removed bypass logic, all videoSrc (including transcode routes) go through HLS.js
       if (Hls.isSupported()) {
         hls = new Hls({ enableWorker: true });
         hls.loadSource(videoSrc);

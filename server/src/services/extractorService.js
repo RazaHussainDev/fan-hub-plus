@@ -33,8 +33,8 @@ class ExtractorService {
         if (targetStream.infoHash) {
           console.log(`[ExtractorService] Extracted infoHash: ${targetStream.infoHash}`);
           
-          // Construct a public HTTP torrent relay URL to bypass local WebTorrent downloading
-          const streamUrl = `https://webtor.io/api/watch/torrent/${targetStream.infoHash}`;
+          // Use our own internal FFmpeg transcode pipeline to convert MKV torrents to HLS instantly
+          const streamUrl = `http://localhost:5000/api/stream/transcode?infoHash=${targetStream.infoHash}`;
           
           return {
             streamUrl,

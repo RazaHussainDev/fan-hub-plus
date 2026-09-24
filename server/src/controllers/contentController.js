@@ -54,3 +54,12 @@ exports.streamMagnet = (req, res) => {
     res.status(500).send('Internal server error while streaming magnet');
   }
 };
+
+exports.transcodeMagnet = (req, res) => {
+  try {
+    TorrentService.transcodeMagnet(req, res);
+  } catch (error) {
+    console.error('[ContentController] transcodeMagnet error:', error.message);
+    res.status(500).send('Internal server error while transcoding magnet');
+  }
+};
