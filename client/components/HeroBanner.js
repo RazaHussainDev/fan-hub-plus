@@ -11,7 +11,7 @@ const SLIDES = [
     title: 'Money Heist',
     badge: 'Nº 1 in TV Shows Today',
     description: 'To carry out the biggest heist in history, a mysterious man called The Professor recruits a band of eight robbers who have a single characteristic: none of them has anything to lose.',
-    image: 'https://image.tmdb.org/t/p/original/gL0E3wRzyF3FpxqP4jD2HhpxV7F.jpg',
+    image: 'https://image.tmdb.org/t/p/original/gFZriCkpJYsApPZEF3jhxL4yLzG.jpg',
     type: 'tv'
   },
   {
@@ -19,7 +19,7 @@ const SLIDES = [
     title: 'House of the Dragon',
     badge: 'New Season',
     description: 'An internal succession conflict within house Targaryen that causes the decline of their power, 172 years before the birth of Daenerys Targaryen.',
-    image: 'https://image.tmdb.org/t/p/original/etj8E2o0NpZHp1ZQQW0jNl735fH.jpg',
+    image: 'https://image.tmdb.org/t/p/original/577eXC8wFQT0eUrJcgznSiFPRmk.jpg',
     type: 'tv'
   },
   {
@@ -27,7 +27,7 @@ const SLIDES = [
     title: 'Interstellar',
     badge: 'Critically Acclaimed',
     description: 'A team of explorers travel through a wormhole in space in an attempt to ensure humanity\'s survival as Earth\'s resources run out.',
-    image: 'https://image.tmdb.org/t/p/original/xJHokMbljvjEVAZSZA15fs44KjZ.jpg',
+    image: 'https://image.tmdb.org/t/p/original/8sNiAPPYU14PUepFNeSNGUTiHW.jpg',
     type: 'movie'
   },
   {
@@ -35,7 +35,7 @@ const SLIDES = [
     title: 'Wednesday',
     badge: 'Trending Globally',
     description: 'Wednesday Addams is sent to Nevermore Academy, a bizarre boarding school where she attempts to master her psychic powers and stop a monstrous killing spree.',
-    image: 'https://image.tmdb.org/t/p/original/tML3O6z9i5Bf0gL4kL1fJzC2sQZ.jpg',
+    image: 'https://image.tmdb.org/t/p/original/iHSwvRVsRyxpX7FE7GbviaDvgGZ.jpg',
     type: 'tv'
   }
 ];
