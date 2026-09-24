@@ -2,13 +2,13 @@ import HeroBanner from '@/components/HeroBanner';
 import MovieRow from '@/components/MovieRow';
 
 const DUMMY_MOVIES = [
-  { id: 1, title: 'Stranger Things', poster: 'https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8OSqAAwQv.jpg' },
-  { id: 2, title: 'Squid Game', poster: 'https://image.tmdb.org/t/p/w500/dDlEmu3EZ0PggZ2K2QK1ZrvMac9.jpg' },
+  { id: 1, title: 'Stranger Things', poster: 'https://static.tvmaze.com/uploads/images/original_untouched/595/1489169.jpg' },
+  { id: 2, title: 'Squid Game', poster: 'https://static.tvmaze.com/uploads/images/original_untouched/576/1440521.jpg' },
   { id: 3, title: 'Breaking Bad', poster: 'https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg' },
-  { id: 4, title: 'The Boys', poster: 'https://image.tmdb.org/t/p/w500/stTEycfG9928RWa4O917eFBRD6.jpg' },
+  { id: 4, title: 'The Boys', poster: 'https://static.tvmaze.com/uploads/images/original_untouched/619/1547768.jpg' },
   { id: 5, title: 'Dark', poster: 'https://image.tmdb.org/t/p/w500/apbrbWs8M9lyOpJYU5WXrpFbk1Z.jpg' },
-  { id: 6, title: 'Peaky Blinders', poster: 'https://image.tmdb.org/t/p/w500/vUUqzWa2LcUICkOMqWHfd05Hn8L.jpg' },
-  { id: 7, title: 'The Witcher', poster: 'https://image.tmdb.org/t/p/w500/7vjaCdMw15FEbXyLQTVICKPhnEn.jpg' },
+  { id: 6, title: 'Peaky Blinders', poster: 'https://static.tvmaze.com/uploads/images/original_untouched/48/122213.jpg' },
+  { id: 7, title: 'The Witcher', poster: 'https://static.tvmaze.com/uploads/images/original_untouched/594/1486674.jpg' },
 ];
 
 export default function Home() {

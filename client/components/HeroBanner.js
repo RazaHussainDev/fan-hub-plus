@@ -7,7 +7,7 @@ const HeroBanner = () => {
     <div className="relative w-full h-[80vh] min-h-[600px] flex items-end pb-24 md:pb-32 px-6 md:px-16 overflow-hidden">
       {/* Background Image with absolute positioning */}
       <img 
-        src="https://image.tmdb.org/t/p/original/x2LSRb2WKuRXrXcqcQ7ibpXN2dE.jpg" 
+        src="https://static.tvmaze.com/uploads/images/original_untouched/209/523445.jpg" 
         alt="Hero Backdrop" 
         className="absolute inset-0 w-full h-full object-cover -z-10"
       />
