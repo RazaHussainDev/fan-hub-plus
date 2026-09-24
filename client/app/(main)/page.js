@@ -1,4 +1,5 @@
 import HeroBanner from '@/components/HeroBanner';
+import CurvedCategorySlider from '@/components/CurvedCategorySlider';
 import MovieRow from '@/components/MovieRow';
 import Link from 'next/link';
 import { fetchTrending, fetchNewReleases, fetchActionMovies, fetchBollywood, fetchAnime, fetchKDramas } from '@/utils/tmdb';
@@ -36,6 +37,7 @@ export default async function Home() {
       <HeroBanner />
       
       <div className="flex flex-col space-y-6 mt-[-100px] relative z-20">
+        <CurvedCategorySlider />
         <MovieRow title="Trending Now" movies={trendingData.results} />
         <MovieRow title="New Releases" movies={newReleasesData.results} />
         <MovieRow title="Action & Thrillers" movies={actionData.results} />
