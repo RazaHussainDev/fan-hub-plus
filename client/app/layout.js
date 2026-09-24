@@ -27,9 +27,9 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${poppins.variable} h-full antialiased dark`}
+      className={`${inter.variable} ${poppins.variable} h-full antialiased`}
     >
-      <body className="bg-brand-bg text-white min-h-screen font-body flex flex-col">
+      <body className="bg-gray-50 text-gray-900 dark:bg-brand-bg dark:text-gray-50 min-h-screen font-body flex flex-col transition-colors duration-300">
         <SearchProvider>
           {children}
           <FloatingNav />

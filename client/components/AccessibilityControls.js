@@ -9,32 +9,36 @@ export default function AccessibilityControls() {
 
   useEffect(() => {
     // Initialization
-    const savedTheme = localStorage.getItem('fanhub_theme') || 'dark';
+    const savedTheme = localStorage.getItem('theme') || 'dark';
     const savedFontSize = parseInt(localStorage.getItem('fanhub_font_size') || '16', 10);
     
     setTheme(savedTheme);
     setFontSize(savedFontSize);
-    applyTheme(savedTheme);
-    applyFontSize(savedFontSize);
-  }, []);
-
-  const applyTheme = (newTheme) => {
-    if (newTheme === 'dark') {
+    
+    if (savedTheme === 'dark') {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
-  };
+    
+    applyFontSize(savedFontSize);
+  }, []);
 
   const applyFontSize = (size) => {
     document.documentElement.style.fontSize = `${size}px`;
   };
 
   const toggleTheme = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-    applyTheme(newTheme);
-    localStorage.setItem('fanhub_theme', newTheme);
+    const html = document.documentElement;
+    if (html.classList.contains('dark')) {
+      html.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+      setTheme('light');
+    } else {
+      html.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+      setTheme('dark');
+    }
   };
 
   const changeFontSize = (delta) => {

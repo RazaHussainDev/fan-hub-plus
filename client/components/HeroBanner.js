@@ -13,16 +13,16 @@ const HeroBanner = () => {
       />
       
       {/* Gradient Overlay for smooth transition and text readability */}
-      <div className="absolute inset-0 bg-gradient-to-r from-brand-bg via-brand-bg/80 to-transparent z-0" />
-      <div className="absolute inset-0 bg-gradient-to-t from-brand-bg via-brand-bg/40 to-transparent z-0" />
+      <div className="absolute inset-0 bg-gradient-to-r from-gray-50 dark:from-brand-bg via-gray-50/80 dark:via-brand-bg/80 to-transparent z-0 transition-colors duration-300" />
+      <div className="absolute inset-0 bg-gradient-to-t from-gray-50 dark:from-brand-bg via-gray-50/40 dark:via-brand-bg/40 to-transparent z-0 transition-colors duration-300" />
 
       {/* Content Container */}
       <div className="relative z-10 max-w-2xl w-full space-y-6">
-        <h1 className="text-5xl md:text-7xl font-heading font-extrabold text-white tracking-tight drop-shadow-xl">
+        <h1 className="text-5xl md:text-7xl font-heading font-extrabold text-gray-900 dark:text-white tracking-tight drop-shadow-xl transition-colors">
           Money Heist
         </h1>
         
-        <p className="text-gray-300 text-lg md:text-xl font-medium max-w-xl leading-relaxed drop-shadow-md">
+        <p className="text-gray-700 dark:text-gray-300 text-lg md:text-xl font-medium max-w-xl leading-relaxed drop-shadow-md transition-colors">
           To carry out the biggest heist in history, a mysterious man called The Professor recruits a band of eight robbers who have a single characteristic: none of them has anything to lose.
         </p>
 
@@ -37,7 +37,7 @@ const HeroBanner = () => {
             Watch Now
           </Link>
           
-          <button className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white px-8 py-3.5 rounded-full font-bold text-lg hover:bg-white/20 transition-all shadow-xl">
+          <button className="flex items-center gap-2 bg-gray-900/10 dark:bg-white/10 backdrop-blur-md border border-gray-900/20 dark:border-white/20 text-gray-900 dark:text-white px-8 py-3.5 rounded-full font-bold text-lg hover:bg-gray-900/20 dark:hover:bg-white/20 transition-all shadow-xl">
             <Info size={22} />
             More Info
           </button>

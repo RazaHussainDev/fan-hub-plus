@@ -32,7 +32,7 @@ export default async function Home() {
   }
 
   return (
-    <main className="w-full flex flex-col bg-brand-bg relative z-0">
+    <main className="w-full flex flex-col bg-gray-50 dark:bg-brand-bg relative z-0 transition-colors duration-300">
       <HeroBanner />
       
       <div className="flex flex-col space-y-6 mt-[-100px] relative z-20">
