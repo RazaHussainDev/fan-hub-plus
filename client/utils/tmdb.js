@@ -59,3 +59,18 @@ export const fetchSearch = async (query) => {
   const res = await fetch(`${BASE_URL}/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}&include_adult=false`);
   return res.json();
 };
+
+export const fetchCredits = async (id, type = 'tv') => {
+  const res = await fetch(`${BASE_URL}/${type}/${id}/credits?api_key=${API_KEY}`);
+  return res.json();
+};
+
+export const fetchVideos = async (id, type = 'tv') => {
+  const res = await fetch(`${BASE_URL}/${type}/${id}/videos?api_key=${API_KEY}`);
+  return res.json();
+};
+
+export const fetchSimilar = async (id, type = 'tv') => {
+  const res = await fetch(`${BASE_URL}/${type}/${id}/similar?api_key=${API_KEY}`);
+  return res.json();
+};

@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { fetchDetails, BASE_IMG_URL } from '@/utils/tmdb';
+import { fetchDetails, BASE_IMG_URL, fetchCredits, fetchVideos, fetchSimilar } from '@/utils/tmdb';
 import { useParams, useSearchParams } from 'next/navigation';
+import MovieRow from '@/components/MovieRow';
+import { Play, X } from 'lucide-react';
 
 export default function StreamPage() {
   const params = useParams();
@@ -18,18 +20,41 @@ export default function StreamPage() {
   const [error, setError] = useState(null);
   
   const [metadata, setMetadata] = useState(null);
+  const [cast, setCast] = useState([]);
+  const [trailer, setTrailer] = useState(null);
+  const [similar, setSimilar] = useState([]);
+  const [isTrailerOpen, setIsTrailerOpen] = useState(false);
 
   useEffect(() => {
     const fetchMeta = async () => {
       if (!tmdbId) return;
       try {
-        let data = await fetchDetails(tmdbId, contentType).catch(() => null);
+        const [data, creditsData, videosData, similarData] = await Promise.all([
+          fetchDetails(tmdbId, contentType).catch(() => null),
+          fetchCredits(tmdbId, contentType).catch(() => null),
+          fetchVideos(tmdbId, contentType).catch(() => null),
+          fetchSimilar(tmdbId, contentType).catch(() => null)
+        ]);
+        
         if (data) {
           setMetadata(data);
           const validSeasons = data?.seasons?.filter(s => s.season_number > 0) || [];
           if (validSeasons.length > 0 && season === 1) {
             setSeason(Number(validSeasons[0].season_number));
           }
+        }
+        
+        if (videosData?.results) {
+          const officialTrailer = videosData.results.find(v => v.site === 'YouTube' && v.type === 'Trailer');
+          setTrailer(officialTrailer);
+        }
+        
+        if (creditsData?.cast) {
+          setCast(creditsData.cast.slice(0, 10));
+        }
+        
+        if (similarData?.results) {
+          setSimilar(similarData.results);
         }
       } catch (err) {
         console.error("Failed to fetch metadata", err);
@@ -97,7 +122,16 @@ export default function StreamPage() {
           <h1 className="text-4xl md:text-5xl font-heading font-bold text-white tracking-tight mb-2 drop-shadow-lg">
             {title} {releaseYear && `(${releaseYear})`} {contentType === 'tv' ? `- S${season < 10 ? '0'+season : season} E${episode < 10 ? '0'+episode : episode}` : ''}
           </h1>
-          <p className="text-brand-primary font-medium">Hydra Cascade Engine Active</p>
+          <p className="text-brand-primary font-medium mb-4">Hydra Cascade Engine Active</p>
+          
+          {trailer && (
+            <button
+              onClick={() => setIsTrailerOpen(true)}
+              className="inline-flex items-center gap-2 px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-full font-bold transition-all shadow-lg hover:shadow-red-900/50"
+            >
+              <Play size={18} fill="currentColor" /> Watch Trailer
+            </button>
+          )}
         </header>
 
         {/* Video Player Container */}
@@ -194,7 +228,58 @@ export default function StreamPage() {
             </div>
           </div>
         )}
+
+        {/* Cast & Crew Section */}
+        {cast.length > 0 && (
+          <div className="mt-12 w-full">
+            <h2 className="text-xl md:text-2xl font-heading font-bold text-gray-100 mb-4 px-2">Cast & Crew</h2>
+            <div className="flex overflow-x-auto gap-4 scrollbar-hide px-2 pb-4">
+              {cast.map((actor) => {
+                if (!actor.profile_path) return null;
+                return (
+                  <div key={actor.id} className="flex flex-col items-center shrink-0 w-28 text-center">
+                    <img 
+                      src={`${BASE_IMG_URL}${actor.profile_path}`} 
+                      alt={actor.name}
+                      className="w-24 h-24 rounded-full object-cover shadow-lg border border-gray-700 mb-2"
+                    />
+                    <p className="text-sm font-bold text-gray-200 line-clamp-1">{actor.name}</p>
+                    <p className="text-xs text-brand-primary line-clamp-1">{actor.character}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
+
+      {/* You May Also Like Row */}
+      {similar.length > 0 && (
+        <div className="w-full max-w-[1400px] mt-8 mb-40">
+          <MovieRow movies={similar} title="You May Also Like" fallbackType={contentType} />
+        </div>
+      )}
+
+      {/* Trailer Modal */}
+      {isTrailerOpen && trailer && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4 md:p-12">
+          <button 
+            onClick={() => setIsTrailerOpen(false)}
+            className="absolute top-6 right-6 text-gray-400 hover:text-white transition-colors"
+          >
+            <X size={32} />
+          </button>
+          <div className="w-full max-w-5xl aspect-video bg-black rounded-xl overflow-hidden shadow-2xl border border-gray-800 relative">
+            <iframe
+              src={`https://www.youtube.com/embed/${trailer.key}?autoplay=1`}
+              title="Official Trailer"
+              className="w-full h-full border-0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
