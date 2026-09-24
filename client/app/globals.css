@@ -1,6 +1,21 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* Dark mode via .dark class on <html> */
+@variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: #030712;
+  --color-foreground: #f9fafb;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+
+  /* Fan Hub Plus Brand Palette - Midnight Cyberpunk */
+  --color-brand-bg: #0B0F19;
+  --color-brand-panel: #111827;
+  --color-brand-primary: #D946EF;
+  --color-brand-accent: #06B6D4;
+}
 
 /* Utility to hide scrollbar for MovieRow */
 .scrollbar-hide::-webkit-scrollbar {
