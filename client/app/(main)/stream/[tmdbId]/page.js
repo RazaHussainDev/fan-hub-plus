@@ -80,10 +80,6 @@ export default function StreamPage() {
   const releaseYear = metadata?.release_date?.split('-')[0] || metadata?.first_air_date?.split('-')[0] || '';
 
   // Dynamic Seasons & Episodes
-  const validSeasons = metadata?.seasons?.filter(s => s.season_number > 0) || [];
-  const currentSeasonData = validSeasons.find(s => Number(s.season_number) === Number(season));
-  const episodeCount = currentSeasonData ? currentSeasonData.episode_count : 0;
-  const episodesArray = Array.from({ length: episodeCount }, (_, i) => i + 1);
 
   return (
     <main className="relative min-h-screen bg-brand-bg text-gray-50 p-6 md:p-12 font-body flex flex-col items-center overflow-hidden">
@@ -162,25 +158,19 @@ export default function StreamPage() {
 
         {/* Controls Section */}
         {contentType === 'tv' && (
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-lg space-y-6 mb-40">
-            {/* Season Selector */}
-            <div>
-              <h2 className="text-sm uppercase tracking-wider text-gray-400 font-semibold mb-3">
-                Select Season
-              </h2>
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-lg space-y-6">
+            {/* SEASON SELECTOR */}
+            <div className="mb-4">
+              <h3 className="text-sm font-bold text-gray-400 mb-2">SELECT SEASON</h3>
               <div className="flex flex-wrap gap-2">
-                {validSeasons.map((s) => (
+                {metadata?.seasons?.filter(s => s.season_number > 0).map((s) => (
                   <button
-                    key={`season-${s.season_number}`}
+                    key={s.season_number}
                     onClick={() => {
-                      setSeason(Number(s.season_number));
-                      setEpisode(1); // Reset to ep 1 on season change
+                      setSeason(s.season_number);
+                      setEpisode(1);
                     }}
-                    className={`px-6 py-2 rounded-lg font-medium transition-all duration-200 ${
-                      Number(season) === Number(s.season_number)
-                        ? 'bg-indigo-600 text-white shadow-md shadow-indigo-900/50 scale-105'
-                        : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
-                    }`}
+                    className={`px-4 py-2 rounded-md ${season === s.season_number ? 'bg-brand-primary text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}`}
                   >
                     Season {s.season_number}
                   </button>
@@ -188,29 +178,21 @@ export default function StreamPage() {
               </div>
             </div>
 
-            {/* Episode Selector */}
-            {episodesArray.length > 0 && (
-              <div>
-                <h2 className="text-sm uppercase tracking-wider text-gray-400 font-semibold mb-3">
-                  Select Episode
-                </h2>
-                <div className="flex flex-wrap gap-2">
-                  {episodesArray.map((ep) => (
-                    <button
-                      key={`episode-${ep}`}
-                      onClick={() => setEpisode(ep)}
-                      className={`w-12 h-12 flex items-center justify-center rounded-lg font-medium transition-all duration-200 ${
-                        Number(episode) === ep
-                          ? 'bg-red-600 text-white shadow-md shadow-red-900/50 scale-105'
-                          : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
-                      }`}
-                    >
-                      {ep}
-                    </button>
-                  ))}
-                </div>
+            {/* EPISODE SELECTOR */}
+            <div className="mb-40">
+              <h3 className="text-sm font-bold text-gray-400 mb-2">SELECT EPISODE</h3>
+              <div className="flex flex-wrap gap-2">
+                {Array.from({ length: metadata?.seasons?.find(s => s.season_number === season)?.episode_count || 0 }, (_, i) => i + 1).map((ep) => (
+                  <button
+                    key={ep}
+                    onClick={() => setEpisode(ep)}
+                    className={`px-4 py-2 rounded-md ${episode === ep ? 'bg-red-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}`}
+                  >
+                    {ep}
+                  </button>
+                ))}
               </div>
-            )}
+            </div>
           </div>
         )}
       </div>
