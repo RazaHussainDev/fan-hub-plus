@@ -4,19 +4,20 @@ import { Play, Info } from 'lucide-react';
 
 const HeroBanner = () => {
   return (
-    <div className="relative w-full h-[80vh] min-h-[600px] flex items-end pb-24 md:pb-32 px-6 md:px-16">
+    <div className="relative w-full h-[80vh] min-h-[600px] flex items-end pb-24 md:pb-32 px-6 md:px-16 overflow-hidden">
       {/* Background Image with absolute positioning */}
-      <div 
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('https://image.tmdb.org/t/p/original/gYZsxcEUe9D7FjGnlq6s3w90x10.jpg')" }}
+      <img 
+        src="https://image.tmdb.org/t/p/original/x2LSRb2WKuRXrXcqcQ7ibpXN2dE.jpg" 
+        alt="Hero Backdrop" 
+        className="absolute inset-0 w-full h-full object-cover -z-10"
       />
       
-      {/* Gradient Overlay for smooth transition into the dark theme */}
-      <div className="absolute inset-0 z-10 bg-gradient-to-t from-brand-bg via-brand-bg/50 to-transparent" />
-      <div className="absolute inset-0 z-10 bg-gradient-to-r from-brand-bg via-brand-bg/60 to-transparent" />
+      {/* Gradient Overlay for smooth transition and text readability */}
+      <div className="absolute inset-0 bg-gradient-to-r from-brand-bg via-brand-bg/80 to-transparent z-0" />
+      <div className="absolute inset-0 bg-gradient-to-t from-brand-bg via-brand-bg/40 to-transparent z-0" />
 
       {/* Content Container */}
-      <div className="relative z-20 max-w-2xl w-full space-y-6">
+      <div className="relative z-10 max-w-2xl w-full space-y-6">
         <h1 className="text-5xl md:text-7xl font-heading font-extrabold text-white tracking-tight drop-shadow-xl">
           Money Heist
         </h1>
