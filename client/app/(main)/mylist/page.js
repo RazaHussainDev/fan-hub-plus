@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useWatchlist } from '@/hooks/useWatchlist';
 import { BASE_IMG_URL } from '@/utils/tmdb';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 export default function MyListPage() {
   const { watchlist } = useWatchlist();
@@ -11,6 +12,8 @@ export default function MyListPage() {
   return (
     <main className="min-h-screen bg-brand-bg text-gray-50 p-6 md:p-12 pb-32 font-body flex flex-col items-center">
       <div className="w-full max-w-5xl">
+        <Breadcrumbs />
+        
         <header className="mb-12 w-full text-center">
           <h1 className="text-4xl md:text-5xl font-heading font-bold text-white mb-2 tracking-tight drop-shadow-md">
             My List

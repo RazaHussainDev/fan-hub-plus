@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Home, Search, List, User } from 'lucide-react';
 import { useSearch } from '@/context/SearchContext';
+import AccessibilityControls from './AccessibilityControls';
 
 const FloatingNav = () => {
   const { openSearch } = useSearch();
@@ -47,6 +48,10 @@ const FloatingNav = () => {
           );
         })}
       </nav>
+      
+      <div className="mt-4 flex justify-center">
+        <AccessibilityControls />
+      </div>
     </div>
   );
 };

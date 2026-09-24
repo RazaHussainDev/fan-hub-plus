@@ -1,5 +1,6 @@
 import HeroBanner from '@/components/HeroBanner';
 import MovieRow from '@/components/MovieRow';
+import Link from 'next/link';
 import { fetchTrending, fetchNewReleases, fetchActionMovies, fetchBollywood, fetchAnime, fetchKDramas } from '@/utils/tmdb';
 
 export default async function Home() {
@@ -42,6 +43,12 @@ export default async function Home() {
         <MovieRow title="Trending Anime" movies={animeData.results} fallbackType="tv" />
         <MovieRow title="Top K-Dramas" movies={kdramasData.results} fallbackType="tv" />
       </div>
+
+      <footer className="w-full text-center py-12 mt-12 border-t border-gray-800">
+        <Link href="/sitemap" className="text-gray-500 hover:text-brand-primary transition-colors text-sm font-medium">
+          Sitemap
+        </Link>
+      </footer>
 
       {/* Padding for Floating Nav Dock */}
       <div className="pb-32"></div>

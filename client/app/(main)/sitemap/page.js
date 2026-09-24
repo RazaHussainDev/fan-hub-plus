@@ -1,0 +1,48 @@
+import React from 'react';
+import Link from 'next/link';
+import Breadcrumbs from '@/components/Breadcrumbs';
+
+export default function SitemapPage() {
+  const sections = [
+    { name: 'Home', href: '/' },
+    { name: 'My List', href: '/mylist' },
+    { name: 'Search', href: '/search', isAction: true },
+    { name: 'Anime', href: '/#anime' },
+    { name: 'Gaming', href: '/#gaming' },
+    { name: 'Movies', href: '/#movies' },
+    { name: 'TV Shows', href: '/#tv-shows' },
+    { name: 'K-Pop', href: '/#k-pop' },
+    { name: 'Comics', href: '/#comics' },
+    { name: 'Manga', href: '/#manga' },
+    { name: 'Cosplay', href: '/#cosplay' },
+    { name: 'Profile', href: '/profile' }
+  ];
+
+  return (
+    <main className="min-h-screen bg-brand-bg text-gray-50 p-6 md:p-12 pb-32 font-body flex flex-col items-center">
+      <div className="w-full max-w-5xl">
+        <Breadcrumbs />
+        
+        <header className="mb-12 w-full border-b border-gray-800 pb-6">
+          <h1 className="text-4xl md:text-5xl font-heading font-bold text-white mb-2 tracking-tight drop-shadow-md">
+            Sitemap
+          </h1>
+          <p className="text-gray-400 font-medium">Explore all sections of Fan Hub Plus</p>
+        </header>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {sections.map((section, index) => (
+            <div key={index} className="bg-gray-900/50 border border-gray-800 rounded-lg p-6 hover:bg-gray-800 transition-colors">
+              <Link 
+                href={section.href}
+                className="text-lg font-bold text-gray-200 hover:text-brand-primary flex items-center gap-2"
+              >
+                {section.name}
+              </Link>
+            </div>
+          ))}
+        </div>
+      </div>
+    </main>
+  );
+}

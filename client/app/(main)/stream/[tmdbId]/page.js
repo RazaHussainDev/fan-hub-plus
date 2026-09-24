@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { fetchDetails, BASE_IMG_URL, fetchCredits, fetchVideos, fetchSimilar } from '@/utils/tmdb';
 import { useParams, useSearchParams } from 'next/navigation';
 import MovieRow from '@/components/MovieRow';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import { Play, X, Plus, Check } from 'lucide-react';
 import { useWatchlist } from '@/hooks/useWatchlist';
 
@@ -119,6 +120,8 @@ export default function StreamPage() {
       <div className="absolute inset-0 z-0 bg-gradient-to-t from-brand-bg via-brand-bg/80 to-transparent" />
 
       <div className="relative z-10 max-w-5xl w-full">
+        <Breadcrumbs />
+        
         {/* Header */}
         <header className="mb-8 text-center">
           <h1 className="text-4xl md:text-5xl font-heading font-bold text-white tracking-tight mb-2 drop-shadow-lg">
