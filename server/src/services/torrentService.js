@@ -212,9 +212,7 @@ class TorrentService {
          // Wait 5 seconds to let FFmpeg generate the .m3u8 manifest and first few chunks
          setTimeout(() => {
              if (!res.headersSent) {
-                 // Rather than sending a JSON payload, redirect directly to the generated M3U8 payload
-                 // so the frontend's hls.js can consume it directly!
-                 res.redirect('http://localhost:5000/hls/stream.m3u8');
+                 res.json({ success: true, data: { streamUrl: "http://localhost:5000/hls/stream.m3u8" } });
              }
          }, 5000);
       })
