@@ -11,7 +11,7 @@ const FloatingNav = () => {
   const navItems = [
     { label: 'Home', icon: <Home size={20} />, href: '/' },
     { label: 'Search', icon: <Search size={20} />, onClick: openSearch },
-    { label: 'My List', icon: <List size={20} />, href: '/my-list' },
+    { label: 'My List', icon: <List size={20} />, href: '/mylist' },
     { label: 'Profile', icon: <User size={20} />, href: '/profile' },
   ];
 

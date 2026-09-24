@@ -4,11 +4,13 @@ import { useState, useEffect, useMemo } from 'react';
 import { fetchDetails, BASE_IMG_URL, fetchCredits, fetchVideos, fetchSimilar } from '@/utils/tmdb';
 import { useParams, useSearchParams } from 'next/navigation';
 import MovieRow from '@/components/MovieRow';
-import { Play, X } from 'lucide-react';
+import { Play, X, Plus, Check } from 'lucide-react';
+import { useWatchlist } from '@/hooks/useWatchlist';
 
 export default function StreamPage() {
   const params = useParams();
   const searchParams = useSearchParams();
+  const { isInWatchlist, addToWatchlist, removeFromWatchlist } = useWatchlist();
   
   const tmdbId = params?.tmdbId;
   const contentType = searchParams?.get('type') || 'movie';
@@ -124,14 +126,33 @@ export default function StreamPage() {
           </h1>
           <p className="text-brand-primary font-medium mb-4">Hydra Cascade Engine Active</p>
           
-          {trailer && (
-            <button
-              onClick={() => setIsTrailerOpen(true)}
-              className="inline-flex items-center gap-2 px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-full font-bold transition-all shadow-lg hover:shadow-red-900/50"
-            >
-              <Play size={18} fill="currentColor" /> Watch Trailer
-            </button>
-          )}
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            {trailer && (
+              <button
+                onClick={() => setIsTrailerOpen(true)}
+                className="inline-flex items-center gap-2 px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-full font-bold transition-all shadow-lg hover:shadow-red-900/50"
+              >
+                <Play size={18} fill="currentColor" /> Watch Trailer
+              </button>
+            )}
+
+            {metadata && (
+              <button
+                onClick={() => isInWatchlist(metadata.id) ? removeFromWatchlist(metadata.id) : addToWatchlist({...metadata, media_type: contentType})}
+                className={`inline-flex items-center gap-2 px-6 py-2 rounded-full font-bold transition-all shadow-lg ${
+                  isInWatchlist(metadata?.id)
+                    ? 'bg-brand-primary/20 text-brand-primary border border-brand-primary hover:bg-brand-primary/30'
+                    : 'bg-gray-800 hover:bg-gray-700 text-white'
+                }`}
+              >
+                {isInWatchlist(metadata?.id) ? (
+                  <><Check size={18} /> Remove from List</>
+                ) : (
+                  <><Plus size={18} /> Add to List</>
+                )}
+              </button>
+            )}
+          </div>
         </header>
 
         {/* Video Player Container */}
