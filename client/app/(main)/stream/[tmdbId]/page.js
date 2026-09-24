@@ -109,15 +109,15 @@ export default function StreamPage() {
   }, [metadata, season]);
 
   return (
-    <main className="relative min-h-screen bg-[#f5f5f7] dark:bg-brand-bg text-[#1d1d1f] dark:text-gray-50 p-6 md:p-12 font-body flex flex-col items-center overflow-hidden transition-colors duration-500">
+    <main className="relative min-h-screen bg-[#FBFBFD] dark:bg-brand-bg text-[#1d1d1f] dark:text-gray-50 p-6 md:p-12 font-body flex flex-col items-center overflow-hidden transition-colors duration-500">
       {/* Cinematic Faded Background */}
       {backdrop && (
-        <div 
-          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-20 dark:opacity-20"
+        <div
+          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-10 dark:opacity-20"
           style={{ backgroundImage: `url('${backdrop}')` }}
         />
       )}
-      <div className="absolute inset-0 z-0 bg-gradient-to-t from-[#f5f5f7] dark:from-brand-bg via-[#f5f5f7]/80 dark:via-brand-bg/80 to-transparent transition-colors duration-500" />
+      <div className="absolute inset-0 z-0 bg-gradient-to-t from-[#FBFBFD] dark:from-brand-bg via-[#FBFBFD]/80 dark:via-brand-bg/80 to-transparent transition-colors duration-500" />
 
       <div className="relative z-10 max-w-5xl w-full">
         <Breadcrumbs />

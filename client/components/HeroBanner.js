@@ -13,8 +13,8 @@ const HeroBanner = () => {
       />
       
       {/* Gradient Overlay for smooth transition and text readability */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#f5f5f7] dark:from-brand-bg via-[#f5f5f7]/80 dark:via-brand-bg/80 to-transparent z-0 transition-colors duration-500" />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#f5f5f7] dark:from-brand-bg via-[#f5f5f7]/60 dark:via-brand-bg/40 to-transparent z-0 transition-colors duration-500" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#FBFBFD] dark:from-brand-bg via-[#FBFBFD]/75 dark:via-brand-bg/80 to-transparent z-0 transition-colors duration-500" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#FBFBFD] dark:from-brand-bg via-[#FBFBFD]/60 dark:via-brand-bg/40 to-transparent z-0 transition-colors duration-500" />
 
       {/* Content Container */}
       <div className="relative z-10 max-w-2xl w-full space-y-6">
