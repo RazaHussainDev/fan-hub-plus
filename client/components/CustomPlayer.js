@@ -21,6 +21,9 @@ export default function CustomPlayer({ videoSrc, isTorrent, onError }) {
       if (onError) onError(e);
     };
 
+    let watchdogTimer = null;
+    let clearWatchdog = null;
+
     const initHls = () => {
       const player = ref.current?.plyr;
       const video = player?.elements?.original;
@@ -29,6 +32,20 @@ export default function CustomPlayer({ videoSrc, isTorrent, onError }) {
 
       // Add error listener for 404/500 backend timeouts
       video.addEventListener('error', handleError);
+
+      // Smart Watchdog Timer
+      clearWatchdog = () => {
+        if (watchdogTimer) clearTimeout(watchdogTimer);
+      };
+      video.addEventListener('loadeddata', clearWatchdog);
+      video.addEventListener('playing', clearWatchdog);
+
+      watchdogTimer = setTimeout(() => {
+        if (video.readyState === 0) {
+          console.warn("Watchdog Timer: Video failed to load within 4000ms. Forcing cascade.");
+          if (onError) onError(new Error("Watchdog timeout: Video dead"));
+        }
+      }, 4000);
 
       if (!videoSrc.includes('.m3u8')) {
         // Fallback for non-HLS direct proxy streams (e.g., Webtor.io MKV/MP4)
@@ -72,8 +89,14 @@ export default function CustomPlayer({ videoSrc, isTorrent, onError }) {
 
     return () => {
       clearTimeout(timeout);
+      if (watchdogTimer) clearTimeout(watchdogTimer);
       if (videoElement) {
         videoElement.removeEventListener('error', handleError);
+        if (clearWatchdog) {
+          videoElement.removeEventListener('loadeddata', clearWatchdog);
+          videoElement.removeEventListener('playing', clearWatchdog);
+        }
+      }
       }
       if (hls) {
         hls.destroy();
