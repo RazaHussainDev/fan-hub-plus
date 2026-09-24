@@ -10,28 +10,28 @@ const SLIDES = [
     id: 71446,
     title: 'Money Heist',
     description: 'To carry out the biggest heist in history, a mysterious man called The Professor recruits a band of eight robbers who have a single characteristic: none of them has anything to lose.',
-    image: 'https://static.tvmaze.com/uploads/images/original_untouched/209/523445.jpg',
+    image: 'https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=100&w=3840',
     type: 'tv'
   },
   {
     id: 94997,
     title: 'House of the Dragon',
     description: 'An internal succession conflict within house Targaryen that causes the decline of their power, 172 years before the birth of Daenerys Targaryen.',
-    image: 'https://image.tmdb.org/t/p/original/etj8E2o0NpZHp1ZQQW0jNl735fH.jpg',
+    image: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=100&w=3840',
     type: 'tv'
   },
   {
     id: 157336,
     title: 'Interstellar',
     description: 'A team of explorers travel through a wormhole in space in an attempt to ensure humanity\'s survival as Earth\'s resources run out.',
-    image: 'https://image.tmdb.org/t/p/original/xJHokMbljvjEVAZSZA15fs44KjZ.jpg',
+    image: 'https://images.unsplash.com/photo-1612036782180-6f0b6ce846ce?q=100&w=3840',
     type: 'movie'
   },
   {
     id: 119051,
     title: 'Wednesday',
     description: 'Wednesday Addams is sent to Nevermore Academy, a bizarre boarding school where she attempts to master her psychic powers and stop a monstrous killing spree.',
-    image: 'https://image.tmdb.org/t/p/original/tML3O6z9i5Bf0gL4kL1fJzC2sQZ.jpg',
+    image: 'https://images.unsplash.com/photo-1542458578-83bba01bcac6?q=100&w=3840',
     type: 'tv'
   }
 ];
@@ -59,13 +59,13 @@ const HeroBanner = () => {
           animate={{ opacity: 1, scale: 1.05 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1.5, ease: "easeInOut" }}
-          className="absolute inset-0 bg-cover bg-center -z-10"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat -z-10"
           style={{ backgroundImage: `url(${currentMovie.image})` }}
         />
       </AnimatePresence>
 
-      {/* Gradient Overlay for smooth transition and text readability */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#FBFBFD] dark:from-brand-bg via-[#FBFBFD]/75 dark:via-brand-bg/80 to-transparent z-0 transition-colors duration-500" />
+      {/* Cinematic Gradient Overlays */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#FBFBFD] dark:from-brand-bg via-[#FBFBFD]/80 dark:via-brand-bg/60 to-transparent z-0 transition-colors duration-500" />
       <div className="absolute inset-0 bg-gradient-to-t from-[#FBFBFD] dark:from-brand-bg via-[#FBFBFD]/60 dark:via-brand-bg/40 to-transparent z-0 transition-colors duration-500" />
 
       {/* Content Container */}
