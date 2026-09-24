@@ -1,22 +1,23 @@
 import React from 'react';
 import Link from 'next/link';
-
 import { BASE_IMG_URL } from '@/utils/tmdb';
 
 const MovieRow = ({ title, movies, fallbackType = 'movie' }) => {
   if (!movies || movies.length === 0) return null;
 
   return (
-    <div className="w-full flex flex-col space-y-3 py-4">
-      {/* Section header with Apple-style label hierarchy */}
-      <div className="flex items-baseline gap-3 px-6 md:px-16">
+    <div className="w-full flex flex-col space-y-2 py-4">
+      {/* Apple-style section heading */}
+      <div className="flex items-baseline justify-between px-6 md:px-16">
         <h2 className="text-xl md:text-2xl font-heading font-bold text-[#1d1d1f] dark:text-gray-100 transition-colors duration-300">
           {title}
         </h2>
-        <span className="text-sm font-medium text-[#86868b] dark:text-gray-500 transition-colors duration-300">See All</span>
+        <span className="text-sm font-semibold text-brand-primary cursor-pointer hover:opacity-70 transition-opacity">
+          See All
+        </span>
       </div>
 
-      <div className="flex overflow-x-auto scrollbar-hide space-x-4 py-3 px-6 md:px-16">
+      <div className="flex overflow-x-auto scrollbar-hide space-x-4 py-4 px-6 md:px-16">
         {movies.map((movie) => {
           if (!movie.poster_path) return null;
           return (
@@ -27,15 +28,26 @@ const MovieRow = ({ title, movies, fallbackType = 'movie' }) => {
               rel="noopener noreferrer"
               className="shrink-0 block group"
             >
-              <div
-                style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06)' }}
-                className="w-32 md:w-40 rounded-xl overflow-hidden border border-black/[0.06] dark:border-gray-700/40 group-hover:scale-105 transition-transform duration-300 dark:shadow-lg"
+              {/* Card with poster + gradient title overlay */}
+              <div className="relative w-32 md:w-40 rounded-2xl overflow-hidden transition-all duration-300 group-hover:scale-105 group-hover:-translate-y-1"
+                style={{
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.10), 0 8px 24px rgba(0,0,0,0.12)',
+                }}
               >
                 <img
                   src={`${BASE_IMG_URL}${movie.poster_path}`}
                   alt={movie.title || movie.name}
                   className="w-full aspect-[2/3] object-cover"
                 />
+                {/* Gradient title overlay — always visible at bottom */}
+                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-2">
+                  <p className="text-white text-xs font-semibold leading-tight line-clamp-2 drop-shadow-sm">
+                    {movie.title || movie.name}
+                  </p>
+                </div>
+                {/* Hover glow ring */}
+                <div className="absolute inset-0 rounded-2xl ring-0 group-hover:ring-2 group-hover:ring-brand-primary/60 transition-all duration-300" />
               </div>
             </Link>
           );

@@ -10,56 +10,48 @@ const FloatingNav = () => {
   const { openSearch } = useSearch();
 
   const navItems = [
-    { label: 'Home', icon: <Home size={20} />, href: '/' },
-    { label: 'Search', icon: <Search size={20} />, onClick: openSearch },
-    { label: 'My List', icon: <List size={20} />, href: '/mylist' },
-    { label: 'Profile', icon: <User size={20} />, href: '/profile' },
+    { label: 'Home', icon: <Home size={22} />, href: '/' },
+    { label: 'Search', icon: <Search size={22} />, onClick: openSearch },
+    { label: 'My List', icon: <List size={22} />, href: '/mylist' },
+    { label: 'Profile', icon: <User size={22} />, href: '/profile' },
   ];
 
   return (
     <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-3">
-      {/* Accessibility Controls above dock */}
+      {/* Accessibility pill above dock */}
       <AccessibilityControls />
 
-      {/* Main macOS-style Dock */}
-      <nav
-        style={{
-          background: 'rgba(255,255,255,0.72)',
-          boxShadow: '0 4px 30px rgba(0,0,0,0.08), 0 1px 0 rgba(255,255,255,0.9) inset, 0 -1px 0 rgba(0,0,0,0.06) inset',
-        }}
-        className="flex items-center gap-1 px-3 py-2 rounded-2xl backdrop-blur-[30px] border border-white/60 dark:border-gray-700/60 dark:!bg-gray-900/80 dark:!shadow-[0_4px_30px_rgba(0,0,0,0.5)] transition-all duration-300"
-      >
+      {/* Rounded Pill Dock */}
+      <nav className="flex items-center gap-1 px-3 py-2.5 rounded-full bg-white/70 dark:bg-gray-900/80 backdrop-blur-2xl border border-white/60 dark:border-gray-700/50 shadow-[0_8px_32px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.6)] transition-all duration-300">
         {navItems.map((item, index) => {
           const btnClass = [
-            "group flex flex-col items-center justify-center gap-1 rounded-xl px-4 py-2.5 min-w-[52px]",
-            "text-[#3c3c43]/80 dark:text-gray-400",
-            "hover:bg-black/[0.04] dark:hover:bg-white/10",
-            "hover:text-[#1d1d1f] dark:hover:text-white",
-            "active:scale-95 transition-all duration-200",
+            "group relative flex items-center justify-center",
+            "rounded-full p-3",
+            "text-[#3c3c43]/70 dark:text-gray-400",
+            "hover:bg-black/[0.06] dark:hover:bg-white/10",
+            "hover:text-brand-primary dark:hover:text-brand-primary",
+            "active:scale-90 transition-all duration-200",
           ].join(' ');
 
-          const content = (
-            <>
-              <span className="group-hover:text-brand-primary transition-colors duration-200">
-                {item.icon}
-              </span>
-              <span className="text-[10px] font-medium tracking-tight">
-                {item.label}
-              </span>
-            </>
+          const TooltipLabel = (
+            <span className="absolute -top-9 left-1/2 -translate-x-1/2 px-2 py-1 rounded-md bg-gray-900/90 dark:bg-white/90 text-white dark:text-gray-900 text-xs font-semibold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+              {item.label}
+            </span>
           );
 
           if (item.onClick) {
             return (
               <button key={index} onClick={item.onClick} className={btnClass}>
-                {content}
+                {TooltipLabel}
+                {item.icon}
               </button>
             );
           }
 
           return (
             <Link key={index} href={item.href} className={btnClass}>
-              {content}
+              {TooltipLabel}
+              {item.icon}
             </Link>
           );
         })}
