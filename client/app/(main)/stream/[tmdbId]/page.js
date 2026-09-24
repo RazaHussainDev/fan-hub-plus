@@ -1,15 +1,18 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { fetchDetails, BASE_IMG_URL } from '@/utils/tmdb';
 
 
+import { useParams, useSearchParams } from 'next/navigation';
 
-export default function StreamPage({ params, searchParams }) {
-  const { tmdbId } = use(params);
-  const { type } = use(searchParams);
-  const contentType = type || 'movie';
+export default function StreamPage() {
+  const params = useParams();
+  const searchParams = useSearchParams();
+  
+  const tmdbId = params?.tmdbId;
+  const contentType = searchParams?.get('type') || 'movie';
   const [season, setSeason] = useState(1);
   const [episode, setEpisode] = useState(1);
   const [sources, setSources] = useState(null);
@@ -23,6 +26,7 @@ export default function StreamPage({ params, searchParams }) {
 
   useEffect(() => {
     const fetchMeta = async () => {
+      if (!tmdbId) return;
       try {
         let data = await fetchDetails(tmdbId, contentType).catch(() => null);
         if (data) {
