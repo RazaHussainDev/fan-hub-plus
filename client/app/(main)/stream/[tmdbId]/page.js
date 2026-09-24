@@ -1,10 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
+import { useState, useEffect, useMemo } from 'react';
 import { fetchDetails, BASE_IMG_URL } from '@/utils/tmdb';
-
-
 import { useParams, useSearchParams } from 'next/navigation';
 
 export default function StreamPage() {
@@ -22,8 +19,6 @@ export default function StreamPage() {
   
   const [metadata, setMetadata] = useState(null);
 
-
-
   useEffect(() => {
     const fetchMeta = async () => {
       if (!tmdbId) return;
@@ -33,7 +28,7 @@ export default function StreamPage() {
           setMetadata(data);
           const validSeasons = data?.seasons?.filter(s => s.season_number > 0) || [];
           if (validSeasons.length > 0 && season === 1) {
-            setSeason(validSeasons[0].season_number);
+            setSeason(Number(validSeasons[0].season_number));
           }
         }
       } catch (err) {
@@ -79,7 +74,11 @@ export default function StreamPage() {
   const backdrop = metadata?.backdrop_path ? `https://image.tmdb.org/t/p/original${metadata.backdrop_path}` : null;
   const releaseYear = metadata?.release_date?.split('-')[0] || metadata?.first_air_date?.split('-')[0] || '';
 
-  // Dynamic Seasons & Episodes
+  const episodeCount = useMemo(() => {
+    if (!metadata?.seasons) return 0;
+    const currentSeason = metadata.seasons.find(s => Number(s.season_number) === Number(season));
+    return currentSeason?.episode_count || 0;
+  }, [metadata, season]);
 
   return (
     <main className="relative min-h-screen bg-brand-bg text-gray-50 p-6 md:p-12 font-body flex flex-col items-center overflow-hidden">
@@ -158,19 +157,19 @@ export default function StreamPage() {
 
         {/* Controls Section */}
         {contentType === 'tv' && (
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-lg space-y-6">
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-lg space-y-6 mb-40">
             {/* SEASON SELECTOR */}
-            <div className="mb-4">
+            <div>
               <h3 className="text-sm font-bold text-gray-400 mb-2">SELECT SEASON</h3>
               <div className="flex flex-wrap gap-2">
                 {metadata?.seasons?.filter(s => s.season_number > 0).map((s) => (
                   <button
-                    key={s.season_number}
+                    key={`season-${s.season_number}`}
                     onClick={() => {
-                      setSeason(s.season_number);
+                      setSeason(Number(s.season_number));
                       setEpisode(1);
                     }}
-                    className={`px-4 py-2 rounded-md ${season === s.season_number ? 'bg-brand-primary text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}`}
+                    className={`px-4 py-2 rounded-md transition-colors duration-200 ${Number(season) === Number(s.season_number) ? 'bg-brand-primary text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}`}
                   >
                     Season {s.season_number}
                   </button>
@@ -181,12 +180,12 @@ export default function StreamPage() {
             {/* EPISODE SELECTOR */}
             <div className="mb-40">
               <h3 className="text-sm font-bold text-gray-400 mb-2">SELECT EPISODE</h3>
-              <div className="flex flex-wrap gap-2">
-                {Array.from({ length: metadata?.seasons?.find(s => s.season_number === season)?.episode_count || 0 }, (_, i) => i + 1).map((ep) => (
+              <div key={`ep-container-${season}`} className="flex flex-wrap gap-2">
+                {Array.from({ length: episodeCount }, (_, i) => i + 1).map((ep) => (
                   <button
-                    key={ep}
+                    key={`ep-btn-${season}-${ep}`}
                     onClick={() => setEpisode(ep)}
-                    className={`px-4 py-2 rounded-md ${episode === ep ? 'bg-red-600 text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}`}
+                    className={`px-4 py-2 rounded-md transition-colors duration-200 ${Number(episode) === ep ? 'bg-red-600 text-white font-bold' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}`}
                   >
                     {ep}
                   </button>
