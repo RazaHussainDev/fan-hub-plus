@@ -15,66 +15,67 @@ const categories = [
 ];
 
 export default function CurvedCategorySlider() {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(3);
 
   return (
-    <section className="w-full py-16 overflow-x-clip overflow-y-visible relative z-30">
-      {/* 3D Perspective Wrapper */}
-      <div className="w-full [perspective:1400px] flex justify-center items-center overflow-visible">
-        
-        {/* Transform Container */}
-        <div className="flex justify-center items-center gap-2 sm:gap-4 w-full max-w-[1600px] px-2 sm:px-6 [transform-style:preserve-3d]">
-          {categories.map((category, index) => {
-            const isActive = index === activeIndex;
-            
-            // Calculate Concave Arc
-            const middle = (categories.length - 1) / 2;
-            const diff = index - middle;
-            
-            // Left side rotates right (+), Right side rotates left (-)
-            const rotateY = -diff * 8; 
-            // Pull the outer edges closer to the user to form a wraparound screen
-            const translateZ = Math.abs(diff) * 25;
-            // Optionally drop them slightly to make a "smile" curve
-            const translateY = Math.abs(diff) * 2;
+    <section className="w-full py-12 overflow-hidden relative z-30">
+      <div className="max-w-7xl mx-auto px-4 mb-2 text-center">
+        <h2 className="text-2xl font-bold font-heading text-[#1d1d1f] dark:text-white">Explore Fandoms</h2>
+        <p className="text-[#86868b] dark:text-gray-400 text-sm mt-1">Discover communities matching your interests</p>
+      </div>
 
-            return (
-              <div
-                key={category.id}
-                onClick={() => setActiveIndex(index)}
-                className={`relative shrink-0 w-[20vw] sm:w-[12vw] min-w-[110px] sm:min-w-[150px] max-w-[220px] aspect-[4/3] sm:aspect-[1.2] rounded-2xl cursor-pointer transition-all duration-500 ease-out overflow-hidden group
-                  ${isActive 
-                    ? 'ring-2 ring-[#a855f7] shadow-[0_0_30px_rgba(168,85,247,0.7)] z-50 scale-105' 
-                    : 'border border-white/10 shadow-2xl hover:border-white/30 z-10'
-                  }
-                `}
-                style={{
-                  transform: `rotateY(${rotateY}deg) translateZ(${translateZ}px) translateY(${translateY}px)`,
-                }}
-              >
-                {/* Background Image */}
-                <div 
-                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                  style={{ backgroundImage: `url(${category.image})` }}
-                />
-                
-                {/* Gradients to match the reference UI */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/50 to-transparent opacity-95" />
-                <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/60 to-transparent opacity-50" />
-                
-                {/* Icon & Title */}
-                <div className="absolute bottom-3 left-3 right-2 flex flex-col sm:flex-row items-start sm:items-center gap-2">
-                  <div className={`p-1.5 sm:p-2 rounded-full backdrop-blur-md ${isActive ? 'bg-white/20 text-white' : 'bg-black/40 text-gray-300'}`}>
-                    <category.icon className="w-3 h-3 sm:w-4 sm:h-4" />
-                  </div>
-                  <h3 className={`font-bold tracking-wide text-[10px] sm:text-xs md:text-sm leading-tight ${isActive ? 'text-white' : 'text-gray-300'} font-heading line-clamp-2`}>
-                    {category.name}
-                  </h3>
-                </div>
+      <div className="relative w-full h-[400px] flex justify-center items-center overflow-hidden [perspective:1200px]">
+        {categories.map((category, index) => {
+          const offset = index - activeIndex;
+
+          let transform = '';
+          let zIndex = 50 - Math.abs(offset);
+          let opacity = Math.abs(offset) > 3 ? 0 : 1; // Hide cards too far away
+
+          if (offset === 0) {
+            // Center active card
+            transform = 'translateX(0px) translateZ(50px) rotateY(0deg) scale(1.1)';
+          } else if (offset < 0) {
+            // Left cards
+            transform = `translateX(${offset * 140}px) translateZ(-100px) rotateY(35deg) scale(0.85)`;
+          } else {
+            // Right cards
+            transform = `translateX(${offset * 140}px) translateZ(-100px) rotateY(-35deg) scale(0.85)`;
+          }
+
+          const isActive = offset === 0;
+
+          return (
+            <div
+              key={category.id}
+              onClick={() => setActiveIndex(index)}
+              style={{ transform, zIndex, opacity }}
+              className={`absolute transition-all duration-500 ease-out [transform-style:preserve-3d] cursor-pointer overflow-hidden group select-none rounded-2xl w-48 h-64
+                ${isActive 
+                  ? 'border-2 border-brand-primary shadow-[0_0_30px_rgba(139,92,246,0.6)]' 
+                  : 'border border-black/10 dark:border-white/10 shadow-lg'
+                }
+              `}
+            >
+              {/* Background Image */}
+              <div 
+                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                style={{ backgroundImage: `url(${category.image})` }}
+              />
+              
+              {/* Overlay */}
+              <div className={`absolute inset-0 transition-opacity duration-500 ${isActive ? 'bg-gradient-to-t from-black/90 via-black/20 to-transparent' : 'bg-black/60'}`} />
+              
+              {/* Content */}
+              <div className="absolute bottom-0 left-0 w-full p-4 flex flex-col items-center justify-end text-center">
+                <category.icon className={`w-8 h-8 mb-2 ${isActive ? 'text-brand-primary drop-shadow-[0_0_10px_rgba(139,92,246,0.8)]' : 'text-gray-400'}`} />
+                <h3 className={`font-bold tracking-wide ${isActive ? 'text-white' : 'text-gray-300'} font-heading`}>
+                  {category.name}
+                </h3>
               </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );
