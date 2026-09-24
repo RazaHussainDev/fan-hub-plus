@@ -7,7 +7,7 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   useEffect(() => {
     try {
@@ -20,7 +20,7 @@ export function AuthProvider({ children }) {
     } catch (e) {
       console.error('Auth hydration error:', e);
     } finally {
-      setLoading(false);
+      setIsAuthLoading(false);
     }
   }, []);
 
@@ -33,10 +33,10 @@ export function AuthProvider({ children }) {
     const data = await res.json();
     if (!data.success) throw new Error(data.message);
 
-    localStorage.setItem('fanhub_token', data.data.token);
-    localStorage.setItem('fanhub_user', JSON.stringify(data.data.user));
-    setToken(data.data.token);
-    setUser(data.data.user);
+    localStorage.setItem('fanhub_token', data.token);
+    localStorage.setItem('fanhub_user', JSON.stringify(data.user));
+    setToken(data.token);
+    setUser(data.user);
     return data;
   };
 
@@ -49,10 +49,10 @@ export function AuthProvider({ children }) {
     const data = await res.json();
     if (!data.success) throw new Error(data.message);
 
-    localStorage.setItem('fanhub_token', data.data.token);
-    localStorage.setItem('fanhub_user', JSON.stringify(data.data.user));
-    setToken(data.data.token);
-    setUser(data.data.user);
+    localStorage.setItem('fanhub_token', data.token);
+    localStorage.setItem('fanhub_user', JSON.stringify(data.user));
+    setToken(data.token);
+    setUser(data.user);
     return data;
   };
 
@@ -64,7 +64,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, token, isAuthLoading, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

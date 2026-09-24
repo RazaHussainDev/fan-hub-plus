@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { Eye, EyeOff, UserPlus } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 
 export default function RegisterPage() {
   const { register } = useAuth();
@@ -16,23 +17,32 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    if (formData.password.length < 6) {
-      return setError('Password must be at least 6 characters.');
+    if (!formData.name || !formData.email || !formData.password) {
+      return toast.error('All fields are required.');
     }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      return toast.error('Please enter a valid email address.');
+    }
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(formData.password)) {
+      return toast.error('Password must be at least 8 chars, 1 uppercase, 1 number, and 1 special char.');
+    }
+
     setLoading(true);
     try {
       await register(formData.name, formData.email, formData.password);
+      toast.success('Welcome to Fan Hub Plus!');
       router.push('/');
     } catch (err) {
-      setError(err.message);
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-[#FBFBFD] dark:bg-brand-bg p-4 transition-colors duration-500">
+    <main className="min-h-screen flex items-center justify-center bg-[#FBFBFD] dark:bg-brand-bg p-4 pb-40 transition-colors duration-500">
       {/* Background glow orbs */}
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-brand-primary/10 dark:bg-brand-primary/20 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-1/4 w-72 h-72 bg-brand-accent/10 dark:bg-brand-accent/20 rounded-full blur-3xl pointer-events-none" />
@@ -50,12 +60,6 @@ export default function RegisterPage() {
           style={{ boxShadow: '0 8px 40px rgba(0,0,0,0.10), 0 1px 0 rgba(255,255,255,0.8) inset' }}
         >
           <h2 className="text-2xl font-bold text-[#1d1d1f] dark:text-white mb-6">Create Account</h2>
-
-          {error && (
-            <div className="mb-4 p-3 rounded-xl bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-sm">
-              {error}
-            </div>
-          )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -105,7 +109,7 @@ export default function RegisterPage() {
               disabled={loading}
               className="w-full py-3.5 rounded-xl bg-brand-primary hover:bg-brand-primary/90 text-white font-bold text-base transition-all active:scale-[0.98] shadow-lg shadow-brand-primary/30 flex items-center justify-center gap-2 mt-2 disabled:opacity-60"
             >
-              {loading ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <><UserPlus size={18} /> Create Account</>}
+              {loading ? <><div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> Please wait...</> : <><UserPlus size={18} /> Create Account</>}
             </button>
           </form>
 
