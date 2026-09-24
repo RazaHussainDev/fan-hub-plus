@@ -6,8 +6,10 @@ import { fetchDetails, BASE_IMG_URL } from '@/utils/tmdb';
 
 
 
-export default function StreamPage({ params }) {
+export default function StreamPage({ params, searchParams }) {
   const { tmdbId } = use(params);
+  const { type } = use(searchParams);
+  const contentType = type || 'movie';
   const [season, setSeason] = useState(1);
   const [episode, setEpisode] = useState(1);
   const [sources, setSources] = useState(null);
@@ -22,10 +24,7 @@ export default function StreamPage({ params }) {
   useEffect(() => {
     const fetchMeta = async () => {
       try {
-        let data = await fetchDetails(tmdbId, 'tv').catch(() => null);
-        if (!data || data.success === false) {
-          data = await fetchDetails(tmdbId, 'movie').catch(() => null);
-        }
+        let data = await fetchDetails(tmdbId, contentType).catch(() => null);
         if (data) {
           setMetadata(data);
           const validSeasons = data?.seasons?.filter(s => s.season_number > 0) || [];
@@ -38,7 +37,7 @@ export default function StreamPage({ params }) {
       }
     };
     fetchMeta();
-  }, [tmdbId]);
+  }, [tmdbId, contentType]);
 
   useEffect(() => {
     const fetchStream = async () => {
@@ -50,7 +49,6 @@ export default function StreamPage({ params }) {
       setActiveLayer('primary');
       
       try {
-        const contentType = metadata.media_type;
         const urlParams = contentType === 'tv' ? `&season=${season}&episode=${episode}` : '';
         const response = await fetch(`http://localhost:5000/api/content/stream/${tmdbId}?type=${contentType}${urlParams}`);
         const data = await response.json();
@@ -76,7 +74,6 @@ export default function StreamPage({ params }) {
   const title = metadata?.name || metadata?.title || 'Loading...';
   const backdrop = metadata?.backdrop_path ? `https://image.tmdb.org/t/p/original${metadata.backdrop_path}` : null;
   const releaseYear = metadata?.release_date?.split('-')[0] || metadata?.first_air_date?.split('-')[0] || '';
-  const contentType = metadata?.media_type;
 
   // Dynamic Seasons & Episodes
   const validSeasons = metadata?.seasons?.filter(s => s.season_number > 0) || [];
@@ -85,7 +82,7 @@ export default function StreamPage({ params }) {
   const episodesArray = Array.from({ length: episodeCount }, (_, i) => i + 1);
 
   return (
-    <main className="relative min-h-screen bg-brand-bg text-gray-50 p-6 md:p-12 pb-40 font-body flex flex-col items-center overflow-hidden">
+    <main className="relative min-h-screen bg-brand-bg text-gray-50 p-6 md:p-12 font-body flex flex-col items-center overflow-hidden">
       {/* Cinematic Faded Background */}
       {backdrop && (
         <div 
@@ -160,8 +157,8 @@ export default function StreamPage({ params }) {
         </div>
 
         {/* Controls Section */}
-        {metadata?.media_type !== 'movie' && (
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-lg space-y-6">
+        {contentType === 'tv' && (
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-lg space-y-6 mb-40">
             {/* Season Selector */}
             <div>
               <h2 className="text-sm uppercase tracking-wider text-gray-400 font-semibold mb-3">
