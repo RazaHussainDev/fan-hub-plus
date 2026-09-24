@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Play, Info } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import ContinueWatchingHero from '@/components/ContinueWatchingHero';
 
 const SLIDES = [
   {
@@ -40,7 +41,7 @@ const SLIDES = [
   }
 ];
 
-const HeroBanner = () => {
+const HeroBanner = ({ trendingData = [] }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
@@ -141,6 +142,9 @@ const HeroBanner = () => {
           </motion.div>
         </AnimatePresence>
       </div>
+
+      {/* 3D Tilted Continue Watching Carousel Overlay */}
+      <ContinueWatchingHero data={trendingData.slice(4, 10)} />
 
       {/* Progress Indicators */}
       <div className="absolute bottom-10 left-6 md:left-16 flex items-center gap-3 z-20">
