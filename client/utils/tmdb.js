@@ -53,3 +53,9 @@ export const fetchKDramas = async () => {
   const res = await fetch(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ko&sort_by=popularity.desc`);
   return res.json();
 };
+
+export const fetchSearch = async (query) => {
+  if (!query) return { results: [] };
+  const res = await fetch(`${BASE_URL}/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}&include_adult=false`);
+  return res.json();
+};
