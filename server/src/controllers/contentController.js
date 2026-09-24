@@ -21,7 +21,7 @@ exports.getStream = async (req, res) => {
 
     const streamData = await StreamAggregator.fetchStreamLinks(tmdbId, season, episode);
 
-    if (!streamData || !streamData.streamUrl) {
+    if (!streamData || (!streamData.streamUrl && !streamData.primary)) {
       return res.status(404).json({ 
         success: false, 
         data: null, 
