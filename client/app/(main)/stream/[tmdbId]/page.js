@@ -28,6 +28,10 @@ export default function StreamPage({ params }) {
         }
         if (data) {
           setMetadata(data);
+          const validSeasons = data?.seasons?.filter(s => s.season_number > 0) || [];
+          if (validSeasons.length > 0 && season === 1) {
+            setSeason(validSeasons[0].season_number);
+          }
         }
       } catch (err) {
         console.error("Failed to fetch metadata", err);
@@ -47,7 +51,8 @@ export default function StreamPage({ params }) {
       
       try {
         const contentType = metadata.media_type;
-        const response = await fetch(`http://localhost:5000/api/content/stream/${tmdbId}?type=${contentType}&season=${season}&episode=${episode}`);
+        const urlParams = contentType === 'tv' ? `&season=${season}&episode=${episode}` : '';
+        const response = await fetch(`http://localhost:5000/api/content/stream/${tmdbId}?type=${contentType}${urlParams}`);
         const data = await response.json();
         
         if (data.success && data.data && data.data.primary) {
@@ -70,6 +75,8 @@ export default function StreamPage({ params }) {
 
   const title = metadata?.name || metadata?.title || 'Loading...';
   const backdrop = metadata?.backdrop_path ? `https://image.tmdb.org/t/p/original${metadata.backdrop_path}` : null;
+  const releaseYear = metadata?.release_date?.split('-')[0] || metadata?.first_air_date?.split('-')[0] || '';
+  const contentType = metadata?.media_type;
 
   // Dynamic Seasons & Episodes
   const validSeasons = metadata?.seasons?.filter(s => s.season_number > 0) || [];
@@ -78,7 +85,7 @@ export default function StreamPage({ params }) {
   const episodesArray = Array.from({ length: episodeCount }, (_, i) => i + 1);
 
   return (
-    <main className="relative min-h-screen bg-brand-bg text-gray-50 p-6 md:p-12 font-body flex flex-col items-center overflow-hidden">
+    <main className="relative min-h-screen bg-brand-bg text-gray-50 p-6 md:p-12 pb-40 font-body flex flex-col items-center overflow-hidden">
       {/* Cinematic Faded Background */}
       {backdrop && (
         <div 
@@ -92,7 +99,7 @@ export default function StreamPage({ params }) {
         {/* Header */}
         <header className="mb-8 text-center">
           <h1 className="text-4xl md:text-5xl font-heading font-bold text-white tracking-tight mb-2 drop-shadow-lg">
-            {title}
+            {title} {releaseYear && `(${releaseYear})`} {contentType === 'tv' ? `- S${season < 10 ? '0'+season : season} E${episode < 10 ? '0'+episode : episode}` : ''}
           </h1>
           <p className="text-brand-primary font-medium">Hydra Cascade Engine Active</p>
         </header>
@@ -112,7 +119,7 @@ export default function StreamPage({ params }) {
             <div className="w-full bg-black rounded-xl overflow-hidden shadow-2xl border border-gray-800 relative aspect-video">
               <iframe
                 src={sources[activeLayer]}
-                title={`${title} - Video Player`}
+                title={`${title} - ${contentType === 'tv' ? 'S'+season+'E'+episode : 'Movie'}`}
                 className="absolute top-0 left-0 w-full h-full border-0"
                 allowFullScreen
                 referrerPolicy="origin"
