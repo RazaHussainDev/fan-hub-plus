@@ -1,24 +1,27 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import dynamic from 'next/dynamic';
+import { fetchDetails, BASE_IMG_URL } from '@/utils/tmdb';
 
 const CustomPlayer = dynamic(() => import('@/components/CustomPlayer'), { 
   ssr: false,
   loading: () => <div className="w-full aspect-video bg-gray-900 rounded-xl flex items-center justify-center border border-gray-800"><span className="text-gray-400">Loading Player Component...</span></div>
 });
 
-export default function MoneyHeistPlayer() {
+export default function StreamPage({ params }) {
+  const { tmdbId } = use(params);
   const [season, setSeason] = useState(1);
   const [episode, setEpisode] = useState(1);
   const [sources, setSources] = useState(null);
   const [activeLayer, setActiveLayer] = useState('primary');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  const [metadata, setMetadata] = useState(null);
 
   const seasons = [1, 2, 3, 4, 5];
   const episodes = Array.from({ length: 10 }, (_, i) => i + 1);
-  const tmdbId = 71446;
 
   const handleFallback = () => {
     console.warn(`Layer ${activeLayer} failed. Cascading down...`);
@@ -27,6 +30,22 @@ export default function MoneyHeistPlayer() {
     else if (activeLayer === 'backup2') setActiveLayer('backup3');
     else setError("All streaming layers failed to load.");
   };
+
+  useEffect(() => {
+    const fetchMeta = async () => {
+      try {
+        // Try fetching as TV show first, if fails, fetch as movie
+        let data = await fetchDetails(tmdbId, 'tv').catch(() => null);
+        if (!data || data.success === false) {
+          data = await fetchDetails(tmdbId, 'movie').catch(() => null);
+        }
+        if (data) setMetadata(data);
+      } catch (err) {
+        console.error("Failed to fetch metadata", err);
+      }
+    };
+    fetchMeta();
+  }, [tmdbId]);
 
   useEffect(() => {
     const fetchStream = async () => {
@@ -55,17 +74,29 @@ export default function MoneyHeistPlayer() {
     };
 
     fetchStream();
-  }, [season, episode]);
+  }, [tmdbId, season, episode]);
+
+  const title = metadata?.name || metadata?.title || 'Loading...';
+  const backdrop = metadata?.backdrop_path ? `https://image.tmdb.org/t/p/original${metadata.backdrop_path}` : null;
 
   return (
-    <main className="min-h-screen bg-gray-950 text-gray-50 p-6 md:p-12 font-body flex flex-col items-center">
-      <div className="max-w-5xl w-full">
+    <main className="relative min-h-screen bg-brand-bg text-gray-50 p-6 md:p-12 font-body flex flex-col items-center overflow-hidden">
+      {/* Cinematic Faded Background */}
+      {backdrop && (
+        <div 
+          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-20"
+          style={{ backgroundImage: `url('${backdrop}')` }}
+        />
+      )}
+      <div className="absolute inset-0 z-0 bg-gradient-to-t from-brand-bg via-brand-bg/80 to-transparent" />
+
+      <div className="relative z-10 max-w-5xl w-full">
         {/* Header */}
         <header className="mb-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-heading font-bold text-white tracking-tight mb-2">
-            Money Heist <span className="text-gray-400 font-normal text-2xl md:text-3xl">(La Casa de Papel)</span>
+          <h1 className="text-4xl md:text-5xl font-heading font-bold text-white tracking-tight mb-2 drop-shadow-lg">
+            {title}
           </h1>
-          <p className="text-emerald-400 font-medium">HLS.js + Plyr Multi-Audio PoC (API Connected)</p>
+          <p className="text-brand-primary font-medium">Hydra Cascade Engine Active</p>
         </header>
 
         {/* Video Player Container */}

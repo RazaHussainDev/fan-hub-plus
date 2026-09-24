@@ -28,7 +28,7 @@ const HeroBanner = () => {
 
         <div className="flex flex-wrap items-center gap-4 pt-4">
           <Link
-            href="/money-heist"
+            href="/stream/71446"
             className="flex items-center gap-2 bg-brand-primary text-white px-8 py-3.5 rounded-full font-bold text-lg hover:bg-brand-primary/80 transition-all hover:scale-105 shadow-lg shadow-brand-primary/30"
           >
             <Play fill="currentColor" size={22} />

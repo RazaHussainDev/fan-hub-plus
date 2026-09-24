@@ -21,3 +21,9 @@ export const fetchActionMovies = async () => {
   if (!res.ok) throw new Error("Failed to fetch action movies");
   return res.json();
 };
+
+export const fetchDetails = async (id, type = 'tv') => {
+  const res = await fetch(`${BASE_URL}/${type}/${id}?api_key=${API_KEY}&language=en-US`);
+  if (!res.ok) throw new Error(`Failed to fetch details for ${type} ${id}`);
+  return res.json();
+};
