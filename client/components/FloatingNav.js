@@ -18,7 +18,7 @@ const FloatingNav = () => {
 
   return (
     <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
-      <nav className="flex items-center gap-2 px-4 py-3 bg-white/10 backdrop-blur-md border border-white/20 rounded-full shadow-2xl">
+      <nav className="flex items-center gap-2 px-4 py-3 bg-white/60 dark:bg-gray-900/80 backdrop-blur-xl border border-white/40 dark:border-gray-800 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-2xl rounded-full transition-all duration-300">
         {navItems.map((item, index) => {
           const content = (
             <>
@@ -31,7 +31,7 @@ const FloatingNav = () => {
             </>
           );
 
-          const className = "group flex items-center justify-center gap-0 overflow-hidden rounded-full p-3 text-gray-300 hover:text-white hover:bg-brand-primary/20 transition-all duration-300 ease-in-out";
+          const className = "group flex items-center justify-center gap-0 overflow-hidden rounded-full p-3 text-[#1d1d1f] dark:text-gray-300 hover:text-brand-primary hover:bg-gray-200/50 dark:hover:bg-gray-800 transition-all duration-300 ease-in-out";
 
           if (item.onClick) {
             return (

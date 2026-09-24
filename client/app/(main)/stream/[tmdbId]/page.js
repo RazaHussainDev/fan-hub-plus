@@ -109,7 +109,7 @@ export default function StreamPage() {
   }, [metadata, season]);
 
   return (
-    <main className="relative min-h-screen bg-gray-50 dark:bg-brand-bg text-gray-900 dark:text-gray-50 p-6 md:p-12 font-body flex flex-col items-center overflow-hidden transition-colors duration-300">
+    <main className="relative min-h-screen bg-[#f5f5f7] dark:bg-brand-bg text-[#1d1d1f] dark:text-gray-50 p-6 md:p-12 font-body flex flex-col items-center overflow-hidden transition-colors duration-500">
       {/* Cinematic Faded Background */}
       {backdrop && (
         <div 
@@ -117,14 +117,14 @@ export default function StreamPage() {
           style={{ backgroundImage: `url('${backdrop}')` }}
         />
       )}
-      <div className="absolute inset-0 z-0 bg-gradient-to-t from-gray-50 dark:from-brand-bg via-gray-50/80 dark:via-brand-bg/80 to-transparent transition-colors duration-300" />
+      <div className="absolute inset-0 z-0 bg-gradient-to-t from-[#f5f5f7] dark:from-brand-bg via-[#f5f5f7]/80 dark:via-brand-bg/80 to-transparent transition-colors duration-500" />
 
       <div className="relative z-10 max-w-5xl w-full">
         <Breadcrumbs />
         
         {/* Header */}
         <header className="mb-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-heading font-bold text-gray-900 dark:text-white tracking-tight mb-2 drop-shadow-lg transition-colors duration-300">
+          <h1 className="text-4xl md:text-5xl font-heading font-bold text-[#1d1d1f] dark:text-white tracking-tight mb-2 drop-shadow-lg transition-colors duration-300">
             {title} {releaseYear && `(${releaseYear})`} {contentType === 'tv' ? `- S${season < 10 ? '0'+season : season} E${episode < 10 ? '0'+episode : episode}` : ''}
           </h1>
           <p className="text-brand-primary font-medium mb-4">Hydra Cascade Engine Active</p>

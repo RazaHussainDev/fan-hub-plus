@@ -8,7 +8,7 @@ const MovieRow = ({ title, movies, fallbackType = 'movie' }) => {
 
   return (
     <div className="w-full flex flex-col space-y-2 py-4">
-      <h2 className="text-xl md:text-2xl font-heading font-bold text-gray-900 dark:text-gray-100 px-6 md:px-16 transition-colors">
+      <h2 className="text-xl md:text-2xl font-heading font-bold text-[#1d1d1f] dark:text-gray-100 px-6 md:px-16 transition-colors duration-300">
         {title}
       </h2>
       
