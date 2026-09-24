@@ -37,7 +37,7 @@ class TorrentService {
     try {
       const client = await TorrentService.getClient();
 
-      let torrent = client.get(magnetURI);
+      let torrent = await client.get(magnetURI);
       if (!torrent) {
         console.log(`[TorrentService] Connecting to swarm for: ${magnetURI.substring(0, 40)}...`);
         torrent = client.add(magnetURI);
