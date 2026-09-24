@@ -30,8 +30,8 @@ export default function CustomPlayer({ videoSrc, isTorrent, onError }) {
       // Add error listener for 404/500 backend timeouts
       video.addEventListener('error', handleError);
 
-      if (isTorrent) {
-        // Bypass HLS.js for direct WebTorrent HTTP pipes
+      if (!videoSrc.includes('.m3u8')) {
+        // Bypass HLS.js for direct proxy links and force native Plyr playback
         player.source = {
           type: 'video',
           sources: [

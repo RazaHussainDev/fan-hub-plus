@@ -34,16 +34,18 @@ class ExtractorService {
           console.log(`[ExtractorService] Extracted infoHash: ${targetStream.infoHash}`);
           
           // Construct a public HTTP torrent relay URL to bypass local WebTorrent downloading
-          const streamUrl = `https://webtor.io/api/watch/torrent/${targetStream.infoHash}/download`;
+          const streamUrl = `https://webtor.io/api/watch/torrent/${targetStream.infoHash}`;
           
           return {
             streamUrl,
+            isTorrent: true,
             subtitles: []
           };
         } else if (targetStream.url) {
           console.log(`[ExtractorService] Extracted direct HTTP URL from Torrentio.`);
           return {
             streamUrl: targetStream.url,
+            isTorrent: false,
             subtitles: []
           };
         }
