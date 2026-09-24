@@ -4,60 +4,45 @@ const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: [true, 'Name is required'],
       trim: true,
       minLength: 3,
       maxLength: 30,
-      match: /^[a-zA-Z0-9_ ]+$/,
     },
     email: {
       type: String,
-      required: true,
+      required: [true, 'Email is required'],
       unique: true,
       lowercase: true,
       trim: true,
     },
-    password_hash: {
+    password: {
       type: String,
-      required: true,
-      select: false, // Never returned in queries by default
+      required: [true, 'Password is required'],
+      select: false,
     },
     role: {
       type: String,
-      enum: ['Visitor', 'Registered', 'Admin'],
-      default: 'Registered',
+      enum: ['user', 'admin'],
+      default: 'user',
+    },
+    avatar: {
+      type: String,
+      default: null,
     },
     favorite_fandoms: {
       type: [String],
-      enum: ['Anime', 'Gaming', 'Movies', 'TV Shows', 'K-Pop', 'Comics', 'Manga', 'Cosplay'],
       default: [],
-    },
-    avatar_url: {
-      type: String,
-      default: null,
-    },
-    is_banned: {
-      type: Boolean,
-      default: false,
-    },
-    refresh_token: {
-      type: String,
-      default: null,
-      select: false,
     },
     last_login: {
       type: Date,
       default: null,
     },
   },
-  {
-    timestamps: true, // Automatically creates createdAt and updatedAt fields
-  }
+  { timestamps: true }
 );
 
-// Indexes
 userSchema.index({ email: 1 }, { unique: true });
 
 const User = mongoose.model('User', userSchema);
-
 module.exports = User;

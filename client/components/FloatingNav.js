@@ -2,18 +2,32 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Home, Search, List, User } from 'lucide-react';
+import { Home, Search, List, User, LogIn } from 'lucide-react';
 import { useSearch } from '@/context/SearchContext';
+import { useAuth } from '@/context/AuthContext';
 import AccessibilityControls from './AccessibilityControls';
 
 const FloatingNav = () => {
   const { openSearch } = useSearch();
+  const { user } = useAuth();
 
   const navItems = [
     { label: 'Home', icon: <Home size={22} />, href: '/' },
     { label: 'Search', icon: <Search size={22} />, onClick: openSearch },
     { label: 'My List', icon: <List size={22} />, href: '/mylist' },
-    { label: 'Profile', icon: <User size={22} />, href: '/profile' },
+    user
+      ? {
+          label: user.name.split(' ')[0],
+          icon: user.avatar
+            ? <img src={user.avatar} alt={user.name} className="w-6 h-6 rounded-full object-cover" />
+            : (
+              <span className="w-6 h-6 rounded-full bg-brand-primary text-white flex items-center justify-center text-xs font-bold">
+                {user.name.charAt(0).toUpperCase()}
+              </span>
+            ),
+          href: '/profile',
+        }
+      : { label: 'Sign In', icon: <LogIn size={22} />, href: '/login' },
   ];
 
   return (
@@ -33,8 +47,8 @@ const FloatingNav = () => {
             "active:scale-90 transition-all duration-200",
           ].join(' ');
 
-          const TooltipLabel = (
-            <span className="absolute -top-9 left-1/2 -translate-x-1/2 px-2 py-1 rounded-md bg-gray-900/90 dark:bg-white/90 text-white dark:text-gray-900 text-xs font-semibold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+          const Tooltip = (
+            <span className="absolute -top-9 left-1/2 -translate-x-1/2 px-2.5 py-1 rounded-lg bg-gray-900/90 dark:bg-white/90 text-white dark:text-gray-900 text-xs font-semibold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none shadow-lg">
               {item.label}
             </span>
           );
@@ -42,7 +56,7 @@ const FloatingNav = () => {
           if (item.onClick) {
             return (
               <button key={index} onClick={item.onClick} className={btnClass}>
-                {TooltipLabel}
+                {Tooltip}
                 {item.icon}
               </button>
             );
@@ -50,7 +64,7 @@ const FloatingNav = () => {
 
           return (
             <Link key={index} href={item.href} className={btnClass}>
-              {TooltipLabel}
+              {Tooltip}
               {item.icon}
             </Link>
           );
