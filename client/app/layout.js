@@ -20,6 +20,8 @@ export const metadata = {
 };
 
 import FloatingNav from '@/components/FloatingNav';
+import { SearchProvider } from '@/context/SearchContext';
+import SearchModal from '@/components/SearchModal';
 
 export default function RootLayout({ children }) {
   return (
@@ -28,8 +30,11 @@ export default function RootLayout({ children }) {
       className={`${inter.variable} ${poppins.variable} h-full antialiased dark`}
     >
       <body className="bg-brand-bg text-white min-h-screen font-body flex flex-col">
-        {children}
-        <FloatingNav />
+        <SearchProvider>
+          {children}
+          <FloatingNav />
+          <SearchModal />
+        </SearchProvider>
       </body>
     </html>
   );
