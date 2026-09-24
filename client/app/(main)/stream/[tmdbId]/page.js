@@ -17,9 +17,6 @@ export default function StreamPage({ params }) {
   
   const [metadata, setMetadata] = useState(null);
 
-  const seasons = [1, 2, 3, 4, 5];
-  const episodes = Array.from({ length: 10 }, (_, i) => i + 1);
-
 
 
   useEffect(() => {
@@ -73,6 +70,12 @@ export default function StreamPage({ params }) {
 
   const title = metadata?.name || metadata?.title || 'Loading...';
   const backdrop = metadata?.backdrop_path ? `https://image.tmdb.org/t/p/original${metadata.backdrop_path}` : null;
+
+  // Dynamic Seasons & Episodes
+  const validSeasons = metadata?.seasons?.filter(s => s.season_number > 0) || [];
+  const currentSeasonData = validSeasons.find(s => s.season_number === season);
+  const episodeCount = currentSeasonData ? currentSeasonData.episode_count : 0;
+  const episodesArray = Array.from({ length: episodeCount }, (_, i) => i + 1);
 
   return (
     <main className="relative min-h-screen bg-brand-bg text-gray-50 p-6 md:p-12 font-body flex flex-col items-center overflow-hidden">
@@ -158,46 +161,48 @@ export default function StreamPage({ params }) {
                 Select Season
               </h2>
               <div className="flex flex-wrap gap-2">
-                {seasons.map((s) => (
+                {validSeasons.map((s) => (
                   <button
-                    key={`season-${s}`}
+                    key={`season-${s.season_number}`}
                     onClick={() => {
-                      setSeason(s);
+                      setSeason(s.season_number);
                       setEpisode(1); // Reset to ep 1 on season change
                     }}
                     className={`px-6 py-2 rounded-lg font-medium transition-all duration-200 ${
-                      season === s
+                      season === s.season_number
                         ? 'bg-indigo-600 text-white shadow-md shadow-indigo-900/50 scale-105'
                         : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
                     }`}
                   >
-                    Season {s}
+                    Season {s.season_number}
                   </button>
                 ))}
               </div>
             </div>
 
             {/* Episode Selector */}
-            <div>
-              <h2 className="text-sm uppercase tracking-wider text-gray-400 font-semibold mb-3">
-                Select Episode
-              </h2>
-              <div className="flex flex-wrap gap-2">
-                {episodes.map((ep) => (
-                  <button
-                    key={`episode-${ep}`}
-                    onClick={() => setEpisode(ep)}
-                    className={`w-12 h-12 flex items-center justify-center rounded-lg font-medium transition-all duration-200 ${
-                      episode === ep
-                        ? 'bg-red-600 text-white shadow-md shadow-red-900/50 scale-105'
-                        : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
-                    }`}
-                  >
-                    {ep}
-                  </button>
-                ))}
+            {episodesArray.length > 0 && (
+              <div>
+                <h2 className="text-sm uppercase tracking-wider text-gray-400 font-semibold mb-3">
+                  Select Episode
+                </h2>
+                <div className="flex flex-wrap gap-2">
+                  {episodesArray.map((ep) => (
+                    <button
+                      key={`episode-${ep}`}
+                      onClick={() => setEpisode(ep)}
+                      className={`w-12 h-12 flex items-center justify-center rounded-lg font-medium transition-all duration-200 ${
+                        episode === ep
+                          ? 'bg-red-600 text-white shadow-md shadow-red-900/50 scale-105'
+                          : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
+                      }`}
+                    >
+                      {ep}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         )}
       </div>

@@ -16,7 +16,7 @@ const MovieRow = ({ title, movies }) => {
         {movies.map((movie) => {
           if (!movie.poster_path) return null;
           return (
-            <Link href={`/stream/${movie.id}`} key={movie.id} className="shrink-0 block">
+            <Link href={`/stream/${movie.id}`} key={movie.id} target="_blank" rel="noopener noreferrer" className="shrink-0 block">
               <img 
                 src={`${BASE_IMG_URL}${movie.poster_path}`} 
                 alt={movie.title || movie.name} 
