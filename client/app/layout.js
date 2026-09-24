@@ -19,13 +19,18 @@ export const metadata = {
   description: "A dynamic fandom information hub.",
 };
 
+import FloatingNav from '@/components/FloatingNav';
+
 export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
       className={`${inter.variable} ${poppins.variable} h-full antialiased dark`}
     >
-      <body className="min-h-full flex flex-col font-body bg-gray-950 text-gray-50">{children}</body>
+      <body className="bg-brand-bg text-white min-h-screen font-body flex flex-col">
+        {children}
+        <FloatingNav />
+      </body>
     </html>
   );
 }
