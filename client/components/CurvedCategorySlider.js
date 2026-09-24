@@ -33,23 +33,22 @@ export default function CurvedCategorySlider() {
         <p className="text-[#86868b] dark:text-gray-400 text-sm mt-1">Discover communities matching your interests</p>
       </div>
 
-      <div className="relative w-full h-[450px] flex justify-center items-center overflow-hidden perspective-[1200px] [perspective:1200px]">
+      <div className="relative w-full max-w-[1400px] mx-auto h-[450px] flex justify-center items-center overflow-hidden perspective-[1200px] [perspective:1200px]">
         {categories.map((category, index) => {
           const offset = getOffset(index);
 
           let transform = '';
           let zIndex = 50 - Math.abs(offset);
-          let opacity = Math.abs(offset) >= 3 ? 0 : 1; // Show only 5 cards at a time (center + 2 on each side)
+          let opacity = Math.abs(offset) >= 4 ? 0 : 1; // Show more cards clearly
 
           if (offset === 0) {
-            // Active Center
-            transform = 'translateX(0px) translateZ(100px) rotateY(0deg) scale(1.1)';
+            transform = 'translateX(0px) translateZ(150px) rotateY(0deg) scale(1.1)';
           } else if (offset < 0) {
-            // Left Side (tilted right to show left edge)
-            transform = `translateX(${offset * 110}px) translateZ(${-Math.abs(offset) * 60}px) rotateY(45deg) scale(0.9)`;
+            // Left side cards
+            transform = `translateX(${offset * 180}px) translateZ(${-Math.abs(offset) * 80}px) rotateY(35deg) scale(0.9)`;
           } else {
-            // Right Side (tilted left to show right edge)
-            transform = `translateX(${offset * 110}px) translateZ(${-Math.abs(offset) * 60}px) rotateY(-45deg) scale(0.9)`;
+            // Right side cards
+            transform = `translateX(${offset * 180}px) translateZ(${-Math.abs(offset) * 80}px) rotateY(-35deg) scale(0.9)`;
           }
 
           const isActive = offset === 0;
