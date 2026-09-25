@@ -5,53 +5,51 @@ import Link from 'next/link';
 import { Play, Info } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ContinueWatchingHero from '@/components/ContinueWatchingHero';
-import { fetchDetails } from '@/utils/tmdb';
 
 const HeroBanner = ({ trendingData = [] }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [slides, setSlides] = useState([]);
+  const [customHero, setCustomHero] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchHeroMovies = async () => {
+    const fetchSettings = async () => {
       try {
-        // Fetch global settings to get featured TMDB IDs
         const res = await fetch('http://localhost:5000/api/admin/settings/global');
         const data = await res.json();
-        const ids = data.success && data.settings?.featuredMovies?.length > 0 
-          ? data.settings.featuredMovies 
-          : ['157336', '299534', '82856']; // Fallback to Interstellar, Avengers, Top Gun
-
-        // Fetch TMDB details for each ID
-        const moviesData = await Promise.all(
-          ids.map(async (id) => {
-            try {
-              return await fetchDetails(id, 'movie');
-            } catch (err) {
-              // Fallback to TV if movie fails
-              return await fetchDetails(id, 'tv').catch(() => null);
-            }
-          })
-        );
-
-        const formattedSlides = moviesData.filter(Boolean).map(m => ({
-          id: m.id,
-          title: m.title || m.name,
-          badge: 'Featured Content',
-          description: m.overview,
-          image: m.backdrop_path ? `https://image.tmdb.org/t/p/original${m.backdrop_path}` : '',
-          type: m.title ? 'movie' : 'tv'
-        }));
-
-        setSlides(formattedSlides.length > 0 ? formattedSlides : []);
+        if (data.success && data.settings?.customHero?.isActive) {
+          setCustomHero(data.settings.customHero);
+        }
       } catch (err) {
-        console.error("Failed to load hero banner", err);
+        console.error("Failed to load global settings", err);
       } finally {
         setLoading(false);
       }
     };
-    fetchHeroMovies();
+    fetchSettings();
   }, []);
+
+  // Format the trending data to match the expected SLIDES format
+  const standardSlides = trendingData.slice(0, 5).map(m => ({
+    id: m.id,
+    title: m.title || m.name,
+    badge: 'Trending Now',
+    description: m.overview,
+    image: m.backdrop_path ? `https://image.tmdb.org/t/p/original${m.backdrop_path}` : '',
+    type: m.title ? 'movie' : 'tv'
+  }));
+
+  const slides = customHero ? [
+    {
+      id: 'custom-hero',
+      title: customHero.title,
+      badge: 'Featured Content',
+      description: customHero.description,
+      image: customHero.imageUrl,
+      type: 'custom',
+      buttonText: customHero.buttonText,
+      buttonLink: customHero.buttonLink
+    }
+  ] : standardSlides;
 
   useEffect(() => {
     if (slides.length <= 1) return;
@@ -145,11 +143,11 @@ const HeroBanner = ({ trendingData = [] }) => {
               className="flex flex-wrap items-center gap-4 pt-6"
             >
               <Link
-                href={`/stream/${currentMovie.id}?type=${currentMovie.type}`}
+                href={currentMovie.type === 'custom' ? currentMovie.buttonLink : `/stream/${currentMovie.id}?type=${currentMovie.type}`}
                 className="flex items-center gap-2 bg-gradient-to-r from-brand-primary to-brand-accent text-[#0b0f0a] px-8 py-3.5 rounded-full font-black text-lg hover:scale-105 shadow-[0_10px_20px_rgba(167,201,87,0.4)] transition-all"
               >
                 <Play fill="currentColor" size={22} />
-                Watch Now
+                {currentMovie.type === 'custom' ? currentMovie.buttonText : 'Watch Now'}
               </Link>
               
               <button className="flex items-center gap-2 bg-black/5 dark:bg-white/10 backdrop-blur-xl border border-black/10 dark:border-white/20 text-gray-900 dark:text-white px-8 py-3.5 rounded-full font-bold text-lg hover:bg-black/10 dark:hover:bg-white/20 transition-all shadow-lg">

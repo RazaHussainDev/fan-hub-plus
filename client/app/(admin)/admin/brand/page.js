@@ -1,44 +1,47 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
-import { Plus, Trash2, Film, Save } from 'lucide-react';
+import { Upload, Zap, Image as ImageIcon } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
 export default function HeroController() {
   const { token } = useAuth();
-  const [featuredMovies, setFeaturedMovies] = useState([]);
-  const [newId, setNewId] = useState('');
+  const [customHero, setCustomHero] = useState({ 
+    isActive: false, 
+    title: '', 
+    description: '', 
+    imageUrl: '', 
+    buttonText: 'Watch Now', 
+    buttonLink: '/' 
+  });
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (token) {
       fetch('http://localhost:5000/api/admin/settings/global')
         .then(res => res.json())
         .then(data => {
-          if (data.success && data.settings?.featuredMovies) {
-            setFeaturedMovies(data.settings.featuredMovies);
+          if (data.success && data.settings?.customHero) {
+            setCustomHero(data.settings.customHero);
           }
         })
-        .catch(err => toast.error('Failed to load hero banner settings'))
+        .catch(err => toast.error('Failed to load settings'))
         .finally(() => setLoading(false));
     }
   }, [token]);
 
-  const handleAdd = () => {
-    const trimmedId = newId.trim();
-    if (!trimmedId) return;
-    if (featuredMovies.includes(trimmedId)) return toast.error("Movie ID already exists in the slider!");
-    setFeaturedMovies([...featuredMovies, trimmedId]);
-    setNewId('');
-  };
-
-  const handleRemove = (idToRemove) => {
-    setFeaturedMovies(featuredMovies.filter(id => id !== idToRemove));
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCustomHero({ ...customHero, imageUrl: reader.result }); // Save as Base64
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSave = async () => {
-    setSaving(true);
     try {
       const res = await fetch('http://localhost:5000/api/admin/settings/global', {
         method: 'PUT',
@@ -46,11 +49,11 @@ export default function HeroController() {
           'Content-Type': 'application/json', 
           'Authorization': `Bearer ${token}` 
         },
-        body: JSON.stringify({ featuredMovies })
+        body: JSON.stringify({ customHero })
       });
       const data = await res.json();
       if (data.success) {
-        toast.success("Hero Banner updated successfully!", {
+        toast.success("Hero Banner settings updated!", {
           style: { background: '#0b0f0a', color: '#a7c957', border: '1px solid #a7c957' },
           iconTheme: { primary: '#a7c957', secondary: '#0b0f0a' }
         });
@@ -58,9 +61,7 @@ export default function HeroController() {
         toast.error("Failed to update banner");
       }
     } catch (err) {
-      toast.error("An error occurred while saving");
-    } finally {
-      setSaving(false);
+      toast.error("An error occurred");
     }
   };
 
@@ -76,64 +77,61 @@ export default function HeroController() {
     <div className="max-w-4xl space-y-8 font-body">
       <div>
         <h1 className="text-3xl font-bold font-heading text-white tracking-tight">Hero Banner Controller</h1>
-        <p className="text-gray-400 mt-1">Manage the featured movies shown on the homepage 3D coverflow slider.</p>
+        <p className="text-gray-400 mt-1">Control the main homepage banner. Auto-fetches TMDB Trending by default.</p>
       </div>
 
-      <div className="bg-white/5 border border-white/10 rounded-2xl p-8 space-y-6 shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 blur-[100px] rounded-full pointer-events-none" />
-
-        <div className="relative z-10 flex flex-col md:flex-row gap-4">
-          <input 
-            type="text" 
-            placeholder="Enter TMDB Movie/TV ID (e.g., 299534)" 
-            value={newId} 
-            onChange={(e) => setNewId(e.target.value)} 
-            onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
-            className="flex-1 bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[#a7c957] focus:ring-1 focus:ring-[#a7c957] focus:outline-none transition-all placeholder:text-gray-600" 
-          />
-          <button 
-            onClick={handleAdd} 
-            className="bg-[#a7c957] text-[#0b0f0a] px-6 py-3 md:py-0 rounded-xl font-bold flex items-center justify-center gap-2 hover:scale-105 hover:shadow-[0_0_15px_rgba(167,201,87,0.4)] transition-all"
-          >
-            <Plus size={20} /> Add to Slider
-          </button>
+      <div className="bg-white/5 border border-white/10 rounded-2xl p-8 space-y-8 shadow-2xl relative overflow-hidden">
+        {/* Manual Override Toggle */}
+        <div className="flex justify-between items-center bg-[#a7c957]/10 border border-[#a7c957]/20 p-6 rounded-xl relative z-10">
+          <div>
+            <h3 className="text-lg font-bold text-white flex items-center gap-2"><Zap className="text-[#a7c957] w-5 h-5"/> Manual Override</h3>
+            <p className="text-gray-400 text-sm mt-1">Enable this to hide TMDB trending and show your custom banner below.</p>
+          </div>
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" className="sr-only peer" checked={customHero.isActive} onChange={(e) => setCustomHero({...customHero, isActive: e.target.checked})} />
+            <div className="w-14 h-7 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#a7c957] shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"></div>
+          </label>
         </div>
 
-        <div className="space-y-3 mt-6 relative z-10">
-          {featuredMovies.length === 0 ? (
-            <div className="text-center py-8 text-gray-500 border border-dashed border-white/10 rounded-xl">
-              No movies featured. Add some IDs above!
-            </div>
-          ) : (
-            featuredMovies.map((id, index) => (
-              <div key={index} className="flex justify-between items-center bg-black/40 border border-white/5 p-4 rounded-xl hover:border-white/10 transition-colors group">
-                <div className="flex items-center gap-3">
-                  <Film className="text-[#a7c957]" size={20} />
-                  <span className="text-white font-medium">TMDB ID: <span className="text-[#a7c957] ml-1">{id}</span></span>
-                </div>
-                <button 
-                  onClick={() => handleRemove(id)} 
-                  className="text-red-400 opacity-50 group-hover:opacity-100 hover:text-red-300 p-2 hover:bg-red-400/10 rounded-lg transition-all"
-                  title="Remove from banner"
-                >
-                  <Trash2 size={18} />
-                </button>
+        {/* Custom Banner Form (Only visible if active) */}
+        {customHero.isActive && (
+          <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-500 relative z-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-sm text-gray-400 font-medium">Custom Heading / Title</label>
+                <input type="text" value={customHero.title} onChange={e => setCustomHero({...customHero, title: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[#a7c957] focus:ring-1 focus:ring-[#a7c957] focus:outline-none transition-all" placeholder="e.g. Aptech Techwiz 7 Special" />
               </div>
-            ))
-          )}
-        </div>
+              <div className="space-y-2">
+                <label className="text-sm text-gray-400 font-medium">Button Link</label>
+                <input type="text" value={customHero.buttonLink} onChange={e => setCustomHero({...customHero, buttonLink: e.target.value})} className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[#a7c957] focus:ring-1 focus:ring-[#a7c957] focus:outline-none transition-all" placeholder="e.g. /category/techwiz" />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm text-gray-400 font-medium">Description</label>
+              <textarea value={customHero.description} onChange={e => setCustomHero({...customHero, description: e.target.value})} className="w-full h-24 bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-[#a7c957] focus:ring-1 focus:ring-[#a7c957] focus:outline-none transition-all" placeholder="Description for the banner..."></textarea>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm text-gray-400 font-medium">Custom Background Image</label>
+              <div className="flex items-center gap-4">
+                {customHero.imageUrl ? (
+                  <img src={customHero.imageUrl} alt="Preview" className="w-32 h-20 object-cover rounded-lg border border-[#a7c957]" />
+                ) : (
+                  <div className="w-32 h-20 bg-black/50 rounded-lg flex items-center justify-center border border-white/10"><ImageIcon className="text-gray-500"/></div>
+                )}
+                <label className="cursor-pointer bg-white/5 hover:bg-white/10 border border-white/10 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all">
+                  <Upload size={16}/> Upload Image
+                  <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
+                </label>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="pt-6 border-t border-white/10 flex justify-end relative z-10">
-          <button 
-            onClick={handleSave} 
-            disabled={saving}
-            className="flex items-center gap-2 bg-gradient-to-r from-[#a7c957] to-[#c2e078] text-[#0b0f0a] font-bold py-3 px-8 rounded-xl shadow-[0_0_20px_rgba(167,201,87,0.3)] hover:scale-105 transition-all disabled:opacity-50 disabled:hover:scale-100"
-          >
-            {saving ? (
-              <><div className="w-5 h-5 border-2 border-[#0b0f0a] border-t-transparent rounded-full animate-spin" /> Publishing...</>
-            ) : (
-              <><Save className="w-5 h-5" /> Publish Changes</>
-            )}
+          <button onClick={handleSave} className="bg-gradient-to-r from-[#a7c957] to-[#c2e078] text-[#0b0f0a] font-bold py-3 px-8 rounded-xl shadow-[0_0_20px_rgba(167,201,87,0.3)] hover:scale-105 transition-all">
+            Save Configuration
           </button>
         </div>
       </div>
