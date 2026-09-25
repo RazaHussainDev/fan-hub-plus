@@ -20,11 +20,12 @@ const protect = (req, res, next) => {
   }
 };
 
-const adminOnly = (req, res, next) => {
-  if (req.user?.role !== 'admin') {
-    return res.status(403).json({ success: false, message: 'Access denied. Admins only.' });
+exports.isAdmin = (req, res, next) => {
+  if (req.user && req.user.role === 'admin') {
+    next();
+  } else {
+    res.status(403).json({ success: false, message: 'Access denied: Super Admin privileges required.' });
   }
-  next();
 };
 
-module.exports = { protect, adminOnly };
+module.exports = { protect, isAdmin: exports.isAdmin };
