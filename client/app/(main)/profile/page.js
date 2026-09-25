@@ -103,8 +103,14 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Logout Button */}
-          <div className="shrink-0 relative z-20">
+          {/* Action Buttons */}
+          <div className="shrink-0 relative z-20 flex flex-col md:flex-row items-center gap-4">
+            {user.role === 'admin' && (
+              <Link href="/admin" className="relative overflow-hidden group flex items-center gap-2 bg-[#a7c957]/10 text-[#a7c957] border border-[#a7c957]/30 hover:bg-[#a7c957] hover:text-[#0b0f0a] font-bold py-3 px-8 rounded-full transition-all duration-300 shadow-[0_0_15px_rgba(167,201,87,0.15)]">
+                <ShieldCheck size={18} className="group-hover:scale-110 transition-transform" />
+                Command Center
+              </Link>
+            )}
             <button 
               onClick={handleLogout}
               className="relative overflow-hidden group px-8 py-3 rounded-full font-bold bg-white dark:bg-[#0a0d08] border border-red-500/30 dark:border-red-900/30 text-gray-700 dark:text-gray-300 transition-all shadow-lg hover:shadow-red-500/20 dark:hover:shadow-red-900/20"

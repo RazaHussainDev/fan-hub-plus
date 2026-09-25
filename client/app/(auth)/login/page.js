@@ -23,9 +23,13 @@ export default function LoginPage() {
 
     setLoading(true);
     try {
-      await login(formData.email, formData.password);
+      const resData = await login(formData.email, formData.password);
       toast.success('Welcome back to Fan Hub Plus!');
-      router.push('/');
+      if (resData.user.role === 'admin') {
+        router.push('/admin'); // Direct admins to the Command Center
+      } else {
+        router.push('/'); // Direct regular users to the home page
+      }
     } catch (err) {
       toast.error(err.message);
     } finally {

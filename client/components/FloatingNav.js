@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Home, Search, List, LogIn, Grip } from 'lucide-react';
+import { Home, Search, List, LogIn, Grip, Settings } from 'lucide-react';
 import { useSearch } from '@/context/SearchContext';
 import { useAuth } from '@/context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -55,14 +55,21 @@ const FloatingNav = () => {
     { name: 'Home', icon: Home, href: '/' },
     { name: 'Search', icon: Search, onClick: openSearch },
     { name: 'My List', icon: List, href: '/mylist' },
+  ];
+
+  if (user?.role === 'admin') {
+    navItems.push({ name: 'Admin', icon: Settings, href: '/admin' });
+  }
+
+  navItems.push(
     user
       ? {
           name: user.name.split(' ')[0],
           isAvatar: true,
           href: '/profile',
         }
-      : { name: 'Sign In', icon: LogIn, href: '/login' },
-  ];
+      : { name: 'Sign In', icon: LogIn, href: '/login' }
+  );
 
   return (
     <>
