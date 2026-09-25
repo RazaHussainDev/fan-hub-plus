@@ -102,6 +102,7 @@ exports.login = async (req, res) => {
 // POST /api/auth/watchlist
 exports.toggleWatchlist = async (req, res) => {
   try {
+    console.log("Incoming watchlist data:", req.body);
     const { movieId, title, poster_path, media_type } = req.body;
     const user = await User.findById(req.user.id);
 

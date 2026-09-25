@@ -43,7 +43,7 @@ const userSchema = new mongoose.Schema(
       movieId: { type: String, required: true },
       title: { type: String },
       poster_path: { type: String },
-      media_type: { type: String, default: 'movie' }
+      media_type: { type: String }
     }],
   },
   { timestamps: true }
