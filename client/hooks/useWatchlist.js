@@ -14,8 +14,8 @@ export function useWatchlist() {
   // Use SWR to automatically fetch & cache the watchlist
   const { data, error } = useSWR(token ? 'http://localhost:5000/api/auth/watchlist' : null, fetcher);
 
-  // Derived array
-  const watchlist = data?.watchlist || [];
+  // Derived array - prioritize fresh SWR data, fallback to context state, default to empty array
+  const watchlist = data?.watchlist || user?.watchlist || [];
 
   const toggleWatchlist = async (item) => {
     if (!user || !token) return toast.error("Please login to save movies!");
