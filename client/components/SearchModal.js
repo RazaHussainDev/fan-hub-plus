@@ -2,15 +2,19 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { X, Search } from 'lucide-react';
+import { X, Search as SearchIcon, Film, Tv, Play } from 'lucide-react';
 import { fetchSearch, BASE_IMG_URL } from '@/utils/tmdb';
 import { useSearch } from '@/context/SearchContext';
+import useDebounce from '@/hooks/useDebounce';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function SearchModal() {
   const { isSearchOpen, closeSearch } = useSearch();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+
+  const debouncedQuery = useDebounce(query, 500);
 
   useEffect(() => {
     if (!isSearchOpen) {
@@ -20,93 +24,132 @@ export default function SearchModal() {
   }, [isSearchOpen]);
 
   useEffect(() => {
-    if (!query.trim()) {
+    if (debouncedQuery.trim().length > 2) {
+      setIsSearching(true);
+      fetchSearch(debouncedQuery)
+        .then(data => {
+          setResults(data.results || []);
+        })
+        .catch(err => console.error("Search failed", err))
+        .finally(() => setIsSearching(false));
+    } else {
       setResults([]);
-      return;
     }
-
-    setLoading(true);
-    const timeoutId = setTimeout(async () => {
-      try {
-        const data = await fetchSearch(query);
-        setResults(data.results || []);
-      } catch (error) {
-        console.error("Search failed", error);
-      } finally {
-        setLoading(false);
-      }
-    }, 500);
-
-    return () => clearTimeout(timeoutId);
-  }, [query]);
+  }, [debouncedQuery]);
 
   if (!isSearchOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center pt-24 bg-[#FBFBFD]/90 dark:bg-black/80 backdrop-blur-2xl transition-all duration-300 overflow-y-auto">
-      <button
-        onClick={closeSearch}
-        className="absolute top-6 right-6 text-[#3c3c43] dark:text-gray-400 hover:text-[#1d1d1f] dark:hover:text-white transition-colors bg-black/[0.06] dark:bg-white/10 rounded-full p-2"
+    <AnimatePresence>
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 flex items-start justify-center pt-[10vh] px-4 bg-[#FBFBFD]/90 dark:bg-[#060805]/90 backdrop-blur-2xl transition-colors duration-500 overflow-y-auto"
       >
-        <X size={24} />
-      </button>
+        <button
+          onClick={closeSearch}
+          className="absolute top-6 right-6 text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors bg-black/5 dark:bg-white/10 rounded-full p-2"
+        >
+          <X size={24} />
+        </button>
 
-      <div className="w-full max-w-5xl px-6">
-        <div className="relative w-full max-w-3xl mx-auto mb-12">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#86868b] dark:text-gray-400" size={24} />
-          <input
-            type="text"
-            placeholder="Search for movies, TV shows, anime..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="w-full bg-transparent border-b-2 border-black/10 dark:border-gray-700 text-[#1d1d1f] dark:text-white placeholder-[#86868b] dark:placeholder-gray-500 py-4 pl-14 pr-12 focus:outline-none focus:border-brand-primary transition-all text-2xl md:text-3xl font-medium"
-            autoFocus
-          />
-          {loading && (
-            <div className="absolute right-4 top-1/2 -translate-y-1/2">
-              <div className="w-6 h-6 border-2 border-brand-primary border-t-transparent rounded-full animate-spin"></div>
-            </div>
-          )}
-        </div>
+        <motion.div 
+          initial={{ opacity: 0, y: -40, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ type: "spring", stiffness: 300, damping: 25 }}
+          className="w-full max-w-3xl relative"
+        >
+          {/* Spotlight Input */}
+          <div className="relative group z-20">
+            <SearchIcon className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-primary transition-colors" size={24} />
+            <input
+              type="text"
+              placeholder="Search movies, TV shows, anime..."
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                if (e.target.value.trim().length > 2) setIsSearching(true);
+              }}
+              className="w-full bg-white/60 dark:bg-[#0b0f0a]/60 backdrop-blur-md border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white placeholder-gray-500 rounded-full py-5 pl-16 pr-14 focus:outline-none focus:border-brand-primary focus:shadow-[0_0_20px_rgba(167,201,87,0.3)] transition-all text-xl md:text-2xl font-medium shadow-2xl"
+              autoFocus
+            />
+            {isSearching && (
+              <div className="absolute right-6 top-1/2 -translate-y-1/2">
+                <div className="w-6 h-6 border-2 border-brand-primary border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            )}
+          </div>
 
-        {results.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 pb-24">
-            {results.map((item) => {
-              if (!item.poster_path) return null;
-              return (
-                <Link
-                  key={item.id}
-                  href={`/stream/${item.id}?type=${item.media_type || 'movie'}`}
-                  onClick={closeSearch}
-                  style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.06)' }}
-                  className="block group overflow-hidden rounded-xl border border-black/[0.06] dark:border-gray-800 bg-white dark:bg-gray-900 transition-transform duration-300 hover:scale-105 dark:shadow-lg"
-                >
-                  <img
-                    src={`${BASE_IMG_URL}${item.poster_path}`}
-                    alt={item.title || item.name}
-                    className="w-full aspect-[2/3] object-cover"
-                  />
-                  <div className="p-3">
-                    <p className="text-sm font-bold text-[#1d1d1f] dark:text-gray-200 truncate group-hover:text-brand-primary transition-colors">
-                      {item.title || item.name}
+          {/* Results Dropdown Container */}
+          <AnimatePresence>
+            {(results.length > 0 || (debouncedQuery.trim().length > 2 && !isSearching)) && (
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="absolute top-[80px] left-0 right-0 bg-white/80 dark:bg-[#0a0d08]/90 backdrop-blur-3xl border border-gray-200 dark:border-white/10 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden flex flex-col z-10"
+              >
+                {results.length > 0 ? (
+                  <div className="max-h-[60vh] overflow-y-auto scrollbar-hide py-4 px-2">
+                    {results.map((item) => {
+                      if (!item.poster_path) return null;
+                      const releaseYear = item.release_date?.split('-')[0] || item.first_air_date?.split('-')[0] || '';
+                      
+                      return (
+                        <Link
+                          key={item.id}
+                          href={`/stream/${item.id}?type=${item.media_type || 'movie'}`}
+                          onClick={closeSearch}
+                          className="group flex items-center gap-4 p-3 rounded-2xl hover:bg-gray-100 dark:hover:bg-white/5 transition-colors"
+                        >
+                          <div className="relative w-16 md:w-20 aspect-[2/3] shrink-0 rounded-lg overflow-hidden border border-black/5 dark:border-white/10 shadow-md">
+                            <img
+                              src={`${BASE_IMG_URL}${item.poster_path}`}
+                              alt={item.title || item.name}
+                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                            />
+                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                               <Play size={20} className="text-brand-primary ml-1" fill="currentColor" />
+                            </div>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-white truncate group-hover:text-brand-primary transition-colors">
+                              {item.title || item.name}
+                            </h3>
+                            <div className="flex items-center gap-3 mt-1 text-sm text-gray-500 dark:text-gray-400 font-medium">
+                              <span className="flex items-center gap-1">
+                                {item.media_type === 'tv' ? <Tv size={14} className="text-brand-primary"/> : <Film size={14} className="text-brand-primary"/>}
+                                {item.media_type === 'tv' ? 'Series' : 'Movie'}
+                              </span>
+                              {releaseYear && (
+                                <>
+                                  <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-700" />
+                                  <span>{releaseYear}</span>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="py-16 px-8 text-center flex flex-col items-center">
+                    <SearchIcon size={40} className="text-gray-300 dark:text-gray-600 mb-4" />
+                    <p className="text-xl font-bold text-gray-900 dark:text-gray-200">
+                      No results found for <span className="text-brand-primary">"{debouncedQuery}"</span>
                     </p>
-                    <p className="text-xs text-[#86868b] dark:text-gray-500 uppercase font-semibold mt-1">
-                      {item.media_type === 'tv' ? 'TV Series' : 'Movie'}
+                    <p className="text-sm mt-2 text-gray-500 dark:text-gray-500">
+                      Try adjusting your keywords or spelling.
                     </p>
                   </div>
-                </Link>
-              );
-            })}
-          </div>
-        ) : (
-          query.trim() && !loading && (
-            <div className="text-center mt-12 bg-white/80 dark:bg-gray-900/50 p-8 rounded-2xl border border-black/[0.06] dark:border-gray-800 shadow-sm">
-              <p className="text-xl md:text-2xl font-medium text-[#1d1d1f] dark:text-gray-400">No results found for <span className="text-brand-primary">"{query}"</span></p>
-              <p className="text-sm mt-2 text-[#86868b] dark:text-gray-500">Try checking for typos or using different keywords!</p>
-            </div>
-          )
-        )}
-      </div>
-    </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 }
