@@ -71,8 +71,8 @@ const HeroBanner = ({ trendingData = [] }) => {
       </AnimatePresence>
 
       {/* Sleek Cinematic Gradient Overlays */}
-      <div className="absolute inset-0 bg-gradient-to-r from-brand-light via-brand-light/50 dark:from-brand-bg dark:via-brand-bg/60 to-transparent z-0 transition-colors duration-500" />
-      <div className="absolute inset-0 bg-gradient-to-t from-brand-light via-transparent dark:from-brand-bg dark:via-transparent to-transparent z-0 transition-colors duration-500" />
+      <div className="absolute inset-0 bg-gradient-to-r from-brand-light via-brand-light/50 dark:from-[#0b0f0a] dark:via-[#0b0f0a]/60 to-transparent z-0 transition-colors duration-500" />
+      <div className="absolute inset-0 bg-gradient-to-t from-brand-light via-transparent dark:from-[#0b0f0a] dark:via-transparent to-transparent z-0 transition-colors duration-500" />
       
       {/* Content Container */}
       <div className="relative z-10 max-w-2xl w-full">
@@ -93,7 +93,7 @@ const HeroBanner = ({ trendingData = [] }) => {
                 transition={{ duration: 0.8, delay: 0.1 }}
                 className="flex items-center gap-2 mb-2"
               >
-                <div className="px-3 py-1 bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/20 text-brand-accent rounded-md text-xs font-bold uppercase tracking-widest backdrop-blur-md shadow-sm">
+                <div className="px-3 py-1 bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/20 text-brand-primary rounded-md text-xs font-bold uppercase tracking-widest backdrop-blur-md shadow-sm">
                   {currentMovie.badge}
                 </div>
               </motion.div>
@@ -128,7 +128,7 @@ const HeroBanner = ({ trendingData = [] }) => {
             >
               <Link
                 href={`/stream/${currentMovie.id}?type=${currentMovie.type}`}
-                className="flex items-center gap-2 bg-gradient-to-r from-brand-primary to-brand-accent text-white px-8 py-3.5 rounded-full font-bold text-lg hover:scale-105 shadow-[0_10px_20px_rgba(56,189,248,0.4)] transition-all"
+                className="flex items-center gap-2 bg-gradient-to-r from-brand-primary to-brand-accent text-[#0b0f0a] px-8 py-3.5 rounded-full font-black text-lg hover:scale-105 shadow-[0_10px_20px_rgba(167,201,87,0.4)] transition-all"
               >
                 <Play fill="currentColor" size={22} />
                 Watch Now
