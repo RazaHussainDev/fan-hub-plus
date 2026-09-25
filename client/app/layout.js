@@ -24,6 +24,7 @@ import { SearchProvider } from '@/context/SearchContext';
 import { AuthProvider } from '@/context/AuthContext';
 import SearchModal from '@/components/SearchModal';
 import { Toaster } from 'react-hot-toast';
+import NetworkDetector from '@/components/NetworkDetector';
 
 export default function RootLayout({ children }) {
   return (
@@ -39,6 +40,7 @@ export default function RootLayout({ children }) {
             <FloatingNav />
             <SearchModal />
             <Toaster position="top-center" />
+            <NetworkDetector />
           </SearchProvider>
         </AuthProvider>
       </body>
