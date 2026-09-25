@@ -25,8 +25,8 @@ export default function MyListPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
             {watchlist.map((item) => (
               <Link
-                key={item.id}
-                href={`/stream/${item.id}?type=${item.media_type || 'movie'}`}
+                key={item.id || item.movieId}
+                href={`/stream/${item.id || item.movieId}?type=${item.media_type || 'movie'}`}
                 className="block group overflow-hidden rounded-md shadow-lg border border-gray-800 bg-gray-900 transition-transform duration-300 hover:scale-105"
               >
                 <img

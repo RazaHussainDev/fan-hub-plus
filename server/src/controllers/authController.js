@@ -48,6 +48,7 @@ exports.register = async (req, res) => {
         email: user.email,
         role: user.role,
         avatar: user.avatar,
+        watchlist: user.watchlist || [],
       },
     });
   } catch (err) {
@@ -89,10 +90,36 @@ exports.login = async (req, res) => {
         email: user.email,
         role: user.role,
         avatar: user.avatar,
+        watchlist: user.watchlist,
       },
     });
   } catch (err) {
     console.error('[Login Error]', err.message);
     res.status(500).json({ success: false, message: 'Server error. Please try again.' });
+  }
+};
+
+// POST /api/auth/watchlist
+exports.toggleWatchlist = async (req, res) => {
+  try {
+    const { movieId, title, poster_path, media_type } = req.body;
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const isSaved = user.watchlist.find(item => item.movieId === String(movieId));
+    if (isSaved) {
+      user.watchlist = user.watchlist.filter(item => item.movieId !== String(movieId)); // Remove
+    } else {
+      user.watchlist.push({ movieId: String(movieId), title, poster_path, media_type }); // Add
+    }
+
+    await user.save();
+    res.status(200).json({ success: true, watchlist: user.watchlist });
+  } catch (error) {
+    console.error('[Watchlist Error]', error.message);
+    res.status(500).json({ success: false, message: 'Server Error' });
   }
 };

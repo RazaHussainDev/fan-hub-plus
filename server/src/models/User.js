@@ -39,6 +39,12 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    watchlist: [{
+      movieId: { type: String, required: true },
+      title: { type: String },
+      poster_path: { type: String },
+      media_type: { type: String, default: 'movie' }
+    }],
   },
   { timestamps: true }
 );
