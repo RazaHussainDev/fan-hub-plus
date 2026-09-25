@@ -6,5 +6,6 @@ const { protect } = require('../middleware/auth');
 router.post('/login', authController.login);
 router.post('/register', authController.register);
 router.post('/watchlist', protect, authController.toggleWatchlist);
+router.get('/watchlist', protect, authController.getWatchlist);
 
 module.exports = router;

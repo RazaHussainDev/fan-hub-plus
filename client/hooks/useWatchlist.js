@@ -1,35 +1,36 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'react-hot-toast';
+import useSWR, { useSWRConfig } from 'swr';
 
 export function useWatchlist() {
-  const [watchlist, setWatchlist] = useState([]);
   const { user, token } = useAuth();
+  const { mutate } = useSWRConfig();
 
-  useEffect(() => {
-    if (user && user.watchlist) {
-      setWatchlist(user.watchlist);
-    } else {
-      setWatchlist([]);
-    }
-  }, [user]);
+  // SWR Fetcher
+  const fetcher = (url) => fetch(url, { headers: { Authorization: `Bearer ${token}` } }).then(res => res.json());
+  
+  // Use SWR to automatically fetch & cache the watchlist
+  const { data, error } = useSWR(token ? 'http://localhost:5000/api/auth/watchlist' : null, fetcher);
+
+  // Derived array
+  const watchlist = data?.watchlist || [];
 
   const toggleWatchlist = async (item) => {
     if (!user) return toast.error("Please login to save movies!");
 
     // Extract ID safely
     const movieId = item.id || item.movieId;
+    const isCurrentlySaved = isInWatchlist(movieId);
 
-    // Optimistic UI Update
-    setWatchlist((prev) => {
-      const exists = prev.find((i) => String(i.movieId) === String(movieId) || String(i.id) === String(movieId));
-      if (exists) {
-        return prev.filter((i) => String(i.movieId) !== String(movieId) && String(i.id) !== String(movieId));
-      }
-      return [...prev, { movieId: String(movieId), title: item.title || item.name, poster_path: item.poster_path, media_type: item.media_type || 'movie' }];
-    });
+    // Optimistic UI Data
+    const updatedWatchlist = isCurrentlySaved
+      ? watchlist.filter(i => String(i.movieId) !== String(movieId))
+      : [...watchlist, { movieId: String(movieId), title: item.title || item.name, poster_path: item.poster_path, media_type: item.media_type || 'movie' }];
+
+    // Mutate locally first for instant UI snap!
+    mutate('http://localhost:5000/api/auth/watchlist', { success: true, watchlist: updatedWatchlist }, false);
 
     try {
       const res = await fetch('http://localhost:5000/api/auth/watchlist', {
@@ -45,22 +46,24 @@ export function useWatchlist() {
           media_type: item.media_type || 'movie'
         })
       });
-      const data = await res.json();
-      if (data.success) {
-        setWatchlist(data.watchlist);
-        
-        // Also update local storage user state to keep it in sync for page reloads
+      const resData = await res.json();
+      
+      if (resData.success) {
+        // Sync local storage so it persists if the user hard reloads
         const storedUser = JSON.parse(localStorage.getItem('fanhub_user') || '{}');
-        storedUser.watchlist = data.watchlist;
+        storedUser.watchlist = resData.watchlist;
         localStorage.setItem('fanhub_user', JSON.stringify(storedUser));
         
-        // Let's deduce if added or removed
-        const exists = user.watchlist?.find(i => String(i.movieId) === String(movieId));
-        if (exists) toast.success("Removed from Watchlist", { style: { background: '#0b0f0a', color: '#f3f4f6' } });
+        if (isCurrentlySaved) toast.success("Removed from Watchlist", { style: { background: '#0b0f0a', color: '#f3f4f6' } });
         else toast.success("Added to Watchlist!", { style: { background: '#0b0f0a', color: '#a7c957', border: '1px solid #a7c957' } });
+
+        // Tell SWR to globally sync the new data
+        mutate('http://localhost:5000/api/auth/watchlist'); 
       }
     } catch (err) {
       toast.error("Failed to update watchlist");
+      // Rollback on error
+      mutate('http://localhost:5000/api/auth/watchlist');
     }
   };
 

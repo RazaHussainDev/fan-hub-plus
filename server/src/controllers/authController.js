@@ -123,3 +123,16 @@ exports.toggleWatchlist = async (req, res) => {
     res.status(500).json({ success: false, message: 'Server Error' });
   }
 };
+
+// GET /api/auth/watchlist
+exports.getWatchlist = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('watchlist');
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+
+    res.status(200).json({ success: true, watchlist: user.watchlist });
+  } catch (error) {
+    console.error('[Get Watchlist Error]', error.message);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
