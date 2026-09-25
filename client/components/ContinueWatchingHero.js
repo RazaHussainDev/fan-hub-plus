@@ -61,9 +61,10 @@ export default function ContinueWatchingHero({ data = [] }) {
               >
                 {/* Background Image */}
                 <div 
-                  className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover/card:scale-110"
-                  style={{ backgroundImage: `url(https://image.tmdb.org/t/p/w500${item.backdrop_path})` }}
-                />
+                  className="absolute inset-0 transition-transform duration-500 group-hover/card:scale-110"
+                >
+                  <img src={`https://image.tmdb.org/t/p/w500${item.backdrop_path}`} alt={item.title || item.name} loading="lazy" className="w-full h-full object-cover" />
+                </div>
                 
                 {/* Gradient */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />

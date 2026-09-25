@@ -3,6 +3,11 @@ import CurvedCategorySlider from '@/components/CurvedCategorySlider';
 import MovieRow from '@/components/MovieRow';
 import Link from 'next/link';
 import { fetchTrending, fetchNewReleases, fetchActionMovies, fetchBollywood, fetchAnime, fetchKDramas } from '@/utils/tmdb';
+import dynamic from 'next/dynamic';
+
+const DynamicMovieRow = dynamic(() => import('@/components/MovieRow'), {
+  loading: () => <div className="h-60 w-full animate-pulse bg-gray-900/10 dark:bg-gray-800/20 mb-8 rounded-xl"></div>
+});
 
 export default async function Home() {
   let trendingData = { results: [] };
@@ -38,12 +43,12 @@ export default async function Home() {
       
       <div className="flex flex-col space-y-6 mt-[-100px] relative z-20">
         <CurvedCategorySlider />
-        <MovieRow title="Trending Now" movies={trendingData.results} />
-        <MovieRow title="New Releases" movies={newReleasesData.results} />
-        <MovieRow title="Action & Thrillers" movies={actionData.results} />
-        <MovieRow title="Blockbuster Bollywood" movies={bollywoodData.results} fallbackType="movie" />
-        <MovieRow title="Trending Anime" movies={animeData.results} fallbackType="tv" />
-        <MovieRow title="Top K-Dramas" movies={kdramasData.results} fallbackType="tv" />
+        <DynamicMovieRow title="Trending Now" initialMovies={trendingData.results} fetchCategory="trending" />
+        <DynamicMovieRow title="New Releases" initialMovies={newReleasesData.results} fetchCategory="newReleases" />
+        <DynamicMovieRow title="Action & Thrillers" initialMovies={actionData.results} fetchCategory="action" />
+        <DynamicMovieRow title="Blockbuster Bollywood" initialMovies={bollywoodData.results} fetchCategory="bollywood" fallbackType="movie" />
+        <DynamicMovieRow title="Trending Anime" initialMovies={animeData.results} fetchCategory="anime" fallbackType="tv" />
+        <DynamicMovieRow title="Top K-Dramas" initialMovies={kdramasData.results} fetchCategory="kdramas" fallbackType="tv" />
       </div>
 
       <footer className="w-full text-center py-12 mt-12 border-t border-gray-800">

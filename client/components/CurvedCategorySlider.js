@@ -69,6 +69,7 @@ export default function CurvedCategorySlider() {
               <img 
                 src={category.image}
                 alt={`${category.name} Wallpaper`}
+                loading="lazy"
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
               

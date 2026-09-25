@@ -1,10 +1,30 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
+import useSWR from 'swr';
 import { BASE_IMG_URL } from '@/utils/tmdb';
 import SkeletonCard from './SkeletonCard';
 
-const MovieRow = ({ title, movies, fallbackType = 'movie', isLoading = false }) => {
-  const showSkeletons = isLoading || !movies || movies.length === 0;
+const fetcher = (url) => fetch(url).then((res) => res.json());
+
+const MovieRow = ({ title, fetchCategory, initialMovies = null, fallbackType = 'movie' }) => {
+  // If fetchCategory is provided, we use SWR to fetch and cache data on the client.
+  // Otherwise, fallback to initialMovies.
+  const { data, error, isLoading: swrLoading } = useSWR(
+    fetchCategory ? `/api/movies?category=${fetchCategory}` : null,
+    fetcher,
+    {
+      fallbackData: initialMovies ? { results: initialMovies } : undefined,
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      shouldRetryOnError: false
+    }
+  );
+
+  const movies = data?.results || initialMovies || [];
+  const isLoading = fetchCategory ? swrLoading && !data : false;
+  const showSkeletons = isLoading || movies.length === 0;
 
   return (
     <div className="w-full flex flex-col space-y-2 py-4">
@@ -43,6 +63,7 @@ const MovieRow = ({ title, movies, fallbackType = 'movie', isLoading = false }) 
                   <img
                     src={`${BASE_IMG_URL}${movie.poster_path}`}
                     alt={movie.title || movie.name}
+                    loading="lazy"
                     className="w-full aspect-[2/3] object-cover"
                   />
                   {/* Gradient title overlay — always visible at bottom */}
