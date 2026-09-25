@@ -15,8 +15,23 @@ const poppins = Poppins({
 });
 
 export const metadata = {
-  title: "Fan Hub Plus",
-  description: "A dynamic fandom information hub.",
+  title: 'Fan Hub Plus | Your Ultimate Fandom Universe',
+  description: 'Stream movies, anime, K-dramas, gaming content and more on Fan Hub Plus.',
+  openGraph: {
+    title: 'Fan Hub Plus',
+    description: 'Explore premium streaming content.',
+    url: 'https://fanhubplus.com',
+    siteName: 'Fan Hub Plus',
+    images: [
+      {
+        url: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1200&h=630&fit=crop', // A premium cinema image
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
 };
 
 import FloatingNav from '@/components/FloatingNav';
