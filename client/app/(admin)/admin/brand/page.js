@@ -61,7 +61,8 @@ export default function HeroController() {
         toast.error("Failed to update banner");
       }
     } catch (err) {
-      toast.error("An error occurred");
+      console.error(err);
+      toast.error("Failed to update banner: Payload too large or server error");
     }
   };
 
