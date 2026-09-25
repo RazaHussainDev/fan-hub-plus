@@ -40,6 +40,7 @@ import { AuthProvider } from '@/context/AuthContext';
 import SearchModal from '@/components/SearchModal';
 import { Toaster } from 'react-hot-toast';
 import NetworkDetector from '@/components/NetworkDetector';
+import MaintenanceGuard from '@/components/MaintenanceGuard';
 
 export default function RootLayout({ children }) {
   return (
@@ -51,9 +52,11 @@ export default function RootLayout({ children }) {
       <body className="bg-[#FBFBFD] text-[#1d1d1f] dark:bg-brand-bg dark:text-brand-light transition-colors duration-500 min-h-screen font-body flex flex-col" suppressHydrationWarning>
         <AuthProvider>
           <SearchProvider>
-            {children}
-            <FloatingNav />
-            <SearchModal />
+            <MaintenanceGuard>
+              {children}
+              <FloatingNav />
+              <SearchModal />
+            </MaintenanceGuard>
             <Toaster position="top-center" />
             <NetworkDetector />
           </SearchProvider>
