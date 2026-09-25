@@ -11,22 +11,20 @@ export default function AdminSettings() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (token) {
-      fetch('http://localhost:5000/api/admin/settings/global')
-        .then(res => res.json())
-        .then(data => {
-          if (data.success && data.settings) {
-            setFormData({
-              siteName: data.settings.siteName || '',
-              tagline: data.settings.tagline || '',
-              maintenanceMode: data.settings.maintenanceMode || false
-            });
-          }
-        })
-        .catch(err => toast.error('Failed to load settings'))
-        .finally(() => setLoading(false));
-    }
-  }, [token]);
+    fetch('http://localhost:5000/api/admin/settings/global')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.settings) {
+          setFormData({
+            siteName: data.settings.siteName || '',
+            tagline: data.settings.tagline || '',
+            maintenanceMode: data.settings.maintenanceMode || false
+          });
+        }
+      })
+      .catch(err => toast.error('Failed to load settings'))
+      .finally(() => setLoading(false));
+  }, []);
 
   const handleSave = async () => {
     setSaving(true);

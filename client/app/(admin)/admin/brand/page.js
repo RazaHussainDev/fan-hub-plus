@@ -17,18 +17,16 @@ export default function HeroController() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (token) {
-      fetch('http://localhost:5000/api/admin/settings/global')
-        .then(res => res.json())
-        .then(data => {
-          if (data.success && data.settings?.customHero) {
-            setCustomHero(data.settings.customHero);
-          }
-        })
-        .catch(err => toast.error('Failed to load settings'))
-        .finally(() => setLoading(false));
-    }
-  }, [token]);
+    fetch('http://localhost:5000/api/admin/settings/global')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success && data.settings?.customHero) {
+          setCustomHero(data.settings.customHero);
+        }
+      })
+      .catch(err => toast.error('Failed to load settings'))
+      .finally(() => setLoading(false));
+  }, []);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
