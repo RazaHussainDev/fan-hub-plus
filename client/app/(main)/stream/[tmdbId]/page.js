@@ -7,6 +7,7 @@ import MovieRow from '@/components/MovieRow';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import { Play, X, Plus, Check } from 'lucide-react';
 import { useWatchlist } from '@/hooks/useWatchlist';
+import CustomHTML5Player from '@/components/CustomHTML5Player';
 
 export default function StreamPage() {
   const params = useParams();
@@ -170,16 +171,14 @@ export default function StreamPage() {
               <span className="text-red-400 font-medium">{error}</span>
             </div>
           ) : sources && sources[activeLayer] ? (
-            <div className="w-full bg-black rounded-xl overflow-hidden shadow-2xl border border-gray-800 relative aspect-video">
-              <iframe
-                src={sources[activeLayer]}
-                title={`${title} - ${contentType === 'tv' ? 'S'+season+'E'+episode : 'Movie'}`}
-                className="absolute top-0 left-0 w-full h-full border-0"
-                allowFullScreen
-                referrerPolicy="origin"
-              />
+            <div className="w-full relative">
+              <CustomHTML5Player videoUrl="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" />
             </div>
-          ) : null}
+          ) : (
+            <div className="w-full relative">
+              <CustomHTML5Player videoUrl="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" />
+            </div>
+          )}
 
           {/* Server Switching UI */}
           {sources && (
