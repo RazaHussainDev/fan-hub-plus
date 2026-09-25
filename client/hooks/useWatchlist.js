@@ -30,8 +30,8 @@ export function useWatchlist() {
       ? watchlist.filter(i => String(i.movieId) !== movieId)
       : [...watchlist, { 
           movieId, 
-          title: typeof item === 'object' ? (item.title || item.name) : 'Unknown Title', 
-          poster_path: typeof item === 'object' ? item.poster_path : null, 
+          title: typeof item === 'object' ? (item.title || item.name || 'Unknown Title') : 'Unknown Title', 
+          poster_path: typeof item === 'object' ? (item.poster_path || '') : '', 
           media_type: typeof item === 'object' ? (item.media_type || 'movie') : 'movie'
         }];
         
@@ -46,8 +46,8 @@ export function useWatchlist() {
         },
         body: JSON.stringify({
           movieId, 
-          title: typeof item === 'object' ? (item.title || item.name) : 'Unknown Title',
-          poster_path: typeof item === 'object' ? item.poster_path : null,
+          title: typeof item === 'object' ? (item.title || item.name || 'Unknown Title') : 'Unknown Title',
+          poster_path: typeof item === 'object' ? (item.poster_path || '') : '',
           media_type: typeof item === 'object' ? (item.media_type || 'movie') : 'movie'
         })
       });

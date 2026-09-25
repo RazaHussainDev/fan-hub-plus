@@ -113,7 +113,8 @@ exports.toggleWatchlist = async (req, res) => {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
-    const isSaved = user.watchlist.some(item => item.movieId === String(movieId));
+    const watchlist = user.watchlist || [];
+    const isSaved = watchlist.some(item => item.movieId === String(movieId));
     
     let updatedUser;
     if (isSaved) {
@@ -133,7 +134,7 @@ exports.toggleWatchlist = async (req, res) => {
     res.status(200).json({ success: true, watchlist: updatedUser.watchlist });
   } catch (error) {
     console.error('[Watchlist Error]', error.message);
-    res.status(500).json({ success: false, message: 'Server Error' });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
