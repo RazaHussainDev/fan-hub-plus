@@ -71,8 +71,8 @@ const HeroBanner = ({ trendingData = [] }) => {
       </AnimatePresence>
 
       {/* Sleek Cinematic Gradient Overlays */}
-      <div className="absolute inset-0 bg-gradient-to-r from-white via-white/50 dark:from-[#0a0a0a] dark:via-[#0a0a0a]/50 to-transparent z-0 transition-colors duration-500" />
-      <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent dark:from-[#0a0a0a] dark:via-transparent to-transparent z-0 transition-colors duration-500" />
+      <div className="absolute inset-0 bg-gradient-to-r from-brand-light via-brand-light/50 dark:from-brand-bg dark:via-brand-bg/60 to-transparent z-0 transition-colors duration-500" />
+      <div className="absolute inset-0 bg-gradient-to-t from-brand-light via-transparent dark:from-brand-bg dark:via-transparent to-transparent z-0 transition-colors duration-500" />
       
       {/* Content Container */}
       <div className="relative z-10 max-w-2xl w-full">
@@ -128,7 +128,7 @@ const HeroBanner = ({ trendingData = [] }) => {
             >
               <Link
                 href={`/stream/${currentMovie.id}?type=${currentMovie.type}`}
-                className="flex items-center gap-2 bg-gradient-to-r from-brand-primary to-brand-accent text-brand-light px-8 py-3.5 rounded-full font-bold text-lg hover:scale-105 shadow-[0_10px_20px_rgba(40,54,24,0.6)] transition-all"
+                className="flex items-center gap-2 bg-gradient-to-r from-brand-primary to-brand-accent text-white px-8 py-3.5 rounded-full font-bold text-lg hover:scale-105 shadow-[0_10px_20px_rgba(56,189,248,0.4)] transition-all"
               >
                 <Play fill="currentColor" size={22} />
                 Watch Now
