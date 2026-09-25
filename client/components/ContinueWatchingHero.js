@@ -80,10 +80,10 @@ export default function ContinueWatchingHero({ data = [] }) {
                   </p>
                 </div>
 
-                {/* Progress Bar */}
-                <div className="absolute bottom-0 left-0 w-full h-1 bg-gray-600/50">
+                {/* Progress Bar Container */}
+                <div className="absolute bottom-0 left-0 w-full h-1.5 bg-gray-800/80">
                   <div 
-                    className="h-full bg-red-600 rounded-r-full shadow-[0_0_10px_rgba(220,38,38,0.8)]"
+                    className="h-full bg-brand-primary rounded-r-full shadow-[0_0_10px_rgba(167,201,87,0.8)]"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
