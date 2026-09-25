@@ -68,36 +68,10 @@ export default function StreamPage() {
   }, [tmdbId, contentType]);
 
   useEffect(() => {
-    const fetchStream = async () => {
-      if (!metadata) return;
-
-      setLoading(true);
-      setError(null);
-      setSources(null);
-      setActiveLayer('primary');
-      
-      try {
-        const urlParams = contentType === 'tv' ? `&season=${season}&episode=${episode}` : '';
-        const response = await fetch(`http://localhost:5000/api/content/stream/${tmdbId}?type=${contentType}${urlParams}`);
-        const data = await response.json();
-        
-        if (data.success && data.data && data.data.primary) {
-          setSources(data.data);
-          setActiveLayer('primary');
-          setError(null);
-        } else {
-          setError("Failed to fetch stream sources.");
-        }
-      } catch (err) {
-        console.error('API Fetch Error:', err);
-        setError("Network error. Could not reach backend.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchStream();
-  }, [tmdbId, metadata, season, episode]);
+    if (metadata) {
+      setLoading(false);
+    }
+  }, [metadata]);
 
   const title = metadata?.name || metadata?.title || 'Loading...';
   const backdrop = metadata?.backdrop_path ? `https://image.tmdb.org/t/p/original${metadata.backdrop_path}` : null;
@@ -108,6 +82,18 @@ export default function StreamPage() {
     const currentSeason = metadata.seasons.find(s => Number(s.season_number) === Number(season));
     return currentSeason?.episode_count || 0;
   }, [metadata, season]);
+
+  const getEmbedUrl = (server) => {
+    if (contentType === 'tv') {
+      if (server === 'primary') return `https://vidsrc.me/embed/tv?tmdb=${tmdbId}&season=${season}&episode=${episode}`;
+      if (server === 'backup1') return `https://multiembed.mov/directstream.php?video_id=${tmdbId}&tmdb=1&s=${season}&e=${episode}`;
+      return `https://vidsrc.pro/embed/tv/${tmdbId}/${season}/${episode}`;
+    } else {
+      if (server === 'primary') return `https://vidsrc.me/embed/movie?tmdb=${tmdbId}`;
+      if (server === 'backup1') return `https://multiembed.mov/directstream.php?video_id=${tmdbId}&tmdb=1`;
+      return `https://vidsrc.pro/embed/movie/${tmdbId}`;
+    }
+  };
 
   return (
     <main className="relative min-h-screen bg-[#FBFBFD] dark:bg-brand-bg text-[#1d1d1f] dark:text-gray-50 p-6 md:p-12 font-body flex flex-col items-center overflow-hidden transition-colors duration-500">
@@ -162,27 +148,30 @@ export default function StreamPage() {
         {/* Video Player Container */}
         <div className="mb-8 w-full">
           {loading ? (
-            <div className="w-full aspect-video bg-gray-900 rounded-xl flex flex-col gap-4 items-center justify-center border border-gray-800 shadow-2xl">
-              <div className="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+            <div className="w-full aspect-video bg-gray-900 rounded-2xl flex flex-col gap-4 items-center justify-center border border-gray-800 shadow-2xl">
+              <div className="w-10 h-10 border-4 border-brand-primary border-t-transparent rounded-full animate-spin"></div>
               <span className="text-gray-400 font-medium">Fetching Stream...</span>
             </div>
           ) : error ? (
-            <div className="w-full aspect-video bg-gray-900 rounded-xl flex items-center justify-center border border-red-800 shadow-2xl">
+            <div className="w-full aspect-video bg-gray-900 rounded-2xl flex items-center justify-center border border-red-800 shadow-2xl">
               <span className="text-red-400 font-medium">{error}</span>
             </div>
-          ) : sources && sources[activeLayer] ? (
-            <div className="w-full relative">
-              <CustomHTML5Player videoUrl="https://www.w3schools.com/html/mov_bbb.mp4" />
-            </div>
           ) : (
-            <div className="w-full relative">
-              <CustomHTML5Player videoUrl="https://www.w3schools.com/html/mov_bbb.mp4" />
+            <div className="relative w-full aspect-video bg-[#0b0f0a] rounded-2xl overflow-hidden border border-[#a7c957]/30 shadow-[0_0_40px_rgba(167,201,87,0.15)] group">
+              <iframe
+                src={getEmbedUrl(activeLayer)}
+                className="w-full h-full"
+                frameBorder="0"
+                allowFullScreen
+                allow="autoplay; fullscreen"
+              ></iframe>
+              {/* Subtle glow overlay that ignores pointer events so the user can still click the iframe */}
+              <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_20px_rgba(167,201,87,0.1)] rounded-2xl"></div>
             </div>
           )}
 
           {/* Server Switching UI */}
-          {sources && (
-            <div className="mt-4 flex flex-wrap gap-3 justify-center">
+          <div className="mt-4 flex flex-wrap gap-3 justify-center">
               <span className="text-sm text-gray-400 font-medium flex items-center mr-2">If video is buffering, change server:</span>
               <button
                 onClick={() => setActiveLayer('primary')}
@@ -209,7 +198,7 @@ export default function StreamPage() {
                 Server 3 (Alt)
               </button>
             </div>
-          )}
+            </div>
         </div>
 
         {/* Controls Section */}
