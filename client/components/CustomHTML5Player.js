@@ -3,10 +3,11 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Play, Pause, Volume2, VolumeX, Maximize, Minimize } from 'lucide-react';
 
-export default function CustomHTML5Player({ videoUrl = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" }) {
+export default function CustomHTML5Player({ videoUrl = "https://www.w3schools.com/html/mov_bbb.mp4" }) {
   const playerRef = useRef(null);
   const containerRef = useRef(null);
   
+  const [isMounted, setIsMounted] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -15,6 +16,7 @@ export default function CustomHTML5Player({ videoUrl = "https://commondatastorag
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
     };
@@ -75,6 +77,8 @@ export default function CustomHTML5Player({ videoUrl = "https://commondatastorag
     return `${min < 10 ? '0' + min : min}:${sec < 10 ? '0' + sec : sec}`;
   };
 
+  if (!isMounted) return <div className="w-full aspect-video bg-black animate-pulse rounded-xl"></div>;
+
   return (
     <div 
       ref={containerRef} 
@@ -82,14 +86,18 @@ export default function CustomHTML5Player({ videoUrl = "https://commondatastorag
     >
       <video
         ref={playerRef}
-        src={videoUrl}
-        className="w-full h-full object-contain cursor-pointer"
+        className="w-full h-full object-contain cursor-pointer bg-black"
+        preload="metadata"
+        crossOrigin="anonymous"
         onClick={togglePlay}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
         onEnded={() => setIsPlaying(false)}
         controls={false}
-      />
+      >
+        <source src={videoUrl} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
 
       {/* Control Bar */}
       <div className="absolute bottom-0 left-0 right-0 p-4 bg-black/60 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col gap-3">

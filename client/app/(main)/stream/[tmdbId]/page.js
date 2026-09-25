@@ -172,11 +172,11 @@ export default function StreamPage() {
             </div>
           ) : sources && sources[activeLayer] ? (
             <div className="w-full relative">
-              <CustomHTML5Player videoUrl="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" />
+              <CustomHTML5Player videoUrl="https://www.w3schools.com/html/mov_bbb.mp4" />
             </div>
           ) : (
             <div className="w-full relative">
-              <CustomHTML5Player videoUrl="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" />
+              <CustomHTML5Player videoUrl="https://www.w3schools.com/html/mov_bbb.mp4" />
             </div>
           )}
 
