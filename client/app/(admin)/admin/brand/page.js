@@ -51,18 +51,20 @@ export default function HeroController() {
         },
         body: JSON.stringify({ customHero })
       });
+
       const data = await res.json();
-      if (data.success) {
-        toast.success("Hero Banner settings updated!", {
-          style: { background: '#0b0f0a', color: '#a7c957', border: '1px solid #a7c957' },
-          iconTheme: { primary: '#a7c957', secondary: '#0b0f0a' }
-        });
-      } else {
-        toast.error("Failed to update banner");
+
+      if (!res.ok) {
+        throw new Error(data.message || data.error || 'Server rejected the request');
       }
+
+      toast.success("Hero Banner settings updated successfully!", {
+        style: { background: '#0b0f0a', color: '#a7c957', border: '1px solid #a7c957' },
+        iconTheme: { primary: '#a7c957', secondary: '#0b0f0a' }
+      });
     } catch (err) {
-      console.error(err);
-      toast.error("Failed to update banner: Payload too large or server error");
+      console.error("Save Error:", err);
+      toast.error(err.message || "Something went wrong while saving!");
     }
   };
 
