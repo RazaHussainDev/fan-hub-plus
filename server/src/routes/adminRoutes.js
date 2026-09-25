@@ -19,4 +19,27 @@ router.get('/stats', protect, isAdmin, async (req, res) => {
   }
 });
 
+const Settings = require('../models/Settings');
+
+// Get global settings (Public route so frontend can check maintenance mode)
+router.get('/settings/global', async (req, res) => {
+  try {
+    let settings = await Settings.findOne();
+    if (!settings) settings = await Settings.create({}); // Auto-create if doesn't exist
+    res.json({ success: true, settings });
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
+});
+
+// Update global settings (Admin only)
+router.put('/settings/global', protect, isAdmin, async (req, res) => {
+  try {
+    const settings = await Settings.findOneAndUpdate({}, req.body, { new: true, upsert: true });
+    res.json({ success: true, settings });
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
+});
+
 module.exports = router;
