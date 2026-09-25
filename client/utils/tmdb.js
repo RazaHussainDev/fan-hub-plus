@@ -74,3 +74,9 @@ export const fetchSimilar = async (id, type = 'tv') => {
   const res = await fetch(`${BASE_URL}/${type}/${id}/similar?api_key=${API_KEY}`);
   return res.json();
 };
+
+export const fetchExplore = async (page = 1) => {
+  const res = await fetch(`${BASE_URL}/trending/all/week?api_key=${API_KEY}&language=en-US&page=${page}`);
+  return res.json();
+};
+

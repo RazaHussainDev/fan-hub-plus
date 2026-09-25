@@ -43,8 +43,8 @@ export default async function Home() {
       
       <div className="flex flex-col space-y-6 mt-[-100px] relative z-20">
         <CurvedCategorySlider />
-        <DynamicMovieRow title="Trending Now" initialMovies={trendingData.results} fetchCategory="trending" />
-        <DynamicMovieRow title="New Releases" initialMovies={newReleasesData.results} fetchCategory="newReleases" />
+        <DynamicMovieRow title="Trending Now" initialMovies={trendingData.results} fetchCategory="trending" href="/explore" />
+        <DynamicMovieRow title="New Releases" initialMovies={newReleasesData.results} fetchCategory="newReleases" href="/explore" />
         <DynamicMovieRow title="Action & Thrillers" initialMovies={actionData.results} fetchCategory="action" />
         <DynamicMovieRow title="Blockbuster Bollywood" initialMovies={bollywoodData.results} fetchCategory="bollywood" fallbackType="movie" />
         <DynamicMovieRow title="Trending Anime" initialMovies={animeData.results} fetchCategory="anime" fallbackType="tv" />

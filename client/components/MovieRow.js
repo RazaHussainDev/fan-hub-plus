@@ -8,7 +8,7 @@ import SkeletonCard from './SkeletonCard';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
-const MovieRow = ({ title, fetchCategory, initialMovies = null, fallbackType = 'movie' }) => {
+const MovieRow = ({ title, fetchCategory, initialMovies = null, fallbackType = 'movie', href }) => {
   // If fetchCategory is provided, we use SWR to fetch and cache data on the client.
   // Otherwise, fallback to initialMovies.
   const { data, error, isLoading: swrLoading } = useSWR(
@@ -28,14 +28,19 @@ const MovieRow = ({ title, fetchCategory, initialMovies = null, fallbackType = '
 
   return (
     <div className="w-full flex flex-col space-y-2 py-4">
-      {/* Apple-style section heading */}
       <div className="flex items-baseline justify-between px-6 md:px-16">
         <h2 className="text-xl md:text-2xl font-heading font-bold text-[#1d1d1f] dark:text-gray-100 transition-colors duration-300">
           {title}
         </h2>
-        <span className="text-sm font-semibold text-brand-primary cursor-pointer hover:opacity-70 transition-opacity">
-          See All
-        </span>
+        {href ? (
+          <Link href={href} className="text-sm font-semibold text-brand-primary cursor-pointer hover:opacity-70 transition-opacity">
+            See All
+          </Link>
+        ) : (
+          <span className="text-sm font-semibold text-brand-primary cursor-pointer hover:opacity-70 transition-opacity">
+            See All
+          </span>
+        )}
       </div>
 
       <div className="flex overflow-x-auto scrollbar-hide space-x-4 py-4 px-6 md:px-16 pb-12">
