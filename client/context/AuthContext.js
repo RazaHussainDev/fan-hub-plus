@@ -13,12 +13,19 @@ export function AuthProvider({ children }) {
     try {
       const storedToken = localStorage.getItem('fanhub_token');
       const storedUser = localStorage.getItem('fanhub_user');
-      if (storedToken && storedUser) {
+      
+      if (storedToken && storedUser && storedUser !== 'undefined') {
         setToken(storedToken);
         setUser(JSON.parse(storedUser));
+      } else {
+        // Clear corrupt state
+        localStorage.removeItem('fanhub_token');
+        localStorage.removeItem('fanhub_user');
       }
     } catch (e) {
       console.error('Auth hydration error:', e);
+      localStorage.removeItem('fanhub_token');
+      localStorage.removeItem('fanhub_user');
     } finally {
       setIsAuthLoading(false);
     }

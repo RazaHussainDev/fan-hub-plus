@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Home, Search, List, LogIn, Command } from 'lucide-react';
+import { Home, Search, List, LogIn, Grip } from 'lucide-react';
 import { useSearch } from '@/context/SearchContext';
 import { useAuth } from '@/context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -93,7 +93,7 @@ const FloatingNav = () => {
               : 'rounded-xl bg-brand-primary text-white shadow-[0_0_30px_rgba(168,85,247,0.8)]'
             }`}
         >
-          <Command size={22} />
+          <Grip size={22} className={`transition-transform duration-500 ${isExpanded ? 'rotate-0' : '-rotate-90'}`} />
         </motion.button>
 
         {/* mode="popLayout" allows exiting elements to float absolute while the parent shrinks! */}
