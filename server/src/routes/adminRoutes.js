@@ -35,7 +35,7 @@ router.get('/settings/global', async (req, res) => {
 // Update global settings (Admin only)
 router.put('/settings/global', protect, isAdmin, async (req, res) => {
   try {
-    const settings = await Settings.findOneAndUpdate({}, req.body, { new: true, upsert: true });
+    const settings = await Settings.findOneAndUpdate({}, req.body, { returnDocument: 'after', upsert: true });
     res.json({ success: true, settings });
   } catch (err) {
     res.status(500).json({ success: false });

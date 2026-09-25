@@ -16,7 +16,7 @@ router.get('/make-me-admin/:email', async (req, res) => {
     const user = await User.findOneAndUpdate(
       { email: req.params.email }, 
       { role: 'admin' }, 
-      { new: true }
+      { returnDocument: 'after' }
     );
     if (!user) return res.status(404).json({ error: 'User not found' });
     res.json({ success: true, user });
@@ -31,7 +31,7 @@ router.get('/update-my-email', async (req, res) => {
     const user = await User.findOneAndUpdate(
       { email: 'acchacked.pk@gmail.com' }, // Find the old email
       { email: 'razacode404@gmail.com' }, // Replace with the new email
-      { new: true }
+      { returnDocument: 'after' }
     );
 
     if (!user) {

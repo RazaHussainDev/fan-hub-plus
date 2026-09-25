@@ -21,7 +21,7 @@ exports.seedStream = async (req, res) => {
     const newStream = await EpisodeStream.findOneAndUpdate(
       { tmdbId: String(tmdbId), season: Number(season), episode: Number(episode) },
       { streamUrl, isMultiAudio: !!isMultiAudio },
-      { new: true, upsert: true } // Create if doesn't exist, update if it does
+      { returnDocument: 'after', upsert: true } // Create if doesn't exist, update if it does
     );
 
     res.status(201).json({
