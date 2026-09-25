@@ -60,7 +60,7 @@ export default function CurvedCategorySlider() {
               style={{ transform, zIndex, opacity }}
               className={`absolute w-52 h-72 rounded-2xl bg-gray-900 overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.25,0.8,0.25,1)] cursor-pointer shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/10 group select-none
                 ${isActive 
-                  ? 'border-2 border-brand-primary shadow-[0_0_40px_rgba(139,92,246,0.6)]' 
+                  ? 'border-2 border-brand-primary shadow-[0_0_25px_rgba(212,175,55,0.6)]' 
                   : ''
                 }
               `}
@@ -76,7 +76,7 @@ export default function CurvedCategorySlider() {
               
               {/* Content */}
               <div className="absolute bottom-0 left-0 w-full p-5 flex flex-col items-center justify-end text-center z-10">
-                <category.icon className={`w-8 h-8 mb-2 transition-colors duration-500 ${isActive ? 'text-brand-primary drop-shadow-[0_0_10px_rgba(139,92,246,0.8)]' : 'text-gray-400'}`} />
+                <category.icon className={`w-8 h-8 mb-2 transition-colors duration-500 ${isActive ? 'text-brand-primary drop-shadow-[0_0_10px_rgba(212,175,55,0.8)]' : 'text-gray-400'}`} />
                 <h3 className={`font-bold tracking-wide transition-colors duration-500 ${isActive ? 'text-white' : 'text-gray-300'} font-heading`}>
                   {category.name}
                 </h3>

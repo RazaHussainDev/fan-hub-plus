@@ -93,7 +93,7 @@ const HeroBanner = ({ trendingData = [] }) => {
                 transition={{ duration: 0.8, delay: 0.1 }}
                 className="flex items-center gap-2 mb-2"
               >
-                <div className="px-3 py-1 bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/20 text-black dark:text-white rounded-md text-xs font-bold uppercase tracking-widest backdrop-blur-md shadow-sm">
+                <div className="px-3 py-1 bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/20 text-brand-primary rounded-md text-xs font-bold uppercase tracking-widest backdrop-blur-md shadow-sm">
                   {currentMovie.badge}
                 </div>
               </motion.div>
@@ -128,7 +128,7 @@ const HeroBanner = ({ trendingData = [] }) => {
             >
               <Link
                 href={`/stream/${currentMovie.id}?type=${currentMovie.type}`}
-                className="flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-8 py-3.5 rounded-full font-bold text-lg hover:scale-105 hover:bg-gray-800 dark:hover:bg-gray-200 transition-all shadow-lg"
+                className="flex items-center gap-2 bg-gradient-to-r from-brand-accent to-brand-bronze text-white px-8 py-3.5 rounded-full font-bold text-lg hover:scale-105 shadow-[0_10px_20px_rgba(245,158,11,0.4)] transition-all"
               >
                 <Play fill="currentColor" size={22} />
                 Watch Now

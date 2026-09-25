@@ -90,7 +90,7 @@ const FloatingNav = () => {
           className={`p-3 z-10 flex items-center justify-center transition-colors duration-500 cursor-pointer
             ${isExpanded 
               ? 'rounded-full bg-black/5 dark:bg-white/10 text-gray-600 dark:text-gray-300 hover:text-brand-primary hover:bg-black/10 dark:hover:bg-white/20' 
-              : 'rounded-xl bg-brand-primary text-white shadow-[0_0_30px_rgba(168,85,247,0.8)]'
+              : 'rounded-xl bg-brand-primary text-white shadow-[0_0_30px_rgba(212,175,55,0.8)]'
             }`}
         >
           <Grip size={22} className={`transition-transform duration-500 ${isExpanded ? 'rotate-0' : '-rotate-90'}`} />

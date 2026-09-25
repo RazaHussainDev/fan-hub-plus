@@ -10,11 +10,12 @@
   --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-heading: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
 
-  /* Fan Hub Plus Brand Palette - Midnight Cyberpunk */
-  --color-brand-bg: #0B0F19;
-  --color-brand-panel: #111827;
-  --color-brand-primary: #D946EF;
-  --color-brand-accent: #06B6D4;
+  /* Fan Hub Plus Brand Palette - Premium Luxury Cinema */
+  --color-brand-bg: #0a0806;
+  --color-brand-panel: #14100c;
+  --color-brand-primary: #D4AF37;
+  --color-brand-accent: #F59E0B;
+  --color-brand-bronze: #B45309;
 }
 
 /* Utility to hide scrollbar for MovieRow */
