@@ -4,14 +4,14 @@ import { useState } from 'react';
 import { Gamepad2, Film, Tv, Music, BookOpen, Book, Users, Star } from 'lucide-react';
 
 const categories = [
-  { id: 1, name: 'Movies', icon: Film, image: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500&q=80' },
-  { id: 2, name: 'TV Shows', icon: Tv, image: 'https://images.unsplash.com/photo-1593784991095-a205069470b6?w=500&q=80' },
-  { id: 3, name: 'Anime', icon: Star, image: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500&q=80' },
-  { id: 4, name: 'Gaming', icon: Gamepad2, image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=500&q=80' },
-  { id: 5, name: 'K-Pop', icon: Music, image: 'https://images.unsplash.com/photo-1493225457124-a1a2a5f5646d?w=500&q=80' },
-  { id: 6, name: 'Comics', icon: BookOpen, image: 'https://images.unsplash.com/photo-1612036782180-6f0b6ce846ce?w=500&q=80' },
-  { id: 7, name: 'Manga', icon: Book, image: 'https://images.unsplash.com/photo-1541963463532-d68292c34b19?w=500&q=80' },
-  { id: 8, name: 'Cosplay', icon: Users, image: 'https://images.unsplash.com/photo-1542458578-83bba01bcac6?w=500&q=80' },
+  { id: 1, name: 'Movies', icon: Film, image: 'https://image.tmdb.org/t/p/original/eZ239CUp1d6OryZEBPnO2n87gMG.jpg' }, // Dune Part Two
+  { id: 2, name: 'TV Shows', icon: Tv, image: 'https://image.tmdb.org/t/p/original/9P4IIMYY3HifqeruZq0ZZ9g7YUi.jpg' }, // Stranger Things
+  { id: 3, name: 'Anime', icon: Star, image: 'https://image.tmdb.org/t/p/original/3GQKYh6Trm8pxd2AypovoYQf4Ay.jpg' }, // Demon Slayer
+  { id: 4, name: 'Gaming', icon: Gamepad2, image: 'https://image.tmdb.org/t/p/original/5cvnxEHT3e39DvT6ARw4GNCFrB0.jpg' }, // Arcane
+  { id: 5, name: 'K-Pop', icon: Music, image: 'https://images.unsplash.com/photo-1540039155732-d68292c34b19?w=1920&q=100' }, // Concert stadium
+  { id: 6, name: 'Comics', icon: BookOpen, image: 'https://image.tmdb.org/t/p/original/kVd3a9YeLGkoeR50jGEXM6EqseS.jpg' }, // Spider-Verse
+  { id: 7, name: 'Manga', icon: Book, image: 'https://image.tmdb.org/t/p/original/rqbCbjB19amtOtFQbb3K2lgm2zv.jpg' }, // Attack on Titan
+  { id: 8, name: 'Cosplay', icon: Users, image: 'https://images.unsplash.com/photo-1601645191163-3fc0d5d64e35?w=1920&q=100' }, // Epic Cosplay
 ];
 
 export default function CurvedCategorySlider() {
@@ -58,10 +58,10 @@ export default function CurvedCategorySlider() {
               key={category.id}
               onClick={() => setActiveIndex(index)}
               style={{ transform, zIndex, opacity }}
-              className={`absolute w-52 h-72 rounded-2xl bg-gray-900 overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.25,0.8,0.25,1)] cursor-pointer shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/10 group select-none
+              className={`absolute w-52 h-72 rounded-2xl bg-gray-900 overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.25,0.8,0.25,1)] cursor-pointer shadow-2xl group select-none
                 ${isActive 
-                  ? 'border-2 border-brand-primary shadow-[0_0_25px_rgba(167,201,87,0.5)]' 
-                  : ''
+                  ? 'border border-brand-primary shadow-[0_20px_50px_rgba(0,0,0,0.8)]' 
+                  : 'border border-white/5 opacity-60'
                 }
               `}
             >
@@ -72,12 +72,12 @@ export default function CurvedCategorySlider() {
               />
               
               {/* Overlay */}
-              <div className={`absolute inset-0 transition-opacity duration-700 ${isActive ? 'bg-gradient-to-t from-black/90 via-black/20 to-transparent' : 'bg-black/60'}`} />
+              <div className={`absolute inset-0 transition-opacity duration-700 ${isActive ? 'bg-gradient-to-t from-brand-bg via-brand-bg/40 to-transparent' : 'bg-brand-bg/80'}`} />
               
               {/* Content */}
               <div className="absolute bottom-0 left-0 w-full p-5 flex flex-col items-center justify-end text-center z-10">
-                <category.icon className={`w-8 h-8 mb-2 transition-colors duration-500 ${isActive ? 'text-brand-primary drop-shadow-[0_0_10px_rgba(167,201,87,0.8)]' : 'text-gray-400'}`} />
-                <h3 className={`font-bold tracking-wide transition-colors duration-500 ${isActive ? 'text-brand-primary' : 'text-gray-300'} font-heading`}>
+                <category.icon className={`w-8 h-8 mb-2 transition-colors duration-500 ${isActive ? 'text-brand-primary drop-shadow-md' : 'text-gray-500'}`} />
+                <h3 className={`font-bold tracking-wide transition-colors duration-500 ${isActive ? 'text-brand-light' : 'text-gray-400'} font-heading`}>
                   {category.name}
                 </h3>
               </div>
