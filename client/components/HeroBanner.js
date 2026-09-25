@@ -93,7 +93,7 @@ const HeroBanner = ({ trendingData = [] }) => {
                 transition={{ duration: 0.8, delay: 0.1 }}
                 className="flex items-center gap-2 mb-2"
               >
-                <div className="px-3 py-1 bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/20 text-brand-primary rounded-md text-xs font-bold uppercase tracking-widest backdrop-blur-md shadow-sm">
+                <div className="px-3 py-1 bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/20 text-brand-accent rounded-md text-xs font-bold uppercase tracking-widest backdrop-blur-md shadow-sm">
                   {currentMovie.badge}
                 </div>
               </motion.div>
@@ -104,7 +104,7 @@ const HeroBanner = ({ trendingData = [] }) => {
               animate={{ opacity: 1, y: 0 }} 
               exit={{ opacity: 0, y: -20, transition: { duration: 0.3 } }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-5xl md:text-7xl font-heading font-black text-gray-900 dark:text-white tracking-tight drop-shadow-md"
+              className="text-5xl md:text-7xl font-heading font-black text-gray-900 dark:text-brand-light tracking-tight drop-shadow-md"
             >
               {currentMovie.title}
             </motion.h1>
@@ -128,7 +128,7 @@ const HeroBanner = ({ trendingData = [] }) => {
             >
               <Link
                 href={`/stream/${currentMovie.id}?type=${currentMovie.type}`}
-                className="flex items-center gap-2 bg-gradient-to-r from-brand-accent to-brand-bronze text-white px-8 py-3.5 rounded-full font-bold text-lg hover:scale-105 shadow-[0_10px_20px_rgba(245,158,11,0.4)] transition-all"
+                className="flex items-center gap-2 bg-gradient-to-r from-brand-primary to-brand-accent text-brand-light px-8 py-3.5 rounded-full font-bold text-lg hover:scale-105 shadow-[0_10px_20px_rgba(40,54,24,0.6)] transition-all"
               >
                 <Play fill="currentColor" size={22} />
                 Watch Now

@@ -89,8 +89,8 @@ const FloatingNav = () => {
           transition={{ duration: isExpanded ? 0.5 : 1.5, ease: "easeInOut" }}
           className={`p-3 z-10 flex items-center justify-center transition-colors duration-500 cursor-pointer
             ${isExpanded 
-              ? 'rounded-full bg-black/5 dark:bg-white/10 text-gray-600 dark:text-gray-300 hover:text-brand-primary hover:bg-black/10 dark:hover:bg-white/20' 
-              : 'rounded-xl bg-brand-primary text-white shadow-[0_0_30px_rgba(212,175,55,0.8)]'
+              ? 'rounded-full bg-black/5 dark:bg-white/10 text-gray-600 dark:text-gray-300 hover:text-brand-accent hover:bg-brand-primary/80 dark:hover:bg-brand-primary/80' 
+              : 'rounded-xl bg-brand-primary text-brand-light shadow-[0_0_30px_rgba(40,54,24,0.8)]'
             }`}
         >
           <Grip size={22} className={`transition-transform duration-500 ${isExpanded ? 'rotate-0' : '-rotate-90'}`} />
@@ -110,10 +110,10 @@ const FloatingNav = () => {
               {navItems.map((item, index) => {
                 const IconWrapper = ({ children }) => (
                   <div className="relative group flex flex-col items-center cursor-pointer">
-                    <div className="absolute -top-14 px-3 py-1.5 bg-black/90 dark:bg-white/90 text-white dark:text-black text-xs font-semibold rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap backdrop-blur-md scale-90 group-hover:scale-100 shadow-xl">
+                    <div className="absolute -top-14 px-3 py-1.5 bg-brand-primary text-brand-light text-xs font-semibold rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap backdrop-blur-md scale-90 group-hover:scale-100 shadow-xl">
                       {item.name}
                     </div>
-                    <div className="p-3 bg-transparent hover:bg-black/10 dark:hover:bg-white/10 rounded-full transition-all duration-300 active:scale-90">
+                    <div className="p-3 bg-transparent hover:bg-brand-primary/80 rounded-full transition-all duration-300 active:scale-90">
                       {children}
                     </div>
                   </div>
@@ -123,12 +123,12 @@ const FloatingNav = () => {
                   user.avatar ? (
                     <img src={user.avatar} alt={user.name} className="w-6 h-6 rounded-full object-cover shadow-sm" />
                   ) : (
-                    <span className="w-6 h-6 rounded-full bg-brand-primary text-white flex items-center justify-center text-xs font-bold shadow-sm">
+                    <span className="w-6 h-6 rounded-full bg-brand-accent text-brand-light flex items-center justify-center text-xs font-bold shadow-sm">
                       {user.name.charAt(0).toUpperCase()}
                     </span>
                   )
                 ) : (
-                  <item.icon size={22} className="text-gray-700 dark:text-gray-300 group-hover:text-brand-primary dark:group-hover:text-white transition-colors" />
+                  <item.icon size={22} className="text-gray-700 dark:text-gray-300 group-hover:text-brand-accent transition-colors" />
                 );
 
                 if (item.onClick) {

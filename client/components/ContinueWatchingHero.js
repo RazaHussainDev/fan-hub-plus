@@ -57,7 +57,7 @@ export default function ContinueWatchingHero({ data = [] }) {
               <Link 
                 key={item.id} 
                 href={`/stream/${item.id}?type=${item.media_type || 'tv'}`}
-                className="relative shrink-0 w-48 h-28 rounded-xl overflow-hidden group/card cursor-pointer border border-white/10 shadow-lg hover:border-brand-primary/50 hover:shadow-[0_0_20px_rgba(212,175,55,0.3)] transition-all duration-300"
+                className="relative shrink-0 w-48 h-28 rounded-xl overflow-hidden group/card cursor-pointer border border-white/10 shadow-lg hover:border-brand-accent/50 hover:shadow-[0_0_20px_rgba(96,108,56,0.3)] transition-all duration-300"
               >
                 {/* Background Image */}
                 <div 
