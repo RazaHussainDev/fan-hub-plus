@@ -146,18 +146,18 @@ export default function StreamPage() {
         </header>
 
         {/* Video Player Container */}
-        <div className="mb-8 w-full">
+        <div className="mb-8 w-full relative z-20">
           {loading ? (
-            <div className="w-full aspect-video bg-gray-900 rounded-2xl flex flex-col gap-4 items-center justify-center border border-gray-800 shadow-2xl">
+            <div className="w-full aspect-video bg-gray-200 dark:bg-gray-900 rounded-2xl flex flex-col gap-4 items-center justify-center border border-gray-300 dark:border-gray-800 shadow-2xl transition-colors duration-500">
               <div className="w-10 h-10 border-4 border-brand-primary border-t-transparent rounded-full animate-spin"></div>
-              <span className="text-gray-400 font-medium">Fetching Stream...</span>
+              <span className="text-gray-500 dark:text-gray-400 font-medium">Fetching Stream...</span>
             </div>
           ) : error ? (
-            <div className="w-full aspect-video bg-gray-900 rounded-2xl flex items-center justify-center border border-red-800 shadow-2xl">
-              <span className="text-red-400 font-medium">{error}</span>
+            <div className="w-full aspect-video bg-red-50 dark:bg-gray-900 rounded-2xl flex items-center justify-center border border-red-200 dark:border-red-800 shadow-2xl transition-colors duration-500">
+              <span className="text-red-500 dark:text-red-400 font-medium">{error}</span>
             </div>
           ) : (
-            <div className="relative w-full aspect-video bg-[#0b0f0a] rounded-2xl overflow-hidden border border-[#a7c957]/30 shadow-[0_0_40px_rgba(167,201,87,0.15)] group">
+            <div className="relative w-full aspect-video bg-white dark:bg-[#0b0f0a] rounded-2xl overflow-hidden border border-black/10 dark:border-[#a7c957]/30 shadow-2xl dark:shadow-[0_0_40px_rgba(167,201,87,0.15)] group transition-colors duration-500">
               <iframe
                 src={getEmbedUrl(activeLayer)}
                 className="w-full h-full"
@@ -165,34 +165,34 @@ export default function StreamPage() {
                 allowFullScreen
                 allow="autoplay; fullscreen"
               ></iframe>
-              {/* Subtle glow overlay that ignores pointer events so the user can still click the iframe */}
-              <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_20px_rgba(167,201,87,0.1)] rounded-2xl"></div>
+              {/* Subtle glow overlay that ignores pointer events */}
+              <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_20px_rgba(0,0,0,0.05)] dark:shadow-[inset_0_0_20px_rgba(167,201,87,0.1)] rounded-2xl transition-shadow duration-500"></div>
             </div>
           )}
 
           {/* Server Switching UI */}
           <div className="mt-4 flex flex-wrap gap-3 justify-center">
-              <span className="text-sm text-gray-400 font-medium flex items-center mr-2">If video is buffering, change server:</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400 font-medium flex items-center mr-2 transition-colors duration-500">If video is buffering, change server:</span>
               <button
                 onClick={() => setActiveLayer('primary')}
-                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
-                  activeLayer === 'primary' ? 'bg-brand-primary text-white shadow-lg' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 ${
+                  activeLayer === 'primary' ? 'bg-brand-primary text-white shadow-lg' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-transparent'
                 }`}
               >
                 Server 1 (Primary)
               </button>
               <button
                 onClick={() => setActiveLayer('backup1')}
-                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
-                  activeLayer === 'backup1' ? 'bg-brand-primary text-white shadow-lg' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 ${
+                  activeLayer === 'backup1' ? 'bg-brand-primary text-white shadow-lg' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-transparent'
                 }`}
               >
                 Server 2 (Backup)
               </button>
               <button
                 onClick={() => setActiveLayer('backup2')}
-                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
-                  activeLayer === 'backup2' ? 'bg-brand-primary text-white shadow-lg' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 ${
+                  activeLayer === 'backup2' ? 'bg-brand-primary text-white shadow-lg' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-transparent'
                 }`}
               >
                 Server 3 (Alt)
@@ -202,10 +202,10 @@ export default function StreamPage() {
 
         {/* Controls Section */}
         {contentType === 'tv' && (
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 shadow-lg space-y-6 mb-40">
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-6 shadow-lg space-y-6 mb-40 relative z-20 transition-colors duration-500">
             {/* SEASON SELECTOR */}
             <div>
-              <h3 className="text-sm font-bold text-gray-400 mb-2">SELECT SEASON</h3>
+              <h3 className="text-sm font-bold text-gray-500 dark:text-gray-400 mb-2 transition-colors duration-500">SELECT SEASON</h3>
               <div className="flex flex-wrap gap-2">
                 {metadata?.seasons?.filter(s => s.season_number > 0).map((s) => (
                   <button
@@ -214,7 +214,7 @@ export default function StreamPage() {
                       setSeason(Number(s.season_number));
                       setEpisode(1);
                     }}
-                    className={`px-4 py-2 rounded-md transition-colors duration-200 ${Number(season) === Number(s.season_number) ? 'bg-brand-primary text-white' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}`}
+                    className={`px-4 py-2 rounded-md transition-all duration-200 ${Number(season) === Number(s.season_number) ? 'bg-brand-primary text-white shadow-md' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'}`}
                   >
                     Season {s.season_number}
                   </button>
@@ -224,13 +224,13 @@ export default function StreamPage() {
 
             {/* EPISODE SELECTOR */}
             <div className="mb-40">
-              <h3 className="text-sm font-bold text-gray-400 mb-2">SELECT EPISODE</h3>
+              <h3 className="text-sm font-bold text-gray-500 dark:text-gray-400 mb-2 transition-colors duration-500">SELECT EPISODE</h3>
               <div key={`ep-container-${season}`} className="flex flex-wrap gap-2">
                 {Array.from({ length: episodeCount }, (_, i) => i + 1).map((ep) => (
                   <button
                     key={`ep-btn-${season}-${ep}`}
                     onClick={() => setEpisode(ep)}
-                    className={`px-4 py-2 rounded-md transition-colors duration-200 ${Number(episode) === ep ? 'bg-red-600 text-white font-bold' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}`}
+                    className={`px-4 py-2 rounded-md transition-all duration-200 ${Number(episode) === ep ? 'bg-red-600 text-white font-bold shadow-md' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'}`}
                   >
                     {ep}
                   </button>
@@ -242,8 +242,8 @@ export default function StreamPage() {
 
         {/* Cast & Crew Section */}
         {cast.length > 0 && (
-          <div className="mt-12 w-full">
-            <h2 className="text-xl md:text-2xl font-heading font-bold text-gray-100 mb-4 px-2">Cast & Crew</h2>
+          <div className="mt-12 w-full relative z-20">
+            <h2 className="text-xl md:text-2xl font-heading font-bold text-gray-900 dark:text-gray-100 mb-4 px-2 transition-colors duration-500">Cast & Crew</h2>
             <div className="flex overflow-x-auto gap-4 scrollbar-hide px-2 pb-4">
               {cast.map((actor) => {
                 if (!actor.profile_path) return null;
@@ -252,9 +252,9 @@ export default function StreamPage() {
                     <img 
                       src={`${BASE_IMG_URL}${actor.profile_path}`} 
                       alt={actor.name}
-                      className="w-24 h-24 rounded-full object-cover shadow-lg border border-gray-700 mb-2"
+                      className="w-24 h-24 rounded-full object-cover shadow-lg border border-gray-200 dark:border-gray-700 mb-2 transition-colors duration-500"
                     />
-                    <p className="text-sm font-bold text-gray-200 line-clamp-1">{actor.name}</p>
+                    <p className="text-sm font-bold text-gray-800 dark:text-gray-200 line-clamp-1 transition-colors duration-500">{actor.name}</p>
                     <p className="text-xs text-brand-primary line-clamp-1">{actor.character}</p>
                   </div>
                 );
