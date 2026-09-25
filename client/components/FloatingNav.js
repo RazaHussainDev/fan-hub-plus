@@ -10,27 +10,29 @@ import AccessibilityControls from './AccessibilityControls';
 
 const containerVariants = {
   expanded: { 
-    transition: { staggerChildren: 0.08, delayChildren: 0.1 } 
+    transition: { staggerChildren: 0.15, delayChildren: 0.2 } 
   },
   collapsed: { 
-    transition: { staggerChildren: 0.05, staggerDirection: -1 } 
+    transition: { staggerChildren: 0.15, staggerDirection: -1 } 
   }
 };
 
 const itemVariants = {
   expanded: { 
     opacity: 1, 
-    x: 0, 
+    x: 0,
+    y: 0, 
     scale: 1, 
     filter: "blur(0px)", 
-    transition: { type: "spring", stiffness: 350, damping: 25 } 
+    transition: { type: "spring", stiffness: 200, damping: 20 } 
   },
   collapsed: { 
     opacity: 0, 
-    x: -40, // Pulls towards the left toggle button
-    scale: 0.2, // "halka sa zoom out ho"
-    filter: "blur(2px)", 
-    transition: { duration: 0.3, ease: "backIn" }
+    x: -80, // Pulls strongly towards the toggle button
+    y: 20, // Slight arc
+    scale: 0, // completely disappear
+    filter: "blur(8px)", 
+    transition: { duration: 0.7, ease: [0.32, 0.72, 0, 1] } // Very slow and buttery
   }
 };
 
@@ -68,25 +70,30 @@ const FloatingNav = () => {
         layout
         initial={false}
         className={`fixed z-50 flex items-center p-2 backdrop-blur-2xl border shadow-2xl overflow-hidden
-          transition-colors duration-500
+          transition-colors duration-1000
           ${isExpanded 
             ? "bottom-8 left-1/2 -translate-x-1/2 rounded-full bg-white/70 dark:bg-black/50 border-white/60 dark:border-white/10" 
             : "top-6 left-6 rounded-2xl bg-white/90 dark:bg-black/80 border-black/10 dark:border-white/20"
           }`}
         style={{ borderRadius: isExpanded ? 9999 : 24 }} // forces smooth corner rounding
-        transition={{ type: "spring", stiffness: 220, damping: 28 }} // Butter smooth layout transition
+        transition={{ type: "spring", stiffness: 120, damping: 25 }} // Ultra smooth layout transition
       >
-        {/* Master Toggle Button */}
+        {/* Master Toggle Button (Snake Head) */}
         <motion.button 
           layout
           onClick={() => setIsExpanded(!isExpanded)}
-          className={`p-3 z-10 flex items-center justify-center transition-all duration-300 cursor-pointer
+          animate={{
+            scale: isExpanded ? 1 : [1, 1.3, 0.8, 1.2, 0.9, 1.1, 1], // The "swallowing" snake game effect
+            rotate: isExpanded ? 0 : -90
+          }}
+          transition={{ duration: isExpanded ? 0.5 : 1.5, ease: "easeInOut" }}
+          className={`p-3 z-10 flex items-center justify-center transition-colors duration-500 cursor-pointer
             ${isExpanded 
               ? 'rounded-full bg-black/5 dark:bg-white/10 text-gray-600 dark:text-gray-300 hover:text-brand-primary hover:bg-black/10 dark:hover:bg-white/20' 
-              : 'rounded-xl bg-brand-primary text-white shadow-[0_0_20px_rgba(168,85,247,0.6)] hover:bg-brand-primary/80 hover:scale-105'
+              : 'rounded-xl bg-brand-primary text-white shadow-[0_0_30px_rgba(168,85,247,0.8)]'
             }`}
         >
-          <Command size={22} className={`transition-transform duration-500 ${isExpanded ? 'rotate-0' : '-rotate-90'}`} />
+          <Command size={22} />
         </motion.button>
 
         {/* mode="popLayout" allows exiting elements to float absolute while the parent shrinks! */}
