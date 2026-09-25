@@ -14,6 +14,25 @@ const contentRoutes = require('./src/routes/contentRoutes');
 const app  = express();
 const PORT = process.env.PORT || 5000;
 
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+
+// Add 15+ security headers
+app.use(helmet());
+
+// Content Security Policy (Optional but recommended: Allow iframe embeds from vidsrc)
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      frameSrc: ["'self'", "https://vidsrc.me", "https://multiembed.mov", "https://vidsrc.pro"],
+      imgSrc: ["'self'", "data:", "https://image.tmdb.org", "https://images.unsplash.com"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+    },
+  })
+);
+
 // Connect to MongoDB
 connectDB();
 
@@ -46,6 +65,28 @@ const sendSuccess = (res, data, message, statusCode = 200) =>
 
 const sendError = (res, message, statusCode = 500) =>
   res.status(statusCode).json({ success: false, data: null, message });
+
+// ─── Rate Limiting ───────────────────────────────────────────────────────────
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: { success: false, message: 'Too many requests from this IP, please try again after 15 minutes.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const authLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 5, // Limit each IP to 5 failed login/register attempts per hour
+  message: { success: false, message: 'Too many login attempts, please try again after an hour.' }
+});
+
+// Apply general limiter to all /api routes
+app.use('/api', apiLimiter);
+
+// Apply strict limiter ONLY to auth routes (Login/Register)
+app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/register', authLimiter);
 
 // ─── Routes ──────────────────────────────────────────────────────────────────
 
