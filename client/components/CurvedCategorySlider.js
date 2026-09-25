@@ -8,7 +8,7 @@ const categories = [
   { id: 2, name: 'TV Shows', icon: Tv, image: 'https://image.tmdb.org/t/p/original/9P4IIMYY3HifqeruZq0ZZ9g7YUi.jpg' }, // Stranger Things
   { id: 3, name: 'Anime', icon: Star, image: 'https://image.tmdb.org/t/p/original/3GQKYh6Trm8pxd2AypovoYQf4Ay.jpg' }, // Demon Slayer
   { id: 4, name: 'Gaming', icon: Gamepad2, image: 'https://image.tmdb.org/t/p/original/5cvnxEHT3e39DvT6ARw4GNCFrB0.jpg' }, // Arcane
-  { id: 5, name: 'K-Pop', icon: Music, image: 'https://images.unsplash.com/photo-1540039155732-d68292c34b19?w=1920&q=100' }, // Concert stadium
+  { id: 5, name: 'K-Pop', icon: Music, image: 'https://image.tmdb.org/t/p/original/vpo3qdjgasu2kxHIKkNIXK9hDHM.jpg' }, // Blackpink
   { id: 6, name: 'Comics', icon: BookOpen, image: 'https://image.tmdb.org/t/p/original/kVd3a9YeLGkoeR50jGEXM6EqseS.jpg' }, // Spider-Verse
   { id: 7, name: 'Manga', icon: Book, image: 'https://image.tmdb.org/t/p/original/rqbCbjB19amtOtFQbb3K2lgm2zv.jpg' }, // Attack on Titan
   { id: 8, name: 'Cosplay', icon: Users, image: 'https://images.unsplash.com/photo-1601645191163-3fc0d5d64e35?w=1920&q=100' }, // Epic Cosplay
@@ -65,10 +65,11 @@ export default function CurvedCategorySlider() {
                 }
               `}
             >
-              {/* Background Image */}
-              <div 
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                style={{ backgroundImage: `url(${category.image})` }}
+              {/* Background Image with Alt Text Fallback */}
+              <img 
+                src={category.image}
+                alt={`${category.name} Wallpaper`}
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
               
               {/* Overlay */}
