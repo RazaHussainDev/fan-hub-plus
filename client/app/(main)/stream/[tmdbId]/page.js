@@ -198,7 +198,6 @@ export default function StreamPage() {
                 Server 3 (Alt)
               </button>
             </div>
-            </div>
         </div>
 
         {/* Controls Section */}
