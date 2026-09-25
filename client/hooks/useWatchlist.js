@@ -20,6 +20,23 @@ export function useWatchlist() {
   const toggleWatchlist = async (item) => {
     if (!user || !token) return toast.error("Please login to save movies!");
 
+    // Safely extract ID whether 'item' is an object or a primitive string/number
+    const rawId = typeof item === 'object' ? (item.id || item.movieId) : item;
+    const movieId = String(rawId);
+    const isCurrentlySaved = isInWatchlist(movieId);
+
+    // Optimistic UI mutation for instant feedback
+    const updatedWatchlist = isCurrentlySaved
+      ? watchlist.filter(i => String(i.movieId) !== movieId)
+      : [...watchlist, { 
+          movieId, 
+          title: typeof item === 'object' ? (item.title || item.name) : 'Unknown Title', 
+          poster_path: typeof item === 'object' ? item.poster_path : null, 
+          media_type: typeof item === 'object' ? (item.media_type || 'movie') : 'movie'
+        }];
+        
+    mutate('http://localhost:5000/api/auth/watchlist', { success: true, watchlist: updatedWatchlist }, false);
+
     try {
       const res = await fetch('http://localhost:5000/api/auth/watchlist', {
         method: 'POST',
@@ -28,10 +45,10 @@ export function useWatchlist() {
           Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
-          movieId: String(item.id || item.movieId), // Force String to match MongoDB schema
-          title: item.title || item.name,
-          poster_path: item.poster_path,
-          media_type: item.media_type || 'movie'
+          movieId, 
+          title: typeof item === 'object' ? (item.title || item.name) : 'Unknown Title',
+          poster_path: typeof item === 'object' ? item.poster_path : null,
+          media_type: typeof item === 'object' ? (item.media_type || 'movie') : 'movie'
         })
       });
 
@@ -47,7 +64,6 @@ export function useWatchlist() {
         storedUser.watchlist = resData.watchlist;
         localStorage.setItem('fanhub_user', JSON.stringify(storedUser));
         
-        const isCurrentlySaved = isInWatchlist(item.id || item.movieId);
         if (isCurrentlySaved) toast.success("Removed from Watchlist", { style: { background: '#0b0f0a', color: '#f3f4f6' } });
         else toast.success("Watchlist updated!", { style: { background: '#0b0f0a', color: '#a7c957', border: '1px solid #a7c957' } });
 
@@ -57,6 +73,7 @@ export function useWatchlist() {
     } catch (err) {
       console.error("Watchlist Error:", err);
       toast.error("Error: Could not save to database.");
+      mutate('http://localhost:5000/api/auth/watchlist'); // Rollback
     }
   };
 

@@ -102,23 +102,35 @@ exports.login = async (req, res) => {
 // POST /api/auth/watchlist
 exports.toggleWatchlist = async (req, res) => {
   try {
-    console.log("Incoming watchlist data:", req.body);
     const { movieId, title, poster_path, media_type } = req.body;
-    const user = await User.findById(req.user.id);
+    
+    if (!movieId) {
+      return res.status(400).json({ success: false, message: 'movieId is required' });
+    }
 
+    const user = await User.findById(req.user.id);
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
-    const isSaved = user.watchlist.find(item => item.movieId === String(movieId));
+    const isSaved = user.watchlist.some(item => item.movieId === String(movieId));
+    
+    let updatedUser;
     if (isSaved) {
-      user.watchlist = user.watchlist.filter(item => item.movieId !== String(movieId)); // Remove
+      updatedUser = await User.findByIdAndUpdate(
+        req.user.id,
+        { $pull: { watchlist: { movieId: String(movieId) } } },
+        { new: true }
+      );
     } else {
-      user.watchlist.push({ movieId: String(movieId), title, poster_path, media_type }); // Add
+      updatedUser = await User.findByIdAndUpdate(
+        req.user.id,
+        { $push: { watchlist: { movieId: String(movieId), title, poster_path, media_type } } },
+        { new: true }
+      );
     }
 
-    await user.save();
-    res.status(200).json({ success: true, watchlist: user.watchlist });
+    res.status(200).json({ success: true, watchlist: updatedUser.watchlist });
   } catch (error) {
     console.error('[Watchlist Error]', error.message);
     res.status(500).json({ success: false, message: 'Server Error' });
