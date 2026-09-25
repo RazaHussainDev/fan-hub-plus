@@ -5,53 +5,71 @@ import Link from 'next/link';
 import { Play, Info } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ContinueWatchingHero from '@/components/ContinueWatchingHero';
-
-const SLIDES = [
-  {
-    id: 71446,
-    title: 'Money Heist',
-    badge: 'Nº 1 in TV Shows Today',
-    description: 'To carry out the biggest heist in history, a mysterious man called The Professor recruits a band of eight robbers who have a single characteristic: none of them has anything to lose.',
-    image: 'https://image.tmdb.org/t/p/original/gFZriCkpJYsApPZEF3jhxL4yLzG.jpg',
-    type: 'tv'
-  },
-  {
-    id: 94997,
-    title: 'House of the Dragon',
-    badge: 'New Season',
-    description: 'An internal succession conflict within house Targaryen that causes the decline of their power, 172 years before the birth of Daenerys Targaryen.',
-    image: 'https://image.tmdb.org/t/p/original/577eXC8wFQT0eUrJcgznSiFPRmk.jpg',
-    type: 'tv'
-  },
-  {
-    id: 157336,
-    title: 'Interstellar',
-    badge: 'Critically Acclaimed',
-    description: 'A team of explorers travel through a wormhole in space in an attempt to ensure humanity\'s survival as Earth\'s resources run out.',
-    image: 'https://image.tmdb.org/t/p/original/8sNiAPPYU14PUepFNeSNGUTiHW.jpg',
-    type: 'movie'
-  },
-  {
-    id: 119051,
-    title: 'Wednesday',
-    badge: 'Trending Globally',
-    description: 'Wednesday Addams is sent to Nevermore Academy, a bizarre boarding school where she attempts to master her psychic powers and stop a monstrous killing spree.',
-    image: 'https://image.tmdb.org/t/p/original/iHSwvRVsRyxpX7FE7GbviaDvgGZ.jpg',
-    type: 'tv'
-  }
-];
+import { fetchDetails } from '@/utils/tmdb';
 
 const HeroBanner = ({ trendingData = [] }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [slides, setSlides] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % SLIDES.length);
-    }, 8000);
-    return () => clearInterval(timer);
+    const fetchHeroMovies = async () => {
+      try {
+        // Fetch global settings to get featured TMDB IDs
+        const res = await fetch('http://localhost:5000/api/admin/settings/global');
+        const data = await res.json();
+        const ids = data.success && data.settings?.featuredMovies?.length > 0 
+          ? data.settings.featuredMovies 
+          : ['157336', '299534', '82856']; // Fallback to Interstellar, Avengers, Top Gun
+
+        // Fetch TMDB details for each ID
+        const moviesData = await Promise.all(
+          ids.map(async (id) => {
+            try {
+              return await fetchDetails(id, 'movie');
+            } catch (err) {
+              // Fallback to TV if movie fails
+              return await fetchDetails(id, 'tv').catch(() => null);
+            }
+          })
+        );
+
+        const formattedSlides = moviesData.filter(Boolean).map(m => ({
+          id: m.id,
+          title: m.title || m.name,
+          badge: 'Featured Content',
+          description: m.overview,
+          image: m.backdrop_path ? `https://image.tmdb.org/t/p/original${m.backdrop_path}` : '',
+          type: m.title ? 'movie' : 'tv'
+        }));
+
+        setSlides(formattedSlides.length > 0 ? formattedSlides : []);
+      } catch (err) {
+        console.error("Failed to load hero banner", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchHeroMovies();
   }, []);
 
-  const currentMovie = SLIDES[currentIndex];
+  useEffect(() => {
+    if (slides.length <= 1) return;
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % slides.length);
+    }, 8000);
+    return () => clearInterval(timer);
+  }, [slides]);
+
+  if (loading || slides.length === 0) {
+    return (
+      <div className="relative w-full h-[85vh] min-h-[600px] flex items-center justify-center bg-[#0b0f0a]">
+        <div className="w-10 h-10 border-4 border-brand-primary/30 border-t-brand-primary rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  const currentMovie = slides[currentIndex];
 
   return (
     <div className="relative w-full h-[85vh] min-h-[600px] flex items-end pb-24 md:pb-32 px-6 md:px-16 overflow-hidden">
@@ -148,7 +166,7 @@ const HeroBanner = ({ trendingData = [] }) => {
 
       {/* Progress Indicators */}
       <div className="absolute bottom-10 left-6 md:left-16 flex items-center gap-3 z-20">
-        {SLIDES.map((_, index) => (
+        {slides.map((_, index) => (
           <div 
             key={index} 
             className="h-1.5 rounded-full bg-black/20 dark:bg-white/20 overflow-hidden cursor-pointer"

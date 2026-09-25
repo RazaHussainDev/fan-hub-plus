@@ -4,7 +4,11 @@ const SettingsSchema = new mongoose.Schema({
   siteName: { type: String, default: 'Fan Hub Plus' },
   tagline: { type: String, default: 'Your Ultimate Fandom Universe' },
   maintenanceMode: { type: Boolean, default: false },
-  announcement: { type: String, default: '' }
+  announcement: { type: String, default: '' },
+  featuredMovies: { 
+    type: [String], 
+    default: ['82856', '299534', '157336'] // Default TMDB IDs (e.g., Top Gun, Avengers, Interstellar)
+  }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Settings', SettingsSchema);
