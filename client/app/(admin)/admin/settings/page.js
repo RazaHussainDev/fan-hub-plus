@@ -11,19 +11,39 @@ export default function AdminSettings() {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/admin/settings/global')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success && data.settings) {
+    let isMounted = true;
+    
+    const timeout = setTimeout(() => {
+      if (isMounted) setLoading(false);
+    }, 5000);
+
+    const fetchSettings = async () => {
+      try {
+        console.log("Fetching global settings...");
+        const res = await fetch('http://localhost:5000/api/admin/settings/global');
+        if (!res.ok) throw new Error('Network response was not ok');
+        const data = await res.json();
+        console.log("Global settings fetched:", data);
+        if (isMounted && data.success && data.settings) {
           setFormData({
             siteName: data.settings.siteName || '',
             tagline: data.settings.tagline || '',
             maintenanceMode: data.settings.maintenanceMode || false
           });
         }
-      })
-      .catch(err => toast.error('Failed to load settings'))
-      .finally(() => setLoading(false));
+      } catch (err) {
+        console.error('Failed to load settings:', err);
+        if (isMounted) toast.error('Failed to load settings');
+      } finally {
+        if (isMounted) {
+          console.log("Setting loading to false");
+          setLoading(false);
+          clearTimeout(timeout);
+        }
+      }
+    };
+    fetchSettings();
+    return () => { isMounted = false; clearTimeout(timeout); };
   }, []);
 
   const handleSave = async () => {
