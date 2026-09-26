@@ -18,7 +18,7 @@ export default function ContentEngine() {
   // Load Library
   const fetchLibrary = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/admin/movies/library', { headers: { Authorization: `Bearer ${localStorage.getItem('fanhub_token')}` }});
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/admin/movies/library`, { headers: { Authorization: `Bearer ${localStorage.getItem('fanhub_token')}` }});
       const data = await res.json();
       if (data.success) setDbMovies(data.movies);
     } catch (err) { console.error(err); }
@@ -33,7 +33,7 @@ export default function ContentEngine() {
     if (!searchQuery) return;
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/tmdb/search/${mediaType}/${searchQuery}`, { headers: { Authorization: `Bearer ${localStorage.getItem('fanhub_token')}` }});
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/admin/tmdb/search/${mediaType}/${searchQuery}`, { headers: { Authorization: `Bearer ${localStorage.getItem('fanhub_token')}` }});
       const data = await res.json();
       if (data.success) {
         setSearchResults(data.results);
@@ -50,7 +50,7 @@ export default function ContentEngine() {
   const handleImport = async (item) => {
     try {
       const payload = { ...item, media_type: mediaType };
-      const res = await fetch('http://localhost:5000/api/admin/movies/import', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/admin/movies/import`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('fanhub_token')}` },
         body: JSON.stringify(payload)
@@ -73,7 +73,7 @@ export default function ContentEngine() {
   // Toggle Revoke/Publish
   const toggleStatus = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/movies/${id}/toggle`, { method: 'PATCH', headers: { Authorization: `Bearer ${localStorage.getItem('fanhub_token')}` }});
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/admin/movies/${id}/toggle`, { method: 'PATCH', headers: { Authorization: `Bearer ${localStorage.getItem('fanhub_token')}` }});
       if (res.ok) {
          fetchLibrary(); // Refresh list
          toast.success("Visibility updated!", {

@@ -39,7 +39,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (token) {
-      fetch('http://localhost:5000/api/admin/stats', {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/admin/stats`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

@@ -20,7 +20,7 @@ export default function AdminSettings() {
     const fetchSettings = async () => {
       try {
         console.log("Fetching global settings...");
-        const res = await fetch('http://localhost:5000/api/admin/settings/global');
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/admin/settings/global`);
         if (!res.ok) throw new Error('Network response was not ok');
         const data = await res.json();
         console.log("Global settings fetched:", data);
@@ -54,7 +54,7 @@ export default function AdminSettings() {
     const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
 
     try {
-      const res = await fetch('http://localhost:5000/api/admin/settings/global', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/admin/settings/global`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

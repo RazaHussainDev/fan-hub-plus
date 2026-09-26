@@ -28,7 +28,7 @@ export default function HeroController() {
     const fetchSettings = async () => {
       try {
         console.log("Fetching brand settings...");
-        const res = await fetch('http://localhost:5000/api/admin/settings/global');
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/admin/settings/global`);
         if (!res.ok) throw new Error('Network response was not ok');
         const data = await res.json();
         console.log("Settings fetched:", data);
@@ -70,7 +70,7 @@ export default function HeroController() {
     const timeoutId = setTimeout(() => controller.abort(), 8000);
 
     try {
-      const res = await fetch('http://localhost:5000/api/admin/settings/global', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/admin/settings/global`, {
         method: 'PUT',
         headers: { 
           'Content-Type': 'application/json', 
