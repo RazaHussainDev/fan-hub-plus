@@ -14,14 +14,14 @@ export default function AdminLayout({ children }) {
     if (!isAuthLoading) {
       if (!user) {
         router.push('/login');
-      } else if (user.role !== 'admin') {
+      } else if (user.role !== 'admin' && user.role !== 'superadmin') {
         toast.error("Unauthorized Area", { style: { background: '#0b0f0a', color: '#ef4444', border: '1px solid #ef4444' } });
         router.push('/');
       }
     }
   }, [user, isAuthLoading, router]);
 
-  if (isAuthLoading || !user || user.role !== 'admin') {
+  if (isAuthLoading || !user || (user.role !== 'admin' && user.role !== 'superadmin')) {
     return (
       <div className="h-screen w-full bg-[#0b0f0a] flex items-center justify-center">
         <div className="w-10 h-10 border-4 border-[#a7c957]/30 border-t-[#a7c957] rounded-full animate-spin"></div>
