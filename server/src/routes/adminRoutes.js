@@ -47,4 +47,57 @@ router.put('/settings/global', protect, isAdmin, async (req, res) => {
   }
 });
 
+const Movie = require('../models/Movie');
+
+// Fetch data from TMDB (Native fetch)
+router.get('/tmdb/fetch/:type/:id', protect, isAdmin, async (req, res) => {
+  try {
+    const { type, id } = req.params; // 'movie' or 'tv'
+    const tmdbUrl = `https://api.themoviedb.org/3/${type}/${id}?api_key=${process.env.TMDB_API_KEY}&language=en-US`;
+
+    const response = await fetch(tmdbUrl);
+    if (!response.ok) throw new Error(`TMDB responded with ${response.status}`);
+    
+    const data = await response.json();
+    res.json({ success: true, data });
+  } catch (err) {
+    console.error("TMDB Fetch Error:", err.message);
+    res.status(500).json({ success: false, message: 'Failed to fetch from TMDB. Check ID or API Key.' });
+  }
+});
+
+// Import TMDB Movie/Show into MongoDB
+router.post('/movies/import', protect, isAdmin, async (req, res) => {
+  try {
+    const { id, title, name, overview, poster_path, backdrop_path, media_type, release_date, first_air_date, vote_average } = req.body;
+    
+    const mediaType = media_type || (title ? 'movie' : 'tv');
+    const finalTitle = title || name;
+    const finalReleaseDate = release_date || first_air_date;
+
+    if (!finalTitle || !id) {
+      return res.status(400).json({ success: false, message: 'Missing essential data' });
+    }
+
+    const newMovie = await Movie.findOneAndUpdate(
+      { tmdbId: String(id) },
+      {
+        title: finalTitle,
+        description: overview,
+        posterPath: poster_path,
+        backdropPath: backdrop_path,
+        mediaType: mediaType,
+        releaseDate: finalReleaseDate,
+        voteAverage: vote_average
+      },
+      { upsert: true, returnDocument: 'after' }
+    );
+
+    res.json({ success: true, message: 'Successfully imported', data: newMovie });
+  } catch (err) {
+    console.error("Import Error:", err.message);
+    res.status(500).json({ success: false, message: 'Failed to save to database.' });
+  }
+});
+
 module.exports = router;
