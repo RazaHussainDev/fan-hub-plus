@@ -57,4 +57,33 @@ exports.streamMagnet = (req, res) => {
   }
 };
 
+const Movie = require('../models/Movie');
 
+exports.getPublishedMovies = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const skip = (page - 1) * limit;
+
+    const movies = await Movie.find({ isPublished: true })
+                              .sort({ createdAt: -1 })
+                              .skip(skip)
+                              .limit(limit);
+
+    const mappedMovies = movies.map(m => ({
+      id: m.tmdbId,
+      title: m.title,
+      name: m.title,
+      poster_path: m.posterPath,
+      backdrop_path: m.backdropPath,
+      media_type: m.mediaType,
+      vote_average: m.voteAverage,
+      release_date: m.releaseDate
+    }));
+
+    res.status(200).json({ success: true, results: mappedMovies, page });
+  } catch (error) {
+    console.error('[ContentController] getPublishedMovies error:', error.message);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};

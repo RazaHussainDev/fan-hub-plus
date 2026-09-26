@@ -9,6 +9,7 @@ const MovieSchema = new mongoose.Schema({
   mediaType: { type: String, enum: ['movie', 'tv'], default: 'movie' },
   releaseDate: { type: String, default: '' },
   voteAverage: { type: Number, default: 0 },
+  isPublished: { type: Boolean, default: true },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Movie', MovieSchema);

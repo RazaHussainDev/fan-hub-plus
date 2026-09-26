@@ -100,4 +100,43 @@ router.post('/movies/import', protect, isAdmin, async (req, res) => {
   }
 });
 
+// Search TMDB by Name
+router.get('/tmdb/search/:type/:query', protect, isAdmin, async (req, res) => {
+  try {
+    const { type, query } = req.params;
+    const response = await fetch(`https://api.themoviedb.org/3/search/${type}?query=${encodeURIComponent(query)}&api_key=${process.env.TMDB_API_KEY}&language=en-US&page=1`);
+    const data = await response.json();
+    res.json({ success: true, results: data.results });
+  } catch (err) {
+    console.error("TMDB Search Error:", err.message);
+    res.status(500).json({ success: false, message: 'Search failed' });
+  }
+});
+
+// Get all database movies for Admin Library
+router.get('/movies/library', protect, isAdmin, async (req, res) => {
+  try {
+    const movies = await Movie.find().sort({ createdAt: -1 });
+    res.json({ success: true, movies });
+  } catch (err) {
+    console.error("Library Fetch Error:", err.message);
+    res.status(500).json({ success: false });
+  }
+});
+
+// Toggle Publish/Revoke Status
+router.patch('/movies/:id/toggle', protect, isAdmin, async (req, res) => {
+  try {
+    const movie = await Movie.findById(req.params.id);
+    if (!movie) return res.status(404).json({ success: false, message: "Movie not found" });
+    
+    movie.isPublished = !movie.isPublished;
+    await movie.save();
+    res.json({ success: true, isPublished: movie.isPublished });
+  } catch (err) {
+    console.error("Toggle Error:", err.message);
+    res.status(500).json({ success: false });
+  }
+});
+
 module.exports = router;
