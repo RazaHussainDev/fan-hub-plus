@@ -49,20 +49,6 @@ const HeroBanner = ({ trendingData = [], customHeroProp = null }) => {
   return (
     <div className="relative w-full h-[85vh] min-h-[600px] flex items-end pb-24 md:pb-32 px-6 md:px-16 overflow-hidden">
       
-      {/* Absolute Logo */}
-      <div className="absolute top-6 left-6 md:left-16 z-50">
-        <Link href="/">
-          <Image 
-            src="/logo.png" 
-            alt="Fan Hub Plus" 
-            width={120} 
-            height={40} 
-            className="object-contain drop-shadow-lg" 
-            priority={true}
-          />
-        </Link>
-      </div>
-
       {/* Background Image (Ken Burns Effect) */}
       <AnimatePresence>
         <motion.div

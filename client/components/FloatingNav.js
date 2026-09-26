@@ -55,6 +55,7 @@ const FloatingNav = () => {
   const navItems = [
     { name: 'Home', icon: Home, href: '/' },
     { name: 'Search', icon: Search, onClick: openSearch },
+    { name: 'Logo', isLogo: true, href: '/' },
     { name: 'My List', icon: List, href: '/mylist' },
   ];
 
@@ -127,7 +128,18 @@ const FloatingNav = () => {
                   </div>
                 );
 
-                const iconContent = item.isAvatar ? (
+                const iconContent = item.isLogo ? (
+                  <div className="flex items-center justify-center mx-4">
+                    <Image 
+                      src="/logo.png" 
+                      alt="Fan Hub Plus" 
+                      width={35} 
+                      height={35} 
+                      className="object-contain drop-shadow-md" 
+                      priority={true} 
+                    />
+                  </div>
+                ) : item.isAvatar ? (
                   user.avatar ? (
                     <img src={user.avatar} alt={user.name} className="w-6 h-6 rounded-full object-cover shadow-sm" />
                   ) : (
