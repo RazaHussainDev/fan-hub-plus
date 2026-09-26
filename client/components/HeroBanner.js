@@ -20,7 +20,7 @@ const HeroBanner = ({ trendingData = [] }) => {
           setCustomHero(data.settings.customHero);
         }
       } catch (err) {
-        console.error("Failed to load global settings", err);
+        console.warn("Failed to load global settings:", err.message);
       } finally {
         setLoading(false);
       }

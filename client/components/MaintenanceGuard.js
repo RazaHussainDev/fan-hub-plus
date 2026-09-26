@@ -20,7 +20,7 @@ export default function MaintenanceGuard({ children }) {
           setIsMaintenance(true);
         }
       } catch (error) {
-        console.error("Failed to fetch settings");
+        console.warn("Failed to fetch settings, bypassing maintenance guard gracefully.");
       } finally {
         setLoading(false);
       }

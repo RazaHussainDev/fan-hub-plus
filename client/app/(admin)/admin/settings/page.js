@@ -32,7 +32,7 @@ export default function AdminSettings() {
           });
         }
       } catch (err) {
-        console.error('Failed to load settings:', err);
+        console.warn('Failed to load settings:', err.message);
         if (isMounted) toast.error('Failed to load settings');
       } finally {
         if (isMounted) {
