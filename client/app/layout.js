@@ -17,6 +17,9 @@ const poppins = Poppins({
 export const metadata = {
   title: 'Fan Hub Plus | Your Ultimate Fandom Universe',
   description: 'Stream movies, anime, K-dramas, gaming content and more on Fan Hub Plus.',
+  icons: {
+    icon: '/favicon.ico',
+  },
   openGraph: {
     title: 'Fan Hub Plus',
     description: 'Explore premium streaming content.',

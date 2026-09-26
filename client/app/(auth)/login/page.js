@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
 import { Eye, EyeOff, LogIn } from 'lucide-react';
 import { toast } from 'react-hot-toast';
@@ -45,7 +46,8 @@ export default function LoginPage() {
 
       <div className="relative w-full max-w-md">
         {/* Logo */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 flex flex-col items-center">
+          <Image src="/logo.png" alt="Fan Hub Plus Logo" width={80} height={80} className="mb-4 object-contain" priority />
           <h1 className="text-3xl font-heading font-extrabold text-brand-primary tracking-tight">Fan Hub Plus</h1>
           <p className="text-[#86868b] dark:text-gray-400 mt-1 text-sm">Welcome back</p>
         </div>

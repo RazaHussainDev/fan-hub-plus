@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 import { LayoutDashboard, Film, Users, Settings, Palette, Shield } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -20,9 +21,7 @@ export default function AdminSidebar() {
   return (
     <aside className="w-64 flex-shrink-0 hidden md:flex flex-col border-r border-white/5 bg-[#0b0f0a]/80 backdrop-blur-2xl z-50">
       <div className="h-20 flex items-center px-8 border-b border-white/5">
-        <div className="w-8 h-8 rounded bg-gradient-to-br from-[#a7c957] to-[#c2e078] flex items-center justify-center mr-3 shadow-[0_0_15px_rgba(167,201,87,0.4)]">
-          <span className="text-[#0b0f0a] font-black text-xl leading-none">F</span>
-        </div>
+        <Image src="/logo.png" alt="Fan Hub Plus Logo" width={32} height={32} className="mr-3 object-contain" />
         <span className="font-bold text-xl tracking-tight text-white">Hub<span className="text-[#a7c957]">Admin</span></span>
       </div>
 
