@@ -50,10 +50,9 @@ app.use('/hls', express.static(hlsDir));
 
 app.use(
   cors({
-    origin: process.env.CLIENT_ORIGIN || 'http://localhost:3000',
+    origin: '*', // Allow all origins for local development to prevent fetch errors
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
   })
 );
 

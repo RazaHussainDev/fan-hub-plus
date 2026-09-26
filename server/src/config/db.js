@@ -6,6 +6,7 @@ const connectDB = async () => {
       family: 4, 
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
+      bufferCommands: false, // Don't hang queries forever if MongoDB is down
     });
     console.log(`✅  MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
