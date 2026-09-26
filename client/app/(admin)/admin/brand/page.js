@@ -15,6 +15,7 @@ export default function HeroController() {
     buttonLink: '/' 
   });
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -62,6 +63,12 @@ export default function HeroController() {
   };
 
   const handleSave = async () => {
+    if (saving) return;
+    setSaving(true);
+    
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
+
     try {
       const res = await fetch('http://localhost:5000/api/admin/settings/global', {
         method: 'PUT',
@@ -69,9 +76,11 @@ export default function HeroController() {
           'Content-Type': 'application/json', 
           'Authorization': `Bearer ${token}` 
         },
-        body: JSON.stringify({ customHero })
+        body: JSON.stringify({ customHero }),
+        signal: controller.signal
       });
 
+      clearTimeout(timeoutId);
       const data = await res.json();
 
       if (!res.ok) {
@@ -83,8 +92,14 @@ export default function HeroController() {
         iconTheme: { primary: '#a7c957', secondary: '#0b0f0a' }
       });
     } catch (err) {
-      console.error("Save Error:", err);
-      toast.error(err.message || "Something went wrong while saving!");
+      if (err.name === 'AbortError') {
+        toast.error('Save request timed out. Backend might be unreachable.');
+      } else {
+        console.warn("Save Error:", err.message);
+        toast.error(err.message || "Network Error: Could not connect to backend");
+      }
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -153,8 +168,16 @@ export default function HeroController() {
         )}
 
         <div className="pt-6 border-t border-white/10 flex justify-end relative z-10">
-          <button onClick={handleSave} className="bg-gradient-to-r from-[#a7c957] to-[#c2e078] text-[#0b0f0a] font-bold py-3 px-8 rounded-xl shadow-[0_0_20px_rgba(167,201,87,0.3)] hover:scale-105 transition-all">
-            Save Configuration
+          <button 
+            onClick={handleSave} 
+            disabled={saving}
+            className="flex items-center gap-2 bg-gradient-to-r from-[#a7c957] to-[#c2e078] text-[#0b0f0a] font-bold py-3 px-8 rounded-xl shadow-[0_0_20px_rgba(167,201,87,0.3)] hover:scale-105 transition-all disabled:opacity-50 disabled:hover:scale-100"
+          >
+            {saving ? (
+              <><div className="w-5 h-5 border-2 border-[#0b0f0a] border-t-transparent rounded-full animate-spin" /> Saving...</>
+            ) : (
+              "Save Configuration"
+            )}
           </button>
         </div>
       </div>

@@ -2,11 +2,13 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
+    mongoose.set('bufferCommands', false); // Globally disable buffering
+    
     const conn = await mongoose.connect(process.env.MONGO_URI, {
       family: 4, 
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000,
-      bufferCommands: false, // Don't hang queries forever if MongoDB is down
+      bufferCommands: false,
     });
     console.log(`✅  MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {

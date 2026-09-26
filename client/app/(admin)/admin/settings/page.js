@@ -47,7 +47,12 @@ export default function AdminSettings() {
   }, []);
 
   const handleSave = async () => {
+    if (saving) return;
     setSaving(true);
+    
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
+
     try {
       const res = await fetch('http://localhost:5000/api/admin/settings/global', {
         method: 'PUT',
@@ -55,19 +60,27 @@ export default function AdminSettings() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
+        signal: controller.signal
       });
+      
+      clearTimeout(timeoutId);
       const data = await res.json();
+      
       if (data.success) {
         toast.success('Global settings saved successfully!', {
           style: { background: '#0b0f0a', color: '#a7c957', border: '1px solid #a7c957' },
           iconTheme: { primary: '#a7c957', secondary: '#0b0f0a' }
         });
       } else {
-        toast.error('Failed to save settings');
+        toast.error('Failed to save settings: ' + (data.message || 'Server Error'));
       }
     } catch (err) {
-      toast.error('An error occurred');
+      if (err.name === 'AbortError') {
+        toast.error('Save request timed out. Backend might be unreachable.');
+      } else {
+        toast.error('Network Error: Could not connect to backend');
+      }
     } finally {
       setSaving(false);
     }
