@@ -2,31 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Play, Info } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ContinueWatchingHero from '@/components/ContinueWatchingHero';
 
-const HeroBanner = ({ trendingData = [] }) => {
+const HeroBanner = ({ trendingData = [], customHeroProp = null }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [customHero, setCustomHero] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const res = await fetch('http://localhost:5000/api/admin/settings/global');
-        const data = await res.json();
-        if (data.success && data.settings?.customHero?.isActive) {
-          setCustomHero(data.settings.customHero);
-        }
-      } catch (err) {
-        console.warn("Failed to load global settings:", err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchSettings();
-  }, []);
 
   // Format the trending data to match the expected SLIDES format
   const standardSlides = trendingData.slice(0, 5).map(m => ({
@@ -38,16 +20,16 @@ const HeroBanner = ({ trendingData = [] }) => {
     type: m.title ? 'movie' : 'tv'
   }));
 
-  const slides = customHero ? [
+  const slides = customHeroProp ? [
     {
       id: 'custom-hero',
-      title: customHero.title,
+      title: customHeroProp.title,
       badge: 'Featured Content',
-      description: customHero.description,
-      image: customHero.imageUrl,
+      description: customHeroProp.description,
+      image: customHeroProp.imageUrl,
       type: 'custom',
-      buttonText: customHero.buttonText,
-      buttonLink: customHero.buttonLink
+      buttonText: customHeroProp.buttonText,
+      buttonLink: customHeroProp.buttonLink
     }
   ] : standardSlides;
 
@@ -59,13 +41,7 @@ const HeroBanner = ({ trendingData = [] }) => {
     return () => clearInterval(timer);
   }, [slides]);
 
-  if (loading || slides.length === 0) {
-    return (
-      <div className="relative w-full h-[85vh] min-h-[600px] flex items-center justify-center bg-[#0b0f0a]">
-        <div className="w-10 h-10 border-4 border-brand-primary/30 border-t-brand-primary rounded-full animate-spin"></div>
-      </div>
-    );
-  }
+  if (slides.length === 0) return null;
 
   const currentMovie = slides[currentIndex];
   if (!currentMovie) return null;
@@ -75,16 +51,25 @@ const HeroBanner = ({ trendingData = [] }) => {
       
       {/* Background Image (Ken Burns Effect) */}
       <AnimatePresence>
-        <motion.img
+        <motion.div
           key={currentMovie.id}
           initial={{ opacity: 0, scale: 1 }}
           animate={{ opacity: 1, scale: 1.05 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1.5, ease: "easeInOut" }}
-          src={currentMovie.image}
-          alt={currentMovie.title}
-          className="absolute inset-0 w-full h-full object-cover -z-10"
-        />
+          className="absolute inset-0 -z-10"
+        >
+          <Image
+            src={currentMovie.image || 'https://via.placeholder.com/1920x1080?text=Fan+Hub+Plus'}
+            alt={currentMovie.title}
+            fill
+            priority={true}          // CRITICAL: Preload instantly
+            fetchPriority="high"     // CRITICAL: High network priority
+            quality={90}
+            className="object-cover"
+            unoptimized              // Allow direct TMDB/external URLs
+          />
+        </motion.div>
       </AnimatePresence>
 
       {/* Sleek Cinematic Gradient Overlays */}

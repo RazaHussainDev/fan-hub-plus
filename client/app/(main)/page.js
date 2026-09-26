@@ -16,6 +16,7 @@ export default async function Home() {
   let bollywoodData = { results: [] };
   let animeData = { results: [] };
   let kdramasData = { results: [] };
+  let customHero = null;
 
   try {
     const results = await Promise.allSettled([
@@ -24,7 +25,8 @@ export default async function Home() {
       fetchActionMovies(),
       fetchBollywood(),
       fetchAnime(),
-      fetchKDramas()
+      fetchKDramas(),
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/admin/settings/global`, { next: { revalidate: 60 } }).then(r => r.json())
     ]);
     
     trendingData = results[0].status === 'fulfilled' ? results[0].value : { results: [] };
@@ -33,13 +35,18 @@ export default async function Home() {
     bollywoodData = results[3].status === 'fulfilled' ? results[3].value : { results: [] };
     animeData = results[4].status === 'fulfilled' ? results[4].value : { results: [] };
     kdramasData = results[5].status === 'fulfilled' ? results[5].value : { results: [] };
+    
+    const settingsData = results[6].status === 'fulfilled' ? results[6].value : null;
+    if (settingsData?.success && settingsData.settings?.customHero?.isActive) {
+      customHero = settingsData.settings.customHero;
+    }
   } catch (error) {
     console.error("Failed to fetch TMDB data:", error);
   }
 
   return (
     <main className="w-full flex flex-col bg-[#FBFBFD] dark:bg-brand-bg relative z-0 transition-colors duration-500">
-      <HeroBanner trendingData={trendingData.results} />
+      <HeroBanner trendingData={trendingData.results} customHeroProp={customHero} />
       
       <div className="flex flex-col space-y-6 mt-[-100px] relative z-20">
         <CurvedCategorySlider />
