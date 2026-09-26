@@ -15,7 +15,7 @@ export default function TMDBImporter() {
     setLoading(true);
     try {
       const res = await fetch(`http://localhost:5000/api/admin/tmdb/fetch/${mediaType}/${tmdbId}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        headers: { Authorization: `Bearer ${localStorage.getItem('fanhub_token')}` }
       });
       const data = await res.json();
       if (data.success) {
@@ -44,7 +44,7 @@ export default function TMDBImporter() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('fanhub_token')}`
         },
         body: JSON.stringify(preview)
       });

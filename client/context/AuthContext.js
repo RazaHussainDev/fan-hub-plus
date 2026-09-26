@@ -66,8 +66,11 @@ export function AuthProvider({ children }) {
   const logout = () => {
     localStorage.removeItem('fanhub_token');
     localStorage.removeItem('fanhub_user');
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setToken(null);
     setUser(null);
+    window.location.href = '/login';
   };
 
   return (
