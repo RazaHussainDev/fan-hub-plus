@@ -73,7 +73,7 @@ const issueSession = async (user, res) => {
     maxAge: accessExpirySeconds * 1000,
   });
 
-  return accessToken;
+  return { accessToken, sessionHint };
 };
 
 // POST /api/auth/register
@@ -108,11 +108,12 @@ exports.register = async (req, res) => {
       password: hashedPassword,
     });
 
-    const accessToken = await issueSession(user, res);
+    const { accessToken, sessionHint } = await issueSession(user, res);
 
     res.status(201).json({
       success: true,
       accessToken,
+      sessionHint,
       user: publicUser(user),
     });
   } catch (err) {
@@ -147,11 +148,12 @@ exports.login = async (req, res) => {
     user.last_login = new Date();
     await user.save({ validateBeforeSave: false });
 
-    const accessToken = await issueSession(user, res);
+    const { accessToken, sessionHint } = await issueSession(user, res);
 
     res.status(200).json({
       success: true,
       accessToken,
+      sessionHint,
       user: publicUser(user),
     });
   } catch (err) {
@@ -201,8 +203,8 @@ exports.refresh = async (req, res) => {
       return res.status(401).json({ success: false, message: 'Session is no longer valid.' });
     }
 
-    const accessToken = await issueSession(user, res);
-    return res.status(200).json({ success: true, accessToken, user: publicUser(user) });
+    const { accessToken, sessionHint } = await issueSession(user, res);
+    return res.status(200).json({ success: true, accessToken, sessionHint, user: publicUser(user) });
   } catch (error) {
     console.error('[Refresh Error]', error.message);
     return res.status(500).json({ success: false, message: 'Could not refresh the session. Please try again.' });
