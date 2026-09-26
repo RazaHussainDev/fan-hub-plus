@@ -139,7 +139,7 @@ router.patch('/movies/:id/toggle', protect, isAdmin, async (req, res) => {
   }
 });
 
-const User = require('../models/User');
+
 
 // Get all users
 router.get('/users', protect, isAdmin, async (req, res) => {
