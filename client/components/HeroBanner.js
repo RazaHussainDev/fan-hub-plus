@@ -68,6 +68,7 @@ const HeroBanner = ({ trendingData = [] }) => {
   }
 
   const currentMovie = slides[currentIndex];
+  if (!currentMovie) return null;
 
   return (
     <div className="relative w-full h-[85vh] min-h-[600px] flex items-end pb-24 md:pb-32 px-6 md:px-16 overflow-hidden">

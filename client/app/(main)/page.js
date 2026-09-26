@@ -18,7 +18,7 @@ export default async function Home() {
   let kdramasData = { results: [] };
 
   try {
-    const [trending, newReleases, action, bollywood, anime, kdramas] = await Promise.all([
+    const results = await Promise.allSettled([
       fetchTrending(),
       fetchNewReleases(),
       fetchActionMovies(),
@@ -27,12 +27,12 @@ export default async function Home() {
       fetchKDramas()
     ]);
     
-    trendingData = trending;
-    newReleasesData = newReleases;
-    actionData = action;
-    bollywoodData = bollywood;
-    animeData = anime;
-    kdramasData = kdramas;
+    trendingData = results[0].status === 'fulfilled' ? results[0].value : { results: [] };
+    newReleasesData = results[1].status === 'fulfilled' ? results[1].value : { results: [] };
+    actionData = results[2].status === 'fulfilled' ? results[2].value : { results: [] };
+    bollywoodData = results[3].status === 'fulfilled' ? results[3].value : { results: [] };
+    animeData = results[4].status === 'fulfilled' ? results[4].value : { results: [] };
+    kdramasData = results[5].status === 'fulfilled' ? results[5].value : { results: [] };
   } catch (error) {
     console.error("Failed to fetch TMDB data:", error);
   }
