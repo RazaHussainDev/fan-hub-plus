@@ -28,6 +28,13 @@ export default function StreamPage() {
   const [trailer, setTrailer] = useState(null);
   const [similar, setSimilar] = useState([]);
   const [isTrailerOpen, setIsTrailerOpen] = useState(false);
+  const [isPlayingIntro, setIsPlayingIntro] = useState(true);
+
+  const handleVideoEnded = () => {
+    if (isPlayingIntro) {
+      setIsPlayingIntro(false);
+    }
+  };
 
   useEffect(() => {
     const fetchMeta = async () => {
@@ -158,13 +165,32 @@ export default function StreamPage() {
             </div>
           ) : (
             <div className="relative w-full aspect-video bg-white dark:bg-[#0b0f0a] rounded-2xl overflow-hidden border border-black/10 dark:border-[#a7c957]/30 shadow-2xl dark:shadow-[0_0_40px_rgba(167,201,87,0.15)] group transition-colors duration-500">
-              <iframe
-                src={getEmbedUrl(activeLayer)}
-                className="w-full h-full"
-                frameBorder="0"
-                allowFullScreen
-                allow="autoplay; fullscreen"
-              ></iframe>
+              {isPlayingIntro ? (
+                <div className="relative w-full h-full bg-black flex items-center justify-center">
+                  <video
+                    src="/intro.mp4"
+                    autoPlay
+                    playsInline
+                    onEnded={handleVideoEnded}
+                    onError={handleVideoEnded}
+                    className="w-full h-full object-contain"
+                  />
+                  <button
+                    onClick={handleVideoEnded}
+                    className="absolute top-4 right-4 z-20 px-3.5 py-1.5 rounded-full bg-black/60 border border-white/20 text-white text-xs font-bold uppercase tracking-wider backdrop-blur-md hover:bg-white/20 transition-all active:scale-95 cursor-pointer shadow-lg"
+                  >
+                    Skip Intro
+                  </button>
+                </div>
+              ) : (
+                <iframe
+                  src={getEmbedUrl(activeLayer)}
+                  className="w-full h-full"
+                  frameBorder="0"
+                  allowFullScreen
+                  allow="autoplay; fullscreen"
+                ></iframe>
+              )}
               {/* Subtle glow overlay that ignores pointer events */}
               <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_20px_rgba(0,0,0,0.05)] dark:shadow-[inset_0_0_20px_rgba(167,201,87,0.1)] rounded-2xl transition-shadow duration-500"></div>
             </div>

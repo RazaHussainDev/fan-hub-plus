@@ -38,6 +38,7 @@ export const metadata = {
 };
 
 import FloatingNav from '@/components/FloatingNav';
+import SplashIntro from '@/components/SplashIntro';
 import { SearchProvider } from '@/context/SearchContext';
 import { AuthProvider } from '@/context/AuthContext';
 import SearchModal from '@/components/SearchModal';
@@ -53,6 +54,7 @@ export default function RootLayout({ children }) {
       suppressHydrationWarning
     >
       <body className="bg-[#FBFBFD] text-[#1d1d1f] dark:bg-brand-bg dark:text-brand-light transition-colors duration-500 min-h-screen font-body flex flex-col" suppressHydrationWarning>
+        <SplashIntro />
         <AuthProvider>
           <SearchProvider>
             <MaintenanceGuard>

@@ -9,11 +9,26 @@ export default function CustomHTML5Player({ videoUrl = "https://www.w3schools.co
   
   const [isMounted, setIsMounted] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlayingIntro, setIsPlayingIntro] = useState(true);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+
+  const handleVideoEnded = () => {
+    if (isPlayingIntro) {
+      setIsPlayingIntro(false);
+      setTimeout(() => {
+        if (playerRef.current) {
+          playerRef.current.play().catch(e => console.log("Autoplay blocked:", e));
+          setIsPlaying(true);
+        }
+      }, 100);
+    } else {
+      setIsPlaying(false);
+    }
+  };
 
   useEffect(() => {
     setIsMounted(true);
@@ -86,18 +101,27 @@ export default function CustomHTML5Player({ videoUrl = "https://www.w3schools.co
     >
       <video
         ref={playerRef}
+        key={isPlayingIntro ? 'intro' : 'movie'}
+        src={isPlayingIntro ? '/intro.mp4' : videoUrl}
+        autoPlay
         className="w-full h-full object-contain cursor-pointer bg-black"
-        preload="metadata"
+        preload="auto"
         crossOrigin="anonymous"
         onClick={togglePlay}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
-        onEnded={() => setIsPlaying(false)}
+        onEnded={handleVideoEnded}
         controls={false}
-      >
-        <source src={videoUrl} type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+      />
+
+      {isPlayingIntro && (
+        <button
+          onClick={handleVideoEnded}
+          className="absolute top-4 right-4 z-20 px-3.5 py-1.5 rounded-full bg-black/60 border border-white/20 text-white text-xs font-bold uppercase tracking-wider backdrop-blur-md hover:bg-white/20 transition-all active:scale-95"
+        >
+          Skip Intro
+        </button>
+      )}
 
       {/* Control Bar */}
       <div className="absolute bottom-0 left-0 right-0 p-4 bg-black/60 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col gap-3">

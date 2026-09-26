@@ -129,12 +129,12 @@ const FloatingNav = () => {
                 );
 
                 const iconContent = item.isLogo ? (
-                  <div className="flex items-center justify-center mx-4">
+                  <div className="flex items-center justify-center mx-2">
                     <Image 
                       src="/logo.png" 
                       alt="Fan Hub Plus" 
-                      width={35} 
-                      height={35} 
+                      width={75} 
+                      height={25} 
                       className="object-contain drop-shadow-md" 
                       priority={true} 
                     />
