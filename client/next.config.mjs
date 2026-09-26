@@ -1,6 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: 'image.tmdb.org' }
+    ],
+    qualities: [25, 50, 75, 90, 100],
+  },
 };
 
 export default nextConfig;

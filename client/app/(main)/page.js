@@ -26,7 +26,7 @@ export default async function Home() {
       fetchBollywood(),
       fetchAnime(),
       fetchKDramas(),
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/admin/settings/global`, { next: { revalidate: 60 } }).then(r => r.json())
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/admin/settings/global`, { next: { revalidate: 60 }, signal: AbortSignal.timeout(5000) }).then(r => r.json())
     ]);
     
     trendingData = results[0].status === 'fulfilled' ? results[0].value : { results: [] };

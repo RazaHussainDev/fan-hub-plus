@@ -21,7 +21,7 @@ export default function AdminSidebar() {
   return (
     <aside className="w-64 flex-shrink-0 hidden md:flex flex-col border-r border-white/5 bg-[#0b0f0a]/80 backdrop-blur-2xl z-50">
       <div className="h-20 flex items-center px-8 border-b border-white/5">
-        <Image src="/logo.png" alt="Fan Hub Plus Logo" width={32} height={32} className="mr-3 object-contain" />
+        <Image src="/logo.png" alt="Fan Hub Plus Logo" width={32} height={32} className="mr-3 object-contain" priority={true} />
         <span className="font-bold text-xl tracking-tight text-white">Hub<span className="text-[#a7c957]">Admin</span></span>
       </div>
 
