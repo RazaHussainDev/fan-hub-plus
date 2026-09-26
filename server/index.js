@@ -10,6 +10,7 @@ const connectDB = require('./src/config/db');
 const authRoutes = require('./src/routes/authRoutes');
 const adminRoutes = require('./src/routes/adminRoutes');
 const contentRoutes = require('./src/routes/contentRoutes');
+const fandomRoutes = require('./src/routes/fandomRoutes');
 
 const app  = express();
 const PORT = process.env.PORT || 5000;
@@ -34,6 +35,10 @@ app.use(
 );
 
 // Connect to MongoDB
+if (process.env.NODE_ENV === 'production' && !process.env.CLIENT_ORIGIN) {
+  throw new Error('CLIENT_ORIGIN must be configured in production.');
+}
+
 connectDB();
 
 const fs = require('fs');
@@ -50,9 +55,26 @@ app.use('/hls', express.static(hlsDir));
 
 app.use(
   cors({
-    origin: '*', // Allow all origins for local development to prevent fetch errors
+    origin(origin, callback) {
+      // Requests without an Origin header are typically server-to-server or local tooling.
+      if (!origin) return callback(null, true);
+
+      const allowedOrigins = new Set(
+        [
+          process.env.CLIENT_ORIGIN,
+          ...(process.env.NODE_ENV === 'production'
+            ? []
+            : ['http://localhost:3000', 'http://127.0.0.1:3000']),
+        ].filter(Boolean)
+      );
+
+      if (allowedOrigins.has(origin)) return callback(null, true);
+      return callback(new Error('Origin is not allowed by CORS.'));
+    },
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+    maxAge: 86400,
   })
 );
 
@@ -98,6 +120,7 @@ app.get('/api/status', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/content', contentRoutes);
+app.use('/api/fandom', fandomRoutes);
 
 // 404 catch-all
 app.use((req, res) => {

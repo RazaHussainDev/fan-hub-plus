@@ -3,16 +3,15 @@
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'react-hot-toast';
 import useSWR, { useSWRConfig } from 'swr';
+import { apiFetch } from '@/utils/apiClient';
 
 export function useWatchlist() {
   const { user, token } = useAuth();
   const { mutate } = useSWRConfig();
+  const watchlistKey = token ? ['/api/auth/watchlist', token] : null;
 
-  // SWR Fetcher
-  const fetcher = (url) => fetch(url, { headers: { Authorization: `Bearer ${token}` } }).then(res => res.json());
-  
-  // Use SWR to automatically fetch & cache the watchlist
-  const { data, error } = useSWR(token ? 'http://localhost:5000/api/auth/watchlist' : null, fetcher);
+  const fetcher = ([path]) => apiFetch(path).then(res => res.json());
+  const { data } = useSWR(watchlistKey, fetcher);
 
   // Derived array - prioritize fresh SWR data, fallback to context state, default to empty array
   const watchlist = data?.watchlist || user?.watchlist || [];
@@ -35,14 +34,13 @@ export function useWatchlist() {
           media_type: typeof item === 'object' ? (item.media_type || 'movie') : 'movie'
         }];
         
-    mutate('http://localhost:5000/api/auth/watchlist', { success: true, watchlist: updatedWatchlist }, false);
+    mutate(watchlistKey, { success: true, watchlist: updatedWatchlist }, false);
 
     try {
-      const res = await fetch('http://localhost:5000/api/auth/watchlist', {
+      const res = await apiFetch('/api/auth/watchlist', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           movieId, 
@@ -59,21 +57,15 @@ export function useWatchlist() {
       }
 
       if (resData.success) {
-        // Sync local storage so it persists if the user hard reloads
-        const storedUser = JSON.parse(localStorage.getItem('fanhub_user') || '{}');
-        storedUser.watchlist = resData.watchlist;
-        localStorage.setItem('fanhub_user', JSON.stringify(storedUser));
-        
         if (isCurrentlySaved) toast.success("Removed from Watchlist", { style: { background: '#0b0f0a', color: '#f3f4f6' } });
         else toast.success("Watchlist updated!", { style: { background: '#0b0f0a', color: '#a7c957', border: '1px solid #a7c957' } });
 
-        // Tell SWR to globally sync the new data
-        mutate('http://localhost:5000/api/auth/watchlist'); 
+        mutate(watchlistKey, { success: true, watchlist: resData.watchlist }, false);
       }
     } catch (err) {
       console.error("Watchlist Error:", err);
       toast.error("Error: Could not save to database.");
-      mutate('http://localhost:5000/api/auth/watchlist'); // Rollback
+      mutate(watchlistKey); // Roll back the optimistic update.
     }
   };
 

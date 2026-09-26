@@ -5,6 +5,7 @@ import { useAuth } from '@/context/AuthContext';
 import { Users, Film, Activity, Server, TrendingUp } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { motion } from 'framer-motion';
+import { apiFetch } from '@/utils/apiClient';
 
 const mockChartData = [
   { name: 'Mon', streams: 4000 }, { name: 'Tue', streams: 3000 }, { name: 'Wed', streams: 5000 },
@@ -39,11 +40,7 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (token) {
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/admin/stats`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
+      apiFetch('/api/admin/stats')
       .then(res => res.json())
       .then(data => {
         if (data.success) {

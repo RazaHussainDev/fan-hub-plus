@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Gamepad2, Film, Tv, Music, BookOpen, Book, Users, Star } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Gamepad2, Film, Tv, Music, BookOpen, Book, Users, Star, ArrowRight } from 'lucide-react';
 
 const categories = [
   { id: 1, name: 'Movies', icon: Film, image: 'https://image.tmdb.org/t/p/original/eZ239CUp1d6OryZEBPnO2n87gMG.jpg' }, // Dune Part Two
@@ -15,6 +16,7 @@ const categories = [
 ];
 
 export default function CurvedCategorySlider() {
+  const router = useRouter();
   const [activeIndex, setActiveIndex] = useState(0);
 
   const getOffset = (index) => {
@@ -56,12 +58,18 @@ export default function CurvedCategorySlider() {
           return (
             <div
               key={category.id}
-              onClick={() => setActiveIndex(index)}
+              onClick={() => {
+                if (isActive) {
+                  router.push(`/explore?category=${encodeURIComponent(category.name)}`);
+                } else {
+                  setActiveIndex(index);
+                }
+              }}
               style={{ transform, zIndex, opacity }}
               className={`absolute w-52 h-72 rounded-2xl bg-gray-900 overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.25,0.8,0.25,1)] cursor-pointer shadow-2xl group select-none
                 ${isActive 
-                  ? 'border border-brand-primary shadow-[0_20px_50px_rgba(0,0,0,0.8)]' 
-                  : 'border border-white/5 opacity-60'
+                  ? 'border-2 border-brand-primary shadow-[0_20px_50px_rgba(0,0,0,0.8)] scale-105' 
+                  : 'border border-white/5 opacity-60 hover:opacity-85'
                 }
               `}
             >
@@ -82,6 +90,11 @@ export default function CurvedCategorySlider() {
                 <h3 className={`font-bold tracking-wide transition-colors duration-500 ${isActive ? 'text-brand-light' : 'text-gray-400'} font-heading`}>
                   {category.name}
                 </h3>
+                {isActive && (
+                  <span className="mt-2 inline-flex items-center gap-1 text-[11px] font-bold text-brand-primary uppercase tracking-widest bg-brand-primary/10 px-2.5 py-0.5 rounded-full border border-brand-primary/30">
+                    Explore <ArrowRight size={10} />
+                  </span>
+                )}
               </div>
             </div>
           );

@@ -26,11 +26,13 @@ export default function LoginPage() {
     try {
       const resData = await login(formData.email, formData.password);
       toast.success('Welcome back to Fan Hub Plus!');
-      if (resData.user.role === 'admin') {
-        router.push('/admin'); // Direct admins to the Command Center
-      } else {
-        router.push('/'); // Direct regular users to the home page
-      }
+      const requestedPath = new URLSearchParams(window.location.search).get('callbackUrl');
+      const safeRequestedPath = requestedPath?.startsWith('/') && !requestedPath.startsWith('//')
+        ? requestedPath
+        : null;
+      if (safeRequestedPath) router.push(safeRequestedPath);
+      else if (resData.user.role === 'admin' || resData.user.role === 'superadmin') router.push('/admin');
+      else router.push('/');
     } catch (err) {
       toast.error(err.message);
     } finally {

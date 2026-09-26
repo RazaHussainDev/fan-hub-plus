@@ -1,7 +1,8 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-hot-toast';
 import { Search, Database, Film, Tv, Eye, EyeOff, PlusCircle } from 'lucide-react';
+import { apiFetch } from '@/utils/apiClient';
 
 export default function ContentEngine() {
   const [activeTab, setActiveTab] = useState('library'); // 'library' or 'search'
@@ -16,29 +17,31 @@ export default function ContentEngine() {
   const [loading, setLoading] = useState(false);
 
   // Load Library
-  const fetchLibrary = async () => {
+  const fetchLibrary = useCallback(async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/admin/movies/library`, { headers: { Authorization: `Bearer ${localStorage.getItem('fanhub_token')}` }});
+      const res = await apiFetch('/api/admin/movies/library');
+      if (!res.ok) throw new Error('Could not load the content library.');
       const data = await res.json();
       if (data.success) setDbMovies(data.movies);
     } catch (err) { console.error(err); }
-  };
+  }, []);
 
   useEffect(() => {
-    if (activeTab === 'library') fetchLibrary();
-  }, [activeTab]);
+    if (activeTab !== 'library') return undefined;
+    const timeout = setTimeout(() => { fetchLibrary(); }, 0);
+    return () => clearTimeout(timeout);
+  }, [activeTab, fetchLibrary]);
 
   // TMDB Name Search
   const handleSearch = async () => {
     if (!searchQuery) return;
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/admin/tmdb/search/${mediaType}/${searchQuery}`, { headers: { Authorization: `Bearer ${localStorage.getItem('fanhub_token')}` }});
+      const res = await apiFetch(`/api/admin/tmdb/search/${mediaType}/${encodeURIComponent(searchQuery)}`);
       const data = await res.json();
-      if (data.success) {
-        setSearchResults(data.results);
-        if (data.results.length === 0) toast.error("No results found.");
-      }
+      if (!res.ok || !data.success) throw new Error(data.message || 'Search failed');
+      setSearchResults(data.results);
+      if (data.results.length === 0) toast.error("No results found.");
     } catch (err) {
       toast.error("Search failed");
     } finally {
@@ -50,9 +53,9 @@ export default function ContentEngine() {
   const handleImport = async (item) => {
     try {
       const payload = { ...item, media_type: mediaType };
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/admin/movies/import`, {
+      const res = await apiFetch('/api/admin/movies/import', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('fanhub_token')}` },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
       const data = await res.json();
@@ -73,7 +76,7 @@ export default function ContentEngine() {
   // Toggle Revoke/Publish
   const toggleStatus = async (id) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/admin/movies/${id}/toggle`, { method: 'PATCH', headers: { Authorization: `Bearer ${localStorage.getItem('fanhub_token')}` }});
+      const res = await apiFetch(`/api/admin/movies/${id}/toggle`, { method: 'PATCH' });
       if (res.ok) {
          fetchLibrary(); // Refresh list
          toast.success("Visibility updated!", {
@@ -146,7 +149,7 @@ export default function ContentEngine() {
           {dbMovies.length === 0 ? (
             <div className="p-12 text-center space-y-4">
               <Database size={48} className="mx-auto text-gray-600" />
-              <p className="text-gray-400 font-medium">Your library is currently empty. Switch to "Add New" to import titles.</p>
+              <p className="text-gray-400 font-medium">Your library is currently empty. Switch to &quot;Add New&quot; to import titles.</p>
             </div>
           ) : (
             <div className="overflow-x-auto">

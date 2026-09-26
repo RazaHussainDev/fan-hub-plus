@@ -2,10 +2,9 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { Upload, Zap, Image as ImageIcon } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
+import { apiFetch } from '@/utils/apiClient';
 
 export default function HeroController() {
-  const { token } = useAuth();
   const [customHero, setCustomHero] = useState({ 
     isActive: false, 
     title: '', 
@@ -70,12 +69,9 @@ export default function HeroController() {
     const timeoutId = setTimeout(() => controller.abort(), 8000);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/admin/settings/global`, {
+      const res = await apiFetch('/api/admin/settings/global', {
         method: 'PUT',
-        headers: { 
-          'Content-Type': 'application/json', 
-          'Authorization': `Bearer ${token}` 
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ customHero }),
         signal: controller.signal
       });

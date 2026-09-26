@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
-
-const JWT_SECRET = process.env.JWT_SECRET || 'fanhub_super_secret_key_change_in_production';
+const { accessSecret } = require('../config/tokenConfig');
 
 const User = require('../models/User');
 
@@ -14,12 +13,15 @@ const protect = async (req, res, next) => {
   const token = authHeader.split(' ')[1];
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, accessSecret);
     
     // Fetch fresh user from DB to ensure real-time ban enforcement
     const user = await User.findById(decoded.id).select('-password');
     if (!user) {
       return res.status(401).json({ success: false, message: 'User no longer exists.' });
+    }
+    if (Number(user.token_version || 0) !== Number(decoded.tokenVersion || 0)) {
+      return res.status(401).json({ success: false, message: 'Session is no longer valid.' });
     }
     if (user.isBanned) {
       return res.status(403).json({ success: false, message: 'Your account has been suspended. Contact support.' });

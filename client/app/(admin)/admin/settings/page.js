@@ -2,10 +2,9 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { Save, AlertTriangle } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
+import { apiFetch } from '@/utils/apiClient';
 
 export default function AdminSettings() {
-  const { token } = useAuth();
   const [formData, setFormData] = useState({ siteName: '', tagline: '', maintenanceMode: false });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -54,12 +53,9 @@ export default function AdminSettings() {
     const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/admin/settings/global`, {
+      const res = await apiFetch('/api/admin/settings/global', {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
         signal: controller.signal
       });

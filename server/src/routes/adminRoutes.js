@@ -4,8 +4,8 @@ const adminController = require('../controllers/adminController');
 const { protect, isAdmin } = require('../middleware/auth');
 const User = require('../models/User');
 
-router.get('/dashboard-stats', adminController.getDashboardStats);
-router.post('/seed-stream', adminController.seedStream);
+router.get('/dashboard-stats', protect, isAdmin, adminController.getDashboardStats);
+router.post('/seed-stream', protect, isAdmin, adminController.seedStream);
 
 router.get('/stats', protect, isAdmin, async (req, res) => {
   try {
@@ -159,6 +159,8 @@ router.patch('/users/:id/role', protect, isAdmin, async (req, res) => {
     if(user.role === 'superadmin') return res.status(400).json({ success: false, message: 'Cannot change superadmin role' });
 
     user.role = user.role === 'admin' ? 'user' : 'admin';
+    user.token_version = (user.token_version || 0) + 1;
+    user.refresh_token = null;
     await user.save();
     res.json({ success: true, role: user.role });
   } catch (err) {
@@ -174,6 +176,8 @@ router.patch('/users/:id/ban', protect, isAdmin, async (req, res) => {
     if(user.role === 'superadmin') return res.status(400).json({ success: false, message: 'Cannot ban superadmin' });
 
     user.isBanned = !user.isBanned;
+    user.token_version = (user.token_version || 0) + 1;
+    user.refresh_token = null;
     await user.save();
     res.json({ success: true, isBanned: user.isBanned });
   } catch (err) {

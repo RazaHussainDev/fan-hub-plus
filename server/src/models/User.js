@@ -22,6 +22,15 @@ const userSchema = new mongoose.Schema(
       minlength: 8,
       select: false,
     },
+    refresh_token: {
+      type: String,
+      default: null,
+      select: false,
+    },
+    token_version: {
+      type: Number,
+      default: 0,
+    },
     role: {
       type: String,
       enum: ['user', 'admin', 'superadmin'],

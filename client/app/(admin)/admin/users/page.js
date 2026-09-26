@@ -1,32 +1,34 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { toast } from 'react-hot-toast';
 import { Shield, ShieldAlert, Ban, CheckCircle, User as UserIcon } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
+import { apiFetch } from '@/utils/apiClient';
 
 export default function UsersManagement() {
+  const { token } = useAuth();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
+    if (!token) return;
     try {
-      const res = await fetch(`${API_URL}/api/admin/users`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('fanhub_token')}` }
-      });
+      const res = await apiFetch('/api/admin/users');
       const data = await res.json();
       if (data.success) setUsers(data.users);
     } catch (err) { toast.error("Failed to fetch users"); }
     finally { setLoading(false); }
-  };
+  }, [token]);
 
-  useEffect(() => { fetchUsers(); }, []);
+  useEffect(() => {
+    if (!token) return undefined;
+    const timeout = setTimeout(() => { fetchUsers(); }, 0);
+    return () => clearTimeout(timeout);
+  }, [fetchUsers, token]);
 
   const toggleRole = async (id) => {
     try {
-      const res = await fetch(`${API_URL}/api/admin/users/${id}/role`, {
-        method: 'PATCH',
-        headers: { Authorization: `Bearer ${localStorage.getItem('fanhub_token')}` }
-      });
+      const res = await apiFetch(`/api/admin/users/${id}/role`, { method: 'PATCH' });
       const data = await res.json();
       if (data.success) {
         toast.success("Role updated!", {
@@ -40,10 +42,7 @@ export default function UsersManagement() {
 
   const toggleBan = async (id) => {
     try {
-      const res = await fetch(`${API_URL}/api/admin/users/${id}/ban`, {
-        method: 'PATCH',
-        headers: { Authorization: `Bearer ${localStorage.getItem('fanhub_token')}` }
-      });
+      const res = await apiFetch(`/api/admin/users/${id}/ban`, { method: 'PATCH' });
       const data = await res.json();
       if (data.success) {
         toast.success(data.isBanned ? "User Banned" : "User Restored", {
