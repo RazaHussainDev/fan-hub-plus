@@ -27,8 +27,9 @@ const MovieRow = ({ title, fetchCategory, initialMovies = null, fallbackType = '
   );
 
   const movies = data?.results || initialMovies || [];
-  const isLoading = fetchCategory ? swrLoading && !data : false;
-  const showSkeletons = isLoading || movies.length === 0;
+  // Only show skeletons during active SWR fetch — NOT when movies are passed directly as a prop
+  const isLoading = fetchCategory ? (swrLoading && !data) : false;
+  const showSkeletons = isLoading;
 
   return (
     <div className="w-full flex flex-col space-y-2 py-4">
@@ -50,7 +51,7 @@ const MovieRow = ({ title, fetchCategory, initialMovies = null, fallbackType = '
           [...Array(8)].map((_, i) => (
             <SkeletonCard key={i} />
           ))
-        ) : (
+        ) : movies.length === 0 ? null : (
           movies.map((movie) => {
             if (!movie.poster_path) return null;
             return <MovieCard key={movie.id} movie={movie} fallbackType={fallbackType} />;

@@ -520,7 +520,7 @@ export default function StreamPage() {
       ══════════════════════════════════════════════════════════════ */}
       {similar.length > 0 && (
         <section className="max-w-7xl mx-auto px-6 md:px-12 pb-20">
-          <MovieRow movies={similar} title="You May Also Like" fallbackType={contentType} />
+          <MovieRow initialMovies={similar} title="You May Also Like" fallbackType={contentType} />
         </section>
       )}
 
