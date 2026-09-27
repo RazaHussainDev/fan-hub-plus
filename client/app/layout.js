@@ -27,7 +27,7 @@ export const metadata = {
     siteName: 'Fan Hub Plus',
     images: [
       {
-        url: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1200&h=630&fit=crop', // A premium cinema image
+        url: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1200&h=630&fit=crop',
         width: 1200,
         height: 630,
       },
@@ -35,6 +35,13 @@ export const metadata = {
     locale: 'en_US',
     type: 'website',
   },
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: '#0b0f0a',
 };
 
 import FloatingNav from '@/components/FloatingNav';

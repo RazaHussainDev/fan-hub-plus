@@ -18,6 +18,14 @@
   --color-brand-light: #f3f4f6;
 }
 
+/* Root mobile viewport safeguards */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+
 /* Utility to hide scrollbar for MovieRow */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
