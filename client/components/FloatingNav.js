@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Home, Search, List, LogIn, Grip, Settings } from 'lucide-react';
+import { Home, Search, List, LogIn, Grip, Settings, Compass, Users, BookOpen } from 'lucide-react';
 import { useSearch } from '@/context/SearchContext';
 import { useAuth } from '@/context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -54,8 +54,11 @@ const FloatingNav = () => {
 
   const navItems = [
     { name: 'Home', icon: Home, href: '/' },
-    { name: 'Search', icon: Search, onClick: openSearch },
+    { name: 'Explore', icon: Compass, href: '/explore' },
+    { name: 'Characters', icon: Users, href: '/characters' },
     { name: 'Logo', isLogo: true, href: '/' },
+    { name: 'Articles', icon: BookOpen, href: '/articles' },
+    { name: 'Search', icon: Search, onClick: openSearch },
     { name: 'My List', icon: List, href: '/mylist' },
   ];
 

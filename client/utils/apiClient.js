@@ -25,6 +25,7 @@ export function refreshAuthSession() {
       const data = await response.json();
 
       if (!response.ok || !data.success || !data.accessToken) {
+        await fetch('/api/auth/session', { method: 'DELETE' }).catch(() => {});
         setAuthSession(null, null);
         return null;
       }

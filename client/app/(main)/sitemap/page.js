@@ -5,17 +5,20 @@ import Breadcrumbs from '@/components/Breadcrumbs';
 export default function SitemapPage() {
   const sections = [
     { name: 'Home', href: '/' },
+    { name: 'Fandom Explorer', href: '/explore' },
+    { name: 'Character Dossiers', href: '/characters' },
+    { name: 'Featured Articles & Lore', href: '/articles' },
     { name: 'My List', href: '/mylist' },
     { name: 'Search', href: '/search', isAction: true },
-    { name: 'Anime', href: '/#anime' },
-    { name: 'Gaming', href: '/#gaming' },
-    { name: 'Movies', href: '/#movies' },
-    { name: 'TV Shows', href: '/#tv-shows' },
-    { name: 'K-Pop', href: '/#k-pop' },
-    { name: 'Comics', href: '/#comics' },
-    { name: 'Manga', href: '/#manga' },
-    { name: 'Cosplay', href: '/#cosplay' },
-    { name: 'Profile', href: '/profile' }
+    { name: 'Anime Universe', href: '/explore?category=Anime' },
+    { name: 'Gaming Legends', href: '/explore?category=Gaming' },
+    { name: 'Movies & Cinema', href: '/explore?category=Movies' },
+    { name: 'TV Shows & Series', href: '/explore?category=TV%20Shows' },
+    { name: 'K-Pop Fandom', href: '/explore?category=K-Pop' },
+    { name: 'Comics Multiverse', href: '/explore?category=Comics' },
+    { name: 'Manga & Webtoons', href: '/explore?category=Manga' },
+    { name: 'Cosplay Showcase', href: '/explore?category=Cosplay' },
+    { name: 'User Profile & Dashboard', href: '/profile' }
   ];
 
   return (

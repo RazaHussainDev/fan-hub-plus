@@ -91,6 +91,13 @@ export function AuthProvider({ children }) {
     const data = await res.json();
     if (!res.ok || !data.success) throw new Error(data.message || 'Login failed.');
 
+    const sessionResponse = await fetch('/api/auth/session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessionHint: data.sessionHint }),
+    });
+    if (!sessionResponse.ok) throw new Error('Could not establish the web session.');
+
     setAuthSession(data.accessToken, data.user);
     return data;
   };
@@ -105,6 +112,13 @@ export function AuthProvider({ children }) {
     const data = await res.json();
     if (!res.ok || !data.success) throw new Error(data.message || 'Registration failed.');
 
+    const sessionResponse = await fetch('/api/auth/session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessionHint: data.sessionHint }),
+    });
+    if (!sessionResponse.ok) throw new Error('Could not establish the web session.');
+
     setAuthSession(data.accessToken, data.user);
     return data;
   };
@@ -118,6 +132,7 @@ export function AuthProvider({ children }) {
     } catch (error) {
       console.warn('Could not reach the logout endpoint; clearing local session.', error);
     } finally {
+      await fetch('/api/auth/session', { method: 'DELETE' }).catch(() => {});
       setAuthSession(null, null);
       router.push('/login');
     }
