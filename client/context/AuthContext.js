@@ -91,12 +91,15 @@ export function AuthProvider({ children }) {
     const data = await res.json();
     if (!res.ok || !data.success) throw new Error(data.message || 'Login failed.');
 
-    const sessionResponse = await fetch('/api/auth/session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sessionHint: data.sessionHint }),
-    });
-    if (!sessionResponse.ok) throw new Error('Could not establish the web session.');
+    try {
+      await fetch('/api/auth/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionHint: data.sessionHint }),
+      });
+    } catch (sessionErr) {
+      console.warn('Session cookie sync warning:', sessionErr);
+    }
 
     setAuthSession(data.accessToken, data.user);
     return data;
@@ -112,12 +115,15 @@ export function AuthProvider({ children }) {
     const data = await res.json();
     if (!res.ok || !data.success) throw new Error(data.message || 'Registration failed.');
 
-    const sessionResponse = await fetch('/api/auth/session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sessionHint: data.sessionHint }),
-    });
-    if (!sessionResponse.ok) throw new Error('Could not establish the web session.');
+    try {
+      await fetch('/api/auth/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionHint: data.sessionHint }),
+      });
+    } catch (sessionErr) {
+      console.warn('Session cookie sync warning:', sessionErr);
+    }
 
     setAuthSession(data.accessToken, data.user);
     return data;
