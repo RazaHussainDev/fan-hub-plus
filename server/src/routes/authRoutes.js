@@ -20,6 +20,8 @@ const requireTrustedOrigin = (req, res, next) => {
 
 router.post('/login', authController.login);
 router.post('/register', authController.register);
+router.post('/google', authController.googleLogin);
+router.post('/google-custom', authController.googleLogin);
 router.post('/refresh', requireTrustedOrigin, authController.refresh);
 router.post('/logout', requireTrustedOrigin, authController.logout);
 router.post('/watchlist', protect, authController.toggleWatchlist);

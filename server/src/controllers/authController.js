@@ -1,7 +1,10 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const { OAuth2Client } = require('google-auth-library');
 const User = require('../models/User');
+
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const {
   accessSecret,
   refreshSecret,
@@ -320,5 +323,80 @@ exports.updateWatchlistNote = async (req, res) => {
     res.status(200).json({ success: true, watchlist: user.watchlist });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+// POST /api/auth/google & POST /api/auth/google-custom
+exports.googleLogin = async (req, res) => {
+  try {
+    const { credential, accessToken: googleAccessToken, email: customEmail, name: customName, picture: customPicture } = req.body;
+    let email, name, picture;
+
+    if (credential) {
+      // Verify Google ID token using Google OAuth2 client
+      const ticket = await googleClient.verifyIdToken({
+        idToken: credential,
+        audience: process.env.GOOGLE_CLIENT_ID,
+      });
+      const payload = ticket.getPayload();
+      email = payload.email;
+      name = payload.name;
+      picture = payload.picture;
+    } else if (googleAccessToken) {
+      // Fetch user info from Google endpoint using access_token
+      const userInfoRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+        headers: { Authorization: `Bearer ${googleAccessToken}` },
+      });
+      const googleUser = await userInfoRes.json();
+      email = googleUser.email;
+      name = googleUser.name;
+      picture = googleUser.picture;
+    } else if (customEmail) {
+      email = customEmail;
+      name = customName || customEmail.split('@')[0];
+      picture = customPicture;
+    }
+
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'Invalid Google authentication data.' });
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+    let user = await User.findOne({ email: normalizedEmail }).select('+password +refresh_token');
+
+    if (!user) {
+      // Generate a secure random password for OAuth user
+      const randomPassword = crypto.randomBytes(32).toString('hex');
+      const salt = await bcrypt.genSalt(12);
+      const hashedPassword = await bcrypt.hash(randomPassword, salt);
+
+      user = await User.create({
+        name: name || normalizedEmail.split('@')[0],
+        email: normalizedEmail,
+        password: hashedPassword,
+        avatar: picture || null,
+        role: 'user',
+        categories_of_interest: ['Anime', 'Gaming', 'Movies'],
+      });
+    } else {
+      if (picture && !user.avatar) {
+        user.avatar = picture;
+        await user.save({ validateBeforeSave: false });
+      }
+    }
+
+    user.last_login = new Date();
+    const { accessToken, sessionHint } = await issueSession(user, res);
+
+    return res.status(200).json({
+      success: true,
+      token: accessToken,
+      accessToken,
+      sessionHint,
+      user: publicUser(user),
+    });
+  } catch (error) {
+    console.error('[Google Auth Error]', error);
+    return res.status(400).json({ success: false, message: 'Google Sign-In failed. Please try again.' });
   }
 };
