@@ -45,6 +45,7 @@ import SearchModal from '@/components/SearchModal';
 import { Toaster } from 'react-hot-toast';
 import NetworkDetector from '@/components/NetworkDetector';
 import MaintenanceGuard from '@/components/MaintenanceGuard';
+import FanHubAI from '@/components/FanHubAI';
 
 export default function RootLayout({ children }) {
   return (
@@ -61,6 +62,7 @@ export default function RootLayout({ children }) {
               {children}
               <FloatingNav />
               <SearchModal />
+              <FanHubAI />
             </MaintenanceGuard>
             <Toaster position="top-center" />
             <NetworkDetector />
