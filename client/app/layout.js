@@ -54,6 +54,7 @@ import SearchModal from '@/components/SearchModal';
 import { Toaster } from 'react-hot-toast';
 import NetworkDetector from '@/components/NetworkDetector';
 import MaintenanceGuard from '@/components/MaintenanceGuard';
+import FanHubAI from '@/components/FanHubAI';
 import GoogleAuthProvider from '@/components/GoogleAuthProvider';
 import 'nprogress/nprogress.css';
 
