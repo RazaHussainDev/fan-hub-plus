@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { FileCheck, Check, X, Clock, Eye, User, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 
+import { apiFetch } from '@/utils/apiClient';
+
 export default function AdminSubmissionsPage() {
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,14 +14,7 @@ export default function AdminSubmissionsPage() {
   const fetchPending = async () => {
     setLoading(true);
     try {
-      const backendBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-      const token = localStorage.getItem('fanhub_token') || localStorage.getItem('token');
-      
-      const res = await fetch(`${backendBase}/api/admin/submissions/pending`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      const res = await apiFetch('/api/admin/submissions/pending');
       const data = await res.json();
       if (data.success) {
         setSubmissions(data.results || []);
@@ -38,14 +33,10 @@ export default function AdminSubmissionsPage() {
 
   const handleModerate = async (id, status) => {
     try {
-      const backendBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-      const token = localStorage.getItem('fanhub_token') || localStorage.getItem('token');
-
-      const res = await fetch(`${backendBase}/api/admin/submissions/${id}/status`, {
+      const res = await apiFetch(`/api/admin/submissions/${id}/status`, {
         method: 'PATCH',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ status })
       });
@@ -58,7 +49,7 @@ export default function AdminSubmissionsPage() {
         setSubmissions(prev => prev.filter(s => s._id !== id));
         setSelectedSubmission(null);
       } else {
-        toast.error(data.message);
+        toast.error(data.message || 'Action failed');
       }
     } catch (err) {
       toast.error("Action failed");
