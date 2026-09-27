@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Search, 
@@ -52,6 +53,11 @@ const QUICK_ACTIONS = [
 ];
 
 export default function FanHubAI() {
+  const pathname = usePathname();
+  if (pathname === '/login' || pathname === '/register' || pathname?.startsWith('/admin')) {
+    return null;
+  }
+
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);

@@ -68,6 +68,12 @@ export default function FloatingNav() {
   const [fontSize, setFontSize] = useState(16);
   const [mounted, setMounted] = useState(false);
 
+  // Do not render floating dock on auth portals or admin command center
+  const isAuthOrAdminPage = pathname === '/login' || pathname === '/register' || pathname?.startsWith('/admin');
+  if (isAuthOrAdminPage) {
+    return null;
+  }
+
   // Synchronize theme on mount
   useEffect(() => {
     setMounted(true);
