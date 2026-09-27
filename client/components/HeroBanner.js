@@ -201,7 +201,7 @@ const HeroBanner = ({ trendingData = [], customHeroProp = null }) => {
   const isSaved = currentMovie.originalItem ? isInWatchlist(currentMovie.id) : false;
 
   return (
-    <div className="relative w-full h-[88vh] min-h-[640px] flex items-end pb-24 md:pb-32 px-6 md:px-16 overflow-hidden">
+    <div className="hero-banner-mobile relative w-full h-[88vh] min-h-[640px] flex items-end pb-24 md:pb-32 px-6 md:px-16 overflow-hidden">
       
       {/* ─────────────────────────────────────────────────────────────
           1. HIGH-RES STATIC BACKDROP (Ken Burns Zoom Animation)
@@ -314,7 +314,7 @@ const HeroBanner = ({ trendingData = [], customHeroProp = null }) => {
               animate={{ opacity: 1, y: 0 }} 
               exit={{ opacity: 0, y: -15, transition: { duration: 0.2 } }}
               transition={{ duration: 0.7, delay: 0.2 }}
-              className="text-4xl sm:text-5xl md:text-7xl font-heading font-black text-gray-900 dark:text-white tracking-tight drop-shadow-md leading-[1.05]"
+              className="text-3xl sm:text-5xl md:text-7xl font-heading font-black text-gray-900 dark:text-white tracking-tight drop-shadow-md leading-[1.05]"
             >
               {currentMovie.title}
             </motion.h1>
@@ -325,7 +325,7 @@ const HeroBanner = ({ trendingData = [], customHeroProp = null }) => {
               animate={{ opacity: 1, y: 0 }} 
               exit={{ opacity: 0, y: -15, transition: { duration: 0.2 } }}
               transition={{ duration: 0.7, delay: 0.3 }}
-              className="text-gray-700 dark:text-gray-300 text-base md:text-lg font-medium max-w-xl leading-relaxed drop-shadow-sm line-clamp-3"
+              className="text-gray-700 dark:text-gray-300 text-sm md:text-lg font-medium max-w-xl leading-relaxed drop-shadow-sm line-clamp-3"
             >
               {currentMovie.description}
             </motion.p>
@@ -336,12 +336,12 @@ const HeroBanner = ({ trendingData = [], customHeroProp = null }) => {
               animate={{ opacity: 1, y: 0 }} 
               exit={{ opacity: 0, y: -15, transition: { duration: 0.2 } }}
               transition={{ duration: 0.7, delay: 0.4 }}
-              className="flex flex-wrap items-center gap-3.5 pt-4"
+              className="flex flex-wrap items-center gap-2.5 md:gap-3.5 pt-3 md:pt-4"
             >
               {/* Primary Watch Action */}
               <Link
                 href={currentMovie.type === 'custom' ? currentMovie.buttonLink : `/stream/${currentMovie.id}?type=${currentMovie.type}`}
-                className="flex items-center gap-2.5 bg-gradient-to-r from-[#a7c957] to-[#8db33f] text-[#0b0f0a] px-8 py-3.5 rounded-full font-black text-base md:text-lg hover:scale-105 shadow-[0_10px_25px_rgba(167,201,87,0.4)] transition-all active:scale-95"
+                className="flex items-center gap-2 bg-gradient-to-r from-[#a7c957] to-[#8db33f] text-[#0b0f0a] px-5 md:px-8 py-3 md:py-3.5 rounded-full font-black text-sm md:text-lg hover:scale-105 shadow-[0_10px_25px_rgba(167,201,87,0.4)] transition-all active:scale-95"
               >
                 <Play fill="currentColor" size={20} />
                 {currentMovie.type === 'custom' ? currentMovie.buttonText : 'Watch Now'}
@@ -350,7 +350,7 @@ const HeroBanner = ({ trendingData = [], customHeroProp = null }) => {
               {/* Interactive More Info Trigger */}
               <button 
                 onClick={handleOpenMoreInfo}
-                className="flex items-center gap-2 bg-black/10 dark:bg-white/10 backdrop-blur-xl border border-black/15 dark:border-white/20 text-gray-900 dark:text-white px-7 py-3.5 rounded-full font-bold text-base md:text-lg hover:bg-[#a7c957]/20 hover:border-[#a7c957]/50 hover:text-[#a7c957] transition-all shadow-lg active:scale-95 cursor-pointer"
+                className="flex items-center gap-2 bg-black/10 dark:bg-white/10 backdrop-blur-xl border border-black/15 dark:border-white/20 text-gray-900 dark:text-white px-5 md:px-7 py-3 md:py-3.5 rounded-full font-bold text-sm md:text-lg hover:bg-[#a7c957]/20 hover:border-[#a7c957]/50 hover:text-[#a7c957] transition-all shadow-lg active:scale-95 cursor-pointer"
               >
                 <Info size={20} />
                 More Info

@@ -48,7 +48,7 @@ export default async function Home() {
     <main className="w-full flex flex-col bg-[#FBFBFD] dark:bg-brand-bg relative z-0 transition-colors duration-500 pt-14 md:pt-0">
       <HeroBanner trendingData={trendingData.results} customHeroProp={customHero} />
       
-      <div className="flex flex-col space-y-6 mt-[-100px] relative z-20">
+      <div className="flex flex-col space-y-5 md:space-y-6 mt-8 md:mt-[-100px] relative z-20">
         <CurvedCategorySlider />
         <DynamicMovieRow title="Trending Now" initialMovies={trendingData.results} fetchCategory="trending" href="/explore?category=trending" />
         <DynamicMovieRow title="New Releases" initialMovies={newReleasesData.results} fetchCategory="newReleases" href="/explore?category=newReleases" />

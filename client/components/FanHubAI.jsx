@@ -159,7 +159,7 @@ export default function FanHubAI() {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 350, damping: 25 }}
-            className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-50 flex items-center justify-center"
+            className="chatbot-launcher fixed bottom-6 right-6 md:bottom-8 md:right-8 z-[60] flex items-center justify-center"
           >
             {/* Pulse rings */}
             <span className="absolute -inset-1 rounded-full bg-[#a7c957]/30 animate-ping opacity-75" />
@@ -195,7 +195,7 @@ export default function FanHubAI() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: 'spring', stiffness: 300, damping: 26 }}
-            className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 md:bottom-8 md:right-8 z-50 w-[92vw] sm:w-[410px] h-[580px] max-h-[85vh] bg-[#0b0f0a]/95 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_30px_rgba(167,201,87,0.15)] flex flex-col overflow-hidden font-body text-gray-200"
+            className="chatbot-window fixed bottom-4 right-4 sm:bottom-6 sm:right-6 md:bottom-8 md:right-8 z-[60] w-[92vw] sm:w-[410px] h-[580px] max-h-[85vh] bg-[#0b0f0a]/95 backdrop-blur-2xl border border-white/10 rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_30px_rgba(167,201,87,0.15)] flex flex-col overflow-hidden font-body text-gray-200"
           >
             {/* Header */}
             <div className="relative px-5 py-4 bg-gradient-to-r from-[#121a10] via-[#0b0f0a] to-[#121a10] border-b border-white/10 flex items-center justify-between shrink-0">

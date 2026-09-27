@@ -84,9 +84,31 @@ body {
   main {
     padding-bottom: calc(80px + env(safe-area-inset-bottom, 16px));
   }
-  /* Hero banner on mobile: reduce height */
+  /* Keep the home hero compact so its controls do not collide with the next row. */
   .hero-banner-mobile {
-    min-height: 70vh !important;
+    height: 78svh !important;
+    min-height: 540px !important;
+    padding-bottom: 5.25rem !important;
+    padding-left: 1.25rem !important;
+    padding-right: 1.25rem !important;
+  }
+
+  .chatbot-launcher {
+    right: 0.75rem !important;
+    bottom: calc(5.25rem + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  .chatbot-launcher > button {
+    width: 3rem !important;
+    height: 3rem !important;
+  }
+
+  .chatbot-window {
+    right: 0.625rem !important;
+    bottom: calc(5rem + env(safe-area-inset-bottom, 0px)) !important;
+    width: calc(100vw - 1.25rem) !important;
+    height: min(560px, calc(100dvh - 6.5rem - env(safe-area-inset-bottom, 0px))) !important;
+    max-height: calc(100dvh - 6.5rem - env(safe-area-inset-bottom, 0px)) !important;
   }
 }
 
