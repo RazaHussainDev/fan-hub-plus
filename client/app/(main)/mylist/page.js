@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useWatchlist } from '@/hooks/useWatchlist';
 import { BASE_IMG_URL } from '@/utils/tmdb';
 import Breadcrumbs from '@/components/Breadcrumbs';
-import { Play, Compass, StickyNote, Trash2, Edit3, X, Save, Sparkles } from 'lucide-react';
+import { Play, Compass, StickyNote, Trash2, Edit3, X, Save, Bookmark } from 'lucide-react';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -70,7 +70,7 @@ export default function MyListPage() {
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#a7c957]/10 border border-[#a7c957]/20 text-[#a7c957] text-xs font-bold uppercase tracking-wider mb-4">
-              <Sparkles size={14} /> Personal Fandom Vault
+              <Bookmark size={14} /> Personal Fandom Vault
             </div>
             <h1 className="text-5xl md:text-6xl font-heading font-black text-gray-900 dark:text-white mb-4 tracking-tighter transition-colors duration-500">
               My <span className="text-[#a7c957]">Collection</span>

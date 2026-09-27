@@ -4,7 +4,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import { 
-  Users, Search, Star, Heart, Sparkles, X, Shield, 
+  Users, Search, Star, Heart, X, Shield, 
   Quote, Zap, Layers, Trophy, Share2, Info 
 } from 'lucide-react';
 import toast from 'react-hot-toast';

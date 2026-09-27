@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import { 
   MessageSquare, Bug, Lightbulb, HelpCircle, Send, 
-  CheckCircle, Sparkles, ShieldCheck, Mail, User 
+  CheckCircle, ShieldCheck, Mail, User 
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import toast from 'react-hot-toast';

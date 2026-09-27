@@ -4,7 +4,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import { 
-  Sparkles, Search, Heart, Share2, ExternalLink, X, Clock, 
+  Search, Heart, Share2, ExternalLink, X, Clock, 
   Tag, ShoppingBag, Flame, Eye, Layers, ShieldCheck, AlertCircle, 
   Calendar, Check 
 } from 'lucide-react';

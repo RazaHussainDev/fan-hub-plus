@@ -17,7 +17,7 @@ import {
   Clock, 
   ShieldCheck, 
   SlidersHorizontal, 
-  Sparkles, 
+  Palette, 
   Check, 
   X, 
   Film, 
@@ -25,7 +25,6 @@ import {
   Tv, 
   Music, 
   BookOpen, 
-  Masks, 
   Flame,
   Volume2,
   Server
@@ -39,7 +38,7 @@ const FANDOM_OPTIONS = [
   { id: 'K-Pop', label: 'K-Pop', icon: Music },
   { id: 'Comics', label: 'Comics', icon: BookOpen },
   { id: 'Manga', label: 'Manga', icon: BookOpen },
-  { id: 'Cosplay', label: 'Cosplay', icon: Sparkles },
+  { id: 'Cosplay', label: 'Cosplay', icon: Palette },
 ];
 
 const INTEREST_TAGS = [
@@ -223,7 +222,7 @@ export default function ProfilePage() {
                   key={fandom}
                   className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white/10 dark:bg-white/5 border border-white/10 text-xs font-medium text-gray-800 dark:text-gray-300"
                 >
-                  <Sparkles size={11} className="text-[#a7c957]" /> {fandom}
+                  <Flame size={11} className="text-[#a7c957]" /> {fandom}
                 </span>
               ))}
               <button
@@ -282,7 +281,7 @@ export default function ProfilePage() {
         <div className="p-6 rounded-3xl bg-gradient-to-r from-white/60 via-white/40 to-white/60 dark:from-[#0b0f0a]/60 dark:via-[#11180f]/40 dark:to-[#0b0f0a]/60 border border-black/5 dark:border-white/10 backdrop-blur-xl shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="space-y-1">
             <h3 className="text-sm font-bold uppercase tracking-wider text-[#a7c957] flex items-center gap-2">
-              <Sparkles size={14} /> Curated Interests & Fandom Profile
+              <Compass size={14} /> Curated Interests & Fandom Profile
             </h3>
             <p className="text-xs text-gray-500 dark:text-gray-400">
               Personalized algorithms tailor your Explore feed and recommendations based on your selected interests.

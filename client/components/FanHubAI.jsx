@@ -12,12 +12,12 @@ import {
   User, 
   X, 
   Send, 
-  Sparkles, 
+  Zap, 
   Bot, 
   Film, 
-  ChevronRight,
-  Compass,
-  ArrowUp
+  ChevronRight, 
+  Compass, 
+  ArrowUp 
 } from 'lucide-react';
 
 const QUICK_ACTIONS = [
@@ -301,7 +301,7 @@ export default function FanHubAI() {
               {messages.length === 1 && (
                 <div className="pt-2 pb-1">
                   <div className="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-2.5 px-1 flex items-center gap-1.5">
-                    <Sparkles size={12} className="text-[#a7c957]" /> Quick Suggestions
+                    <Zap size={12} className="text-[#a7c957]" /> Quick Suggestions
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     {QUICK_ACTIONS.map((action) => {

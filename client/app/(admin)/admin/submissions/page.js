@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { FileCheck, Check, X, Clock, Eye, User, Sparkles, AlertCircle } from 'lucide-react';
+import { FileCheck, Check, X, Clock, Eye, User, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function AdminSubmissionsPage() {

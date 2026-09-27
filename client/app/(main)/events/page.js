@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import { 
   Calendar, MapPin, Compass, Navigation, Ticket, Users, 
-  Search, Clock, ExternalLink, X, Check, Star, Sparkles, 
+  Search, Clock, ExternalLink, X, Check, Star, 
   Map, Globe, AlertCircle, Share2, Layers 
 } from 'lucide-react';
 import toast from 'react-hot-toast';

@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import { 
-  Film, Tv, Gamepad2, Sparkles, Music, BookOpen, Book, Users, 
+  Film, Tv, Gamepad2, Compass, Music, BookOpen, Book, Users, 
   Search, SlidersHorizontal, Star, X, Play, Share2, Check, Plus, 
   Flame, Calendar, ArrowUpDown, Layers, ExternalLink, Info, Filter
 } from 'lucide-react';
@@ -15,7 +15,7 @@ import toast from 'react-hot-toast';
 
 // ─── Categories definition matching SRS 1.4 & 1.6 ─────────────────────────────
 const FANDOM_CATEGORIES = [
-  { id: 'all', name: 'All Fandoms', icon: Sparkles, color: 'from-[#a7c957] to-[#c2e078]' },
+  { id: 'all', name: 'All Fandoms', icon: Compass, color: 'from-[#a7c957] to-[#c2e078]' },
   { id: 'Anime', name: 'Anime', icon: Star, color: 'from-amber-400 to-orange-500' },
   { id: 'Gaming', name: 'Gaming', icon: Gamepad2, color: 'from-violet-400 to-purple-600' },
   { id: 'Movies', name: 'Movies', icon: Film, color: 'from-blue-400 to-indigo-600' },
@@ -190,7 +190,7 @@ function ExploreContent() {
             transition={{ duration: 0.6 }}
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/15 text-xs font-bold text-[#a7c957] uppercase tracking-widest mb-3 backdrop-blur-md">
-              <Sparkles size={14} className="text-[#a7c957]" />
+              <Compass size={14} className="text-[#a7c957]" />
               Fandom Universe Explorer
             </div>
             

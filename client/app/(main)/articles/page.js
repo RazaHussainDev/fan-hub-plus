@@ -4,7 +4,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import { 
-  BookOpen, Search, Sparkles, Plus, Clock, Eye, Heart, 
+  BookOpen, Search, Plus, Clock, Eye, Heart, 
   Send, X, CheckCircle, Tag, Calendar, User, ArrowRight, Share2 
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';

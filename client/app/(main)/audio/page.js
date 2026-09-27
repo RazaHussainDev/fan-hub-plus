@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import { 
   Headphones, Play, Pause, SkipForward, SkipBack, Volume2, 
-  VolumeX, Heart, Share2, Disc3, Radio, Sparkles, Repeat, 
+  VolumeX, Heart, Share2, Disc3, Radio, Repeat, 
   ListMusic, Clock, Search, Layers 
 } from 'lucide-react';
 import toast from 'react-hot-toast';
