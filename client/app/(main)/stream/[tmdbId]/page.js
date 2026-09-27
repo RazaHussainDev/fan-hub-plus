@@ -9,15 +9,13 @@ import MediaRatingSection from '@/components/MediaRatingSection';
 import DownloadModal from '@/components/DownloadModal';
 import {
   Play, X, Plus, Check, Download, Share2,
-  TrendingUp, Star, Clock, CalendarDays,
-  Wifi, AlertTriangle, ShieldCheck, Maximize2,
-  Minimize2, RotateCw, Monitor, ArrowLeft,
-  ChevronLeft, ChevronRight, Sparkles, Film
+  TrendingUp, Star, Clock, Wifi, ArrowLeft,
+  Film, Sparkles
 } from 'lucide-react';
 import { useWatchlist } from '@/hooks/useWatchlist';
 import toast from 'react-hot-toast';
 
-/* ─── CDN Configurations ─────────────────────────────────────────────────── */
+/* ─── Helpers & CDN Config ──────────────────────────────────────────────── */
 const BACKDROP = 'https://image.tmdb.org/t/p/original';
 const POSTER   = 'https://image.tmdb.org/t/p/w500';
 
@@ -35,10 +33,10 @@ const getRatingColor = (score) => {
 };
 
 const SERVERS = [
-  { id: 'vidlink', name: 'Server 1 (VidLink 4K • Ad-Free)', badge: 'Ultra HD 4K', speed: 'Fastest' },
-  { id: 'autoembed', name: 'Server 2 (AutoEmbed CDN)', badge: 'Ad-Shielded', speed: 'Smooth' },
-  { id: 'vidsrccc', name: 'Server 3 (Vidsrc VIP V2)', badge: 'Multi-Sub', speed: 'High Speed' },
-  { id: 'embedsu', name: 'Server 4 (EmbedSU Global)', badge: 'Global Mirror', speed: 'Backup' },
+  { id: 'primary', name: 'Server 1 (Primary)' },
+  { id: 'backup1', name: 'Server 2 (Backup)' },
+  { id: 'backup2', name: 'Server 3 (Alt)' },
+  { id: 'backup3', name: 'Server 4 (VIP)' },
 ];
 
 export default function StreamPage() {
@@ -53,11 +51,7 @@ export default function StreamPage() {
   /* state */
   const [season,          setSeason]          = useState(1);
   const [episode,         setEpisode]         = useState(1);
-  const [activeServer,    setActiveServer]    = useState('vidlink');
-  const [playerKey,       setPlayerKey]       = useState(1);
-  const [isFullscreen,    setIsFullscreen]    = useState(false);
-  const [isTheaterMode,   setIsTheaterMode]   = useState(false);
-  const [adShieldActive,  setAdShieldActive]  = useState(true);
+  const [activeServer,    setActiveServer]    = useState('primary');
   const [loading,         setLoading]         = useState(true);
   const [metadata,        setMetadata]        = useState(null);
   const [cast,            setCast]            = useState([]);
@@ -71,8 +65,7 @@ export default function StreamPage() {
   const [isDownloadOpen,  setIsDownloadOpen]  = useState(false);
   const [isPlayingIntro,  setIsPlayingIntro]  = useState(true);
 
-  const playerContainerRef = useRef(null);
-  const playerSectionRef   = useRef(null);
+  const playerRef = useRef(null);
 
   /* share helper */
   const handleShare = async () => {
@@ -89,53 +82,10 @@ export default function StreamPage() {
     }
   };
 
-  /* Native Fullscreen API */
-  const toggleFullscreen = () => {
-    if (!playerContainerRef.current) return;
-    if (!document.fullscreenElement) {
-      playerContainerRef.current.requestFullscreen().catch((err) => {
-        toast.error('Fullscreen request blocked by browser');
-      });
-      setIsFullscreen(true);
-    } else {
-      document.exitFullscreen().catch(() => {});
-      setIsFullscreen(false);
-    }
-  };
-
-  useEffect(() => {
-    const handleFsChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-    document.addEventListener('fullscreenchange', handleFsChange);
-    return () => document.removeEventListener('fullscreenchange', handleFsChange);
-  }, []);
-
-  /* 1-Click Stream Reload */
-  const reloadStream = () => {
-    setPlayerKey(prev => prev + 1);
-    toast.success('Refreshing stream connection…', {
-      icon: '🔄',
-      style: { background: '#0b0f0a', color: '#a7c957', border: '1px solid #a7c957' }
-    });
-  };
-
-  /* Server Switcher with Toast */
-  const handleServerChange = (serverId) => {
-    setActiveServer(serverId);
-    setIsPlayingIntro(false);
-    setPlayerKey(prev => prev + 1);
-    const target = SERVERS.find(s => s.id === serverId);
-    toast.success(`Switched to ${target?.name || 'Server'}`, {
-      icon: '⚡',
-      style: { background: '#0b0f0a', color: '#a7c957', border: '1px solid #a7c957' }
-    });
-  };
-
   /* Scroll to player */
   const scrollToPlayer = () => {
     setIsPlayingIntro(false);
-    playerSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    playerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
   /* fetch */
@@ -184,38 +134,18 @@ export default function StreamPage() {
     return s?.episode_count || 0;
   }, [metadata, season]);
 
-  /* Build verified, ad-clean embed URLs */
+  /* Build real, battle-tested embed URLs for TMDB */
   const getEmbedUrl = (server) => {
-    const isTv = contentType === 'tv';
-    switch (server) {
-      case 'vidlink':
-        // VidLink (High performance, minimal popup noise)
-        return isTv
-          ? `https://vidlink.pro/tv/${tmdbId}/${season}/${episode}?primaryColor=a7c957&secondaryColor=0b0f0a&iconColor=a7c957&autoplay=false`
-          : `https://vidlink.pro/movie/${tmdbId}?primaryColor=a7c957&secondaryColor=0b0f0a&iconColor=a7c957&autoplay=false`;
-
-      case 'autoembed':
-        // AutoEmbed (Super reliable fast stream mirror)
-        return isTv
-          ? `https://player.autoembed.cc/embed/tv/${tmdbId}/${season}/${episode}`
-          : `https://player.autoembed.cc/embed/movie/${tmdbId}`;
-
-      case 'vidsrccc':
-        // Vidsrc CC v2
-        return isTv
-          ? `https://vidsrc.cc/v2/embed/tv/${tmdbId}/${season}/${episode}`
-          : `https://vidsrc.cc/v2/embed/movie/${tmdbId}`;
-
-      case 'embedsu':
-        // EmbedSU mirror
-        return isTv
-          ? `https://embed.su/embed/tv/${tmdbId}/${season}/${episode}`
-          : `https://embed.su/embed/movie/${tmdbId}`;
-
-      default:
-        return isTv
-          ? `https://vidlink.pro/tv/${tmdbId}/${season}/${episode}?primaryColor=a7c957`
-          : `https://vidlink.pro/movie/${tmdbId}?primaryColor=a7c957`;
+    if (contentType === 'tv') {
+      if (server === 'primary') return `https://vidsrc.me/embed/tv?tmdb=${tmdbId}&season=${season}&episode=${episode}`;
+      if (server === 'backup1') return `https://multiembed.mov/directstream.php?video_id=${tmdbId}&tmdb=1&s=${season}&e=${episode}`;
+      if (server === 'backup2') return `https://vidsrc.pro/embed/tv/${tmdbId}/${season}/${episode}`;
+      return `https://vidsrc.xyz/embed/tv/${tmdbId}/${season}/${episode}`;
+    } else {
+      if (server === 'primary') return `https://vidsrc.me/embed/movie?tmdb=${tmdbId}`;
+      if (server === 'backup1') return `https://multiembed.mov/directstream.php?video_id=${tmdbId}&tmdb=1`;
+      if (server === 'backup2') return `https://vidsrc.pro/embed/movie/${tmdbId}`;
+      return `https://vidsrc.xyz/embed/movie/${tmdbId}`;
     }
   };
 
@@ -225,7 +155,7 @@ export default function StreamPage() {
       <main className="min-h-screen bg-[#0b0f0a] text-white flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-[#a7c957] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-[#a7c957] font-semibold tracking-widest uppercase text-sm animate-pulse">Initializing Stream Engine…</p>
+          <p className="text-[#a7c957] font-semibold tracking-widest uppercase text-sm animate-pulse">Initializing Fandom Stream…</p>
         </div>
       </main>
     );
@@ -233,7 +163,7 @@ export default function StreamPage() {
 
   /* ─── render ────────────────────────────────────────────────────────────── */
   return (
-    <main className="min-h-screen bg-[#0b0f0a] text-white selection:bg-[#a7c957] selection:text-[#0b0f0a]">
+    <main className="min-h-screen bg-[#0b0f0a] text-white">
 
       {/* ══════════════════════════════════════════════════════════════
           HERO — full-width backdrop with gradient overlay
@@ -307,7 +237,7 @@ export default function StreamPage() {
             {/* Tagline / Engine label */}
             <p className="text-[#a7c957] font-semibold text-sm mb-4 tracking-wide flex items-center gap-2">
               <Sparkles size={14} />
-              {metadata?.tagline || 'Hydra Cascade Engine Active • Ultra-Low Latency'}
+              {metadata?.tagline || 'Hydra Cascade Engine Active • Multi-CDN'}
             </p>
 
             {/* Meta strip */}
@@ -400,87 +330,14 @@ export default function StreamPage() {
       </div>
 
       {/* ══════════════════════════════════════════════════════════════
-          CINEMA VIDEO PLAYER & CONTROL DECK
+          CINEMA VIDEO PLAYER
       ══════════════════════════════════════════════════════════════ */}
       <section
-        ref={playerSectionRef}
-        className={`mx-auto px-4 md:px-12 py-8 transition-all duration-500 ${
-          isTheaterMode ? 'max-w-full px-0' : 'max-w-7xl'
-        }`}
+        ref={playerRef}
+        className="max-w-7xl mx-auto px-4 md:px-12 py-8"
       >
-        {/* Cinema Deck Header */}
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-3 px-2">
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-gray-400">Stream Node:</span>
-            <span className="text-xs font-bold text-[#a7c957] bg-[#a7c957]/10 px-2.5 py-0.5 rounded-full border border-[#a7c957]/30">
-              {SERVERS.find(s => s.id === activeServer)?.name}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            {/* Ad-Shield Badge */}
-            <button
-              onClick={() => {
-                setAdShieldActive(!adShieldActive);
-                toast.success(adShieldActive ? 'Ad-Shield paused' : 'Ad-Shield Active (Popups Blocked)', {
-                  icon: '🛡️',
-                  style: { background: '#0b0f0a', color: '#a7c957', border: '1px solid #a7c957' }
-                });
-              }}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border transition-all cursor-pointer ${
-                adShieldActive
-                  ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-400'
-                  : 'bg-white/5 border-white/10 text-gray-400'
-              }`}
-              title="Click to toggle Ad-Shield Popup Blocker"
-            >
-              <ShieldCheck size={14} />
-              {adShieldActive ? 'Ad-Shield Active' : 'Ad-Shield Off'}
-            </button>
-
-            {/* Quick Reload Stream */}
-            <button
-              onClick={reloadStream}
-              className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 transition-all cursor-pointer active:scale-95"
-              title="Reload video if buffering or frozen"
-            >
-              <RotateCw size={13} />
-              Reload
-            </button>
-
-            {/* Theater Mode Toggle */}
-            <button
-              onClick={() => setIsTheaterMode(!isTheaterMode)}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border transition-all cursor-pointer ${
-                isTheaterMode
-                  ? 'bg-[#a7c957] text-[#0b0f0a] border-[#a7c957]'
-                  : 'bg-white/5 hover:bg-white/10 border-white/10 text-gray-300'
-              }`}
-              title="Toggle Theater Mode"
-            >
-              <Monitor size={13} />
-              Theater
-            </button>
-
-            {/* Native Fullscreen Toggle */}
-            <button
-              onClick={toggleFullscreen}
-              className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-white/5 hover:bg-[#a7c957] hover:text-[#0b0f0a] border border-white/10 text-gray-300 transition-all cursor-pointer active:scale-95"
-              title="Expand to Fullscreen"
-            >
-              {isFullscreen ? <Minimize2 size={13} /> : <Maximize2 size={13} />}
-              {isFullscreen ? 'Exit' : 'Fullscreen'}
-            </button>
-          </div>
-        </div>
-
-        {/* Video Player Frame Container */}
-        <div
-          ref={playerContainerRef}
-          className={`w-full relative rounded-2xl overflow-hidden border border-[#a7c957]/30 shadow-[0_0_60px_rgba(167,201,87,0.15)] bg-black aspect-video transition-all ${
-            isFullscreen ? 'h-screen w-screen rounded-none border-none' : ''
-          }`}
-        >
+        {/* Video Player Container */}
+        <div className="w-full relative rounded-2xl overflow-hidden border border-[#a7c957]/20 shadow-[0_0_60px_rgba(167,201,87,0.12)] bg-black aspect-video">
           {isPlayingIntro ? (
             <div className="relative w-full h-full bg-black flex items-center justify-center">
               <video
@@ -500,7 +357,6 @@ export default function StreamPage() {
             </div>
           ) : (
             <iframe
-              key={`player-${activeServer}-${playerKey}-${contentType}-${tmdbId}-${season}-${episode}`}
               src={getEmbedUrl(activeServer)}
               className="w-full h-full"
               frameBorder="0"
@@ -508,39 +364,33 @@ export default function StreamPage() {
               webkitallowfullscreen="true"
               mozallowfullscreen="true"
               allow="autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope"
-              // Ad-Shield sandbox blocks popup windows and redirect ads while keeping video engine working
-              sandbox={adShieldActive ? "allow-scripts allow-same-origin allow-forms allow-presentation allow-downloads" : undefined}
             />
           )}
-
-          {/* Ambient Glow */}
           <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_30px_rgba(167,201,87,0.06)] rounded-2xl" />
         </div>
 
-        {/* Multi-Server Selector Bar */}
+        {/* Server Switching UI (Matching AI reference image) */}
         <div className="mt-4 p-4 rounded-2xl bg-white/[0.03] border border-white/8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex items-center gap-2 text-sm text-gray-400 font-medium">
             <Wifi size={16} className="text-[#a7c957]" />
-            <span>If video is buffering or down, switch server:</span>
+            <span>If video is buffering, change server:</span>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
             {SERVERS.map((s) => (
               <button
                 key={s.id}
-                onClick={() => handleServerChange(s.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs md:text-sm font-bold transition-all cursor-pointer ${
+                onClick={() => {
+                  setActiveServer(s.id);
+                  setIsPlayingIntro(false);
+                }}
+                className={`px-4 py-2 rounded-xl text-xs md:text-sm font-bold transition-all cursor-pointer ${
                   activeServer === s.id
                     ? 'bg-[#a7c957] text-[#0b0f0a] shadow-[0_0_20px_rgba(167,201,87,0.4)]'
                     : 'bg-white/5 text-gray-300 border border-white/10 hover:bg-white/10'
                 }`}
               >
-                <span>{s.name.split(' (')[0]}</span>
-                <span className={`text-[10px] px-1.5 py-0.2 rounded font-mono ${
-                  activeServer === s.id ? 'bg-[#0b0f0a]/20 text-[#0b0f0a]' : 'bg-white/10 text-gray-400'
-                }`}>
-                  {s.speed}
-                </span>
+                {s.name}
               </button>
             ))}
           </div>
@@ -548,12 +398,12 @@ export default function StreamPage() {
       </section>
 
       {/* ══════════════════════════════════════════════════════════════
-          TV SHOWS — Clean Modern Season & Episode Selector
+          TV SHOWS — Season & Episode Selector
       ══════════════════════════════════════════════════════════════ */}
       {contentType === 'tv' && (
         <section className="max-w-7xl mx-auto px-6 md:px-12 pb-10">
           <div className="rounded-3xl bg-white/[0.03] border border-white/8 p-6 md:p-8 space-y-6">
-            {/* Season switcher */}
+            {/* Season Selector */}
             <div>
               <h3 className="text-xs font-bold text-[#a7c957] uppercase tracking-widest mb-3">Select Season</h3>
               <div className="flex flex-wrap gap-2">
@@ -564,7 +414,6 @@ export default function StreamPage() {
                       setSeason(Number(s.season_number));
                       setEpisode(1);
                       setIsPlayingIntro(false);
-                      setPlayerKey(prev => prev + 1);
                     }}
                     className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all cursor-pointer ${
                       Number(season) === Number(s.season_number)
@@ -578,24 +427,12 @@ export default function StreamPage() {
               </div>
             </div>
 
-            {/* Episode Navigator Grid */}
+            {/* Episode Grid */}
             <div>
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest">
                   Season {season} Episodes ({episodeCount})
                 </h3>
-                {episode < episodeCount && (
-                  <button
-                    onClick={() => {
-                      setEpisode(prev => prev + 1);
-                      setIsPlayingIntro(false);
-                      setPlayerKey(prev => prev + 1);
-                    }}
-                    className="text-xs text-[#a7c957] font-bold hover:underline cursor-pointer flex items-center gap-1"
-                  >
-                    Next Episode ({episode + 1}) →
-                  </button>
-                )}
               </div>
 
               <div key={`ep-grid-${season}`} className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-12 gap-2">
@@ -605,15 +442,14 @@ export default function StreamPage() {
                     onClick={() => {
                       setEpisode(ep);
                       setIsPlayingIntro(false);
-                      setPlayerKey(prev => prev + 1);
                     }}
-                    className={`h-12 rounded-xl text-xs font-black transition-all cursor-pointer flex flex-col items-center justify-center ${
+                    className={`h-11 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center ${
                       Number(episode) === ep
                         ? 'bg-[#a7c957] text-[#0b0f0a] shadow-lg shadow-[#a7c957]/30 scale-105'
                         : 'bg-white/5 text-gray-300 border border-white/8 hover:bg-white/10'
                     }`}
                   >
-                    <span>EP {ep < 10 ? `0${ep}` : ep}</span>
+                    EP {ep < 10 ? `0${ep}` : ep}
                   </button>
                 ))}
               </div>
@@ -623,7 +459,7 @@ export default function StreamPage() {
       )}
 
       {/* ══════════════════════════════════════════════════════════════
-          CAST & CREW — Luxury Squircle Profiles
+          CAST & CREW
       ══════════════════════════════════════════════════════════════ */}
       {(cast.length > 0 || crew.length > 0) && (
         <section className="max-w-7xl mx-auto px-6 md:px-12 pb-10">
