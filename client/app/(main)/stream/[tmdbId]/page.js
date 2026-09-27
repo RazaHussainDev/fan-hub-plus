@@ -8,6 +8,7 @@ import Breadcrumbs from '@/components/Breadcrumbs';
 import { Play, X, Plus, Check } from 'lucide-react';
 import { useWatchlist } from '@/hooks/useWatchlist';
 import CustomHTML5Player from '@/components/CustomHTML5Player';
+import MediaRatingSection from '@/components/MediaRatingSection';
 
 export default function StreamPage() {
   const params = useParams();
@@ -288,6 +289,9 @@ export default function StreamPage() {
             </div>
           </div>
         )}
+
+        {/* 5-Star Media Rating & Community Feedback Section (SRS 1.6) */}
+        <MediaRatingSection mediaId={tmdbId} mediaType={contentType} title={title} />
       </div>
 
       {/* You May Also Like Row */}

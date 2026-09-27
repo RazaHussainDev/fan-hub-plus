@@ -13,6 +13,8 @@ const contentRoutes = require('./src/routes/contentRoutes');
 const fandomRoutes = require('./src/routes/fandomRoutes');
 const merchRoutes = require('./src/routes/merchRoutes');
 const eventRoutes = require('./src/routes/eventRoutes');
+const audioRoutes = require('./src/routes/audioRoutes');
+const ratingRoutes = require('./src/routes/ratingRoutes');
 
 const app  = express();
 const PORT = process.env.PORT || 5000;
@@ -125,6 +127,8 @@ app.use('/api/content', contentRoutes);
 app.use('/api/fandom', fandomRoutes);
 app.use('/api/merchandise', merchRoutes);
 app.use('/api/events', eventRoutes);
+app.use('/api/audio', audioRoutes);
+app.use('/api/ratings', ratingRoutes);
 
 // 404 catch-all
 app.use((req, res) => {

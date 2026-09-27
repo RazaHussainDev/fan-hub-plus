@@ -10,6 +10,7 @@ export default function SitemapPage() {
     { name: 'Featured Articles & Lore', href: '/articles' },
     { name: 'Merchandise & Upcoming Drops', href: '/merchandise' },
     { name: 'Events & Convention Calendar', href: '/events' },
+    { name: 'Fandom Audio & Soundtracks', href: '/audio' },
     { name: 'My List', href: '/mylist' },
     { name: 'Search', href: '/search', isAction: true },
     { name: 'Anime Universe', href: '/explore?category=Anime' },
