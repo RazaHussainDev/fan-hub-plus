@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Search, 
@@ -101,6 +102,7 @@ export default function FanHubAI() {
 
       const data = await res.json();
       let botReply = data.reply || "Sorry, main thoda samajh nahi paya. Can you rephrase?";
+      const movies = data.movies || [];
 
       if (botReply.includes('||ACTION:FETCH_TRENDING')) {
         console.log("Ready for Phase 3: Fetch Movies");
@@ -112,8 +114,9 @@ export default function FanHubAI() {
         {
           id: Date.now() + '-bot',
           sender: 'bot',
-          type: 'text',
-          text: botReply
+          type: movies.length > 0 ? 'movie-cards' : 'text',
+          text: botReply,
+          movies: movies
         }
       ]);
     } catch (err) {
@@ -241,14 +244,49 @@ export default function FanHubAI() {
                     </div>
                   )}
 
-                  <div
-                    className={`max-w-[82%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
-                      msg.sender === 'user'
-                        ? 'bg-[#a7c957] text-[#0b0f0a] font-medium rounded-br-none shadow-[0_4px_15px_rgba(167,201,87,0.25)]'
-                        : 'bg-white/5 border border-white/10 text-gray-200 rounded-bl-none shadow-sm'
-                    }`}
-                  >
-                    <p className="whitespace-pre-line">{msg.text}</p>
+                  <div className={`max-w-[85%] ${msg.sender === 'user' ? 'ml-auto' : ''}`}>
+                    {/* Render text message */}
+                    <div
+                      className={`p-3 rounded-2xl text-sm leading-relaxed ${
+                        msg.sender === 'user'
+                          ? 'bg-[#a7c957] text-[#0b0f0a] font-medium ml-auto rounded-br-none shadow-[0_4px_15px_rgba(167,201,87,0.25)]'
+                          : 'bg-white/10 text-white rounded-bl-none shadow-sm'
+                      }`}
+                    >
+                      <p className="whitespace-pre-line">{msg.text}</p>
+                    </div>
+
+                    {/* Render Movie Cards if attached to the message */}
+                    {msg.movies && msg.movies.length > 0 && (
+                      <div className="flex gap-3 mt-3 overflow-x-auto pb-2 scrollbar-hide">
+                        {msg.movies.map((movie) => (
+                          <Link
+                            key={movie._id || movie.tmdbId}
+                            href={`/stream/${movie.tmdbId || movie._id}?type=${movie.mediaType || 'movie'}`}
+                            className="min-w-[120px] w-[120px] bg-black/50 border border-white/10 hover:border-[#a7c957]/50 rounded-xl overflow-hidden flex-shrink-0 transition-all duration-300 group hover:scale-[1.03] block"
+                          >
+                            <div className="relative w-full h-[170px] bg-zinc-900 overflow-hidden">
+                              <img 
+                                src={movie.posterUrl || movie.posterImage || '/placeholder.png'} 
+                                alt={movie.title} 
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                onError={(e) => {
+                                  e.currentTarget.src = 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=300&auto=format&fit=crop&q=80';
+                                }}
+                              />
+                            </div>
+                            <div className="p-2">
+                              <p className="text-white text-xs font-bold truncate group-hover:text-[#a7c957] transition-colors">{movie.title}</p>
+                              {movie.voteAverage && (
+                                <span className="text-[10px] text-amber-400 font-semibold flex items-center gap-1 mt-0.5">
+                                  ★ {Number(movie.voteAverage).toFixed(1)}
+                                </span>
+                              )}
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   {msg.sender === 'user' && (
