@@ -3,13 +3,14 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
-import { LayoutDashboard, Film, Users, Settings, Palette, Shield, FileCheck } from 'lucide-react';
+import { LayoutDashboard, Film, Users, Settings, Palette, Shield, FileCheck, MessageSquareCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const menuItems = [
   { name: 'Dashboard', icon: LayoutDashboard, path: '/admin' },
   { name: 'Content Engine', icon: Film, path: '/admin/content' },
   { name: 'Submissions', icon: FileCheck, path: '/admin/submissions' },
+  { name: 'Feedback & Bugs', icon: MessageSquareCheck, path: '/admin/feedback' },
   { name: 'Users', icon: Users, path: '/admin/users' },
   { name: 'Brand & UI', icon: Palette, path: '/admin/brand' },
   { name: 'Security', icon: Shield, path: '/admin/security' },

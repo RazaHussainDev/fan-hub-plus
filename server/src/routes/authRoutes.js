@@ -24,5 +24,7 @@ router.post('/refresh', requireTrustedOrigin, authController.refresh);
 router.post('/logout', requireTrustedOrigin, authController.logout);
 router.post('/watchlist', protect, authController.toggleWatchlist);
 router.get('/watchlist', protect, authController.getWatchlist);
+router.patch('/watchlist/note', protect, authController.updateWatchlistNote);
+router.patch('/profile', protect, authController.updateProfile);
 
 module.exports = router;

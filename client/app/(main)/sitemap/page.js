@@ -21,7 +21,8 @@ export default function SitemapPage() {
     { name: 'Comics Multiverse', href: '/explore?category=Comics' },
     { name: 'Manga & Webtoons', href: '/explore?category=Manga' },
     { name: 'Cosplay Showcase', href: '/explore?category=Cosplay' },
-    { name: 'User Profile & Dashboard', href: '/profile' }
+    { name: 'User Profile & Dashboard', href: '/profile' },
+    { name: 'Feedback & Bug Reports', href: '/feedback' }
   ];
 
   return (

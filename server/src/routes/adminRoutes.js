@@ -186,9 +186,14 @@ router.patch('/users/:id/ban', protect, isAdmin, async (req, res) => {
 });
 
 const fandomHubController = require('../controllers/fandomHubController');
+const feedbackController = require('../controllers/feedbackController');
 
 // Moderation for Fan Submissions
 router.get('/submissions/pending', protect, isAdmin, fandomHubController.getPendingSubmissions);
 router.patch('/submissions/:id/status', protect, isAdmin, fandomHubController.moderateArticle);
+
+// User Feedback Management
+router.get('/feedback', protect, isAdmin, feedbackController.getAllFeedback);
+router.patch('/feedback/:id/status', protect, isAdmin, feedbackController.updateFeedbackStatus);
 
 module.exports = router;

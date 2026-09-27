@@ -69,6 +69,36 @@ export function useWatchlist() {
     }
   };
 
+  const updateNote = async (movieId, note) => {
+    if (!user || !token) return toast.error("Please login to update notes");
+
+    const mId = String(movieId);
+    const updatedWatchlist = watchlist.map(i => 
+      String(i.movieId) === mId ? { ...i, note } : i
+    );
+    mutate(watchlistKey, { success: true, watchlist: updatedWatchlist }, false);
+
+    try {
+      const res = await apiFetch('/api/auth/watchlist/note', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ movieId: mId, note })
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success("Fandom note saved!", {
+          style: { background: '#0b0f0a', color: '#a7c957', border: '1px solid #a7c957' }
+        });
+        mutate(watchlistKey, { success: true, watchlist: data.watchlist }, false);
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (err) {
+      toast.error("Failed to save note");
+      mutate(watchlistKey);
+    }
+  };
+
   const isInWatchlist = (id) => {
     return watchlist.some((item) => String(item.movieId) === String(id) || String(item.id) === String(id));
   };
@@ -78,5 +108,6 @@ export function useWatchlist() {
     addToWatchlist: toggleWatchlist,
     removeFromWatchlist: toggleWatchlist,
     isInWatchlist,
+    updateNote,
   };
 }

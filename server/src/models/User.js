@@ -56,8 +56,18 @@ const userSchema = new mongoose.Schema(
       movieId: { type: String, required: true },
       title: { type: String },
       poster_path: { type: String },
-      media_type: { type: String }
+      media_type: { type: String },
+      note: { type: String, default: '' }
     }],
+    categories_of_interest: {
+      type: [String],
+      default: ['Anime', 'Gaming', 'Movies']
+    },
+    display_preferences: {
+      streaming_server: { type: String, default: 'primary' },
+      autoplay_trailers: { type: Boolean, default: true },
+      preferred_theme: { type: String, default: 'dark' }
+    }
   },
   { timestamps: true }
 );

@@ -37,6 +37,9 @@ const publicUser = (user) => ({
   role: user.role,
   avatar: user.avatar,
   watchlist: user.watchlist || [],
+  favorite_fandoms: user.favorite_fandoms || [],
+  categories_of_interest: user.categories_of_interest || ['Anime', 'Gaming', 'Movies'],
+  display_preferences: user.display_preferences || { streaming_server: 'primary', autoplay_trailers: true }
 });
 
 const issueSession = async (user, res) => {
@@ -281,5 +284,41 @@ exports.getWatchlist = async (req, res) => {
   } catch (error) {
     console.error('[Get Watchlist Error]', error.message);
     res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
+
+// PATCH /api/auth/profile
+exports.updateProfile = async (req, res) => {
+  try {
+    const { name, avatar, favorite_fandoms, categories_of_interest, display_preferences } = req.body;
+    const update = {};
+    if (name) update.name = name.trim();
+    if (avatar !== undefined) update.avatar = avatar;
+    if (favorite_fandoms) update.favorite_fandoms = favorite_fandoms;
+    if (categories_of_interest) update.categories_of_interest = categories_of_interest;
+    if (display_preferences) update.display_preferences = display_preferences;
+
+    const user = await User.findByIdAndUpdate(req.user.id, update, { new: true });
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+
+    res.status(200).json({ success: true, message: 'Profile preferences updated!', user: publicUser(user) });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+};
+
+// PATCH /api/auth/watchlist/note
+exports.updateWatchlistNote = async (req, res) => {
+  try {
+    const { movieId, note } = req.body;
+    const user = await User.findOneAndUpdate(
+      { _id: req.user.id, 'watchlist.movieId': String(movieId) },
+      { $set: { 'watchlist.$.note': note || '' } },
+      { new: true }
+    );
+    if (!user) return res.status(404).json({ success: false, message: 'Item not found in watchlist' });
+    res.status(200).json({ success: true, watchlist: user.watchlist });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 };
