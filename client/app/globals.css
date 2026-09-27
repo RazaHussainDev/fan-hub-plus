@@ -18,19 +18,132 @@
   --color-brand-light: #f3f4f6;
 }
 
-/* Root mobile viewport safeguards */
+/* ═══════════════════════════════════════════════════════════════
+   ROOT MOBILE VIEWPORT SAFEGUARDS
+═══════════════════════════════════════════════════════════════ */
 html, body {
   overflow-x: hidden;
   max-width: 100vw;
   width: 100%;
   -webkit-overflow-scrolling: touch;
+  /* Prevent layout shift from scrollbar */
+  scrollbar-gutter: stable;
 }
 
-/* Utility to hide scrollbar for MovieRow */
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
+/* Smoother font rendering on mobile */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeSpeed;
 }
-.scrollbar-hide {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+
+/* ═══════════════════════════════════════════════════════════════
+   SCROLLBAR UTILITIES
+═══════════════════════════════════════════════════════════════ */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ═══════════════════════════════════════════════════════════════
+   PHASE 1 — SPEED: CONTENT-VISIBILITY PAINT OPTIMIZATION
+   Tells browser to skip off-screen sections until needed
+═══════════════════════════════════════════════════════════════ */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 400px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PHASE 2 — SPEED: PAGE TRANSITION (no full reload feel)
+   YouTube-style instant navigation with a slim progress bar
+═══════════════════════════════════════════════════════════════ */
+#nprogress .bar {
+  background: #a7c957 !important;
+  height: 3px !important;
+  box-shadow: 0 0 10px #a7c957, 0 0 5px #a7c957 !important;
+}
+#nprogress .peg {
+  box-shadow: 0 0 10px #a7c957, 0 0 5px #a7c957 !important;
+}
+#nprogress .spinner-icon {
+  border-top-color: #a7c957 !important;
+  border-left-color: #a7c957 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PHASE 3 — MOBILE: SAFE AREA INSETS (notch / home indicator)
+═══════════════════════════════════════════════════════════════ */
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom, 16px); }
+.safe-top    { padding-top:    env(safe-area-inset-top,    0px);  }
+
+/* ═══════════════════════════════════════════════════════════════
+   PHASE 4 — MOBILE: BOTTOM NAV SAFE ZONE
+   Push content up so bottom nav doesn't overlap it
+═══════════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+  /* Main page content should breathe above the bottom nav */
+  main {
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 16px));
+  }
+  /* Hero banner on mobile: reduce height */
+  .hero-banner-mobile {
+    min-height: 70vh !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PHASE 5 — MOBILE: TOUCH TARGETS & INTERACTIONS
+   Minimum 44px touch target per Apple HIG
+═══════════════════════════════════════════════════════════════ */
+@media (max-width: 767px) {
+  button, a, [role="button"] {
+    min-height: 44px;
+    /* Remove tap highlight flash on iOS */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  /* Slightly larger text on mobile for readability */
+  .movie-card-title { font-size: 0.8rem; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PHASE 6 — MOBILE: SWIPE-GESTURE FRIENDLY ROWS
+   Momentum scroll + snap for horizontal lists
+═══════════════════════════════════════════════════════════════ */
+.mobile-row {
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+}
+.mobile-row > * {
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PHASE 6B — MOBILE: IMAGE LAZY LOAD SHIMMER EFFECT
+═══════════════════════════════════════════════════════════════ */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.img-shimmer {
+  background: linear-gradient(90deg, #1a1f19 25%, #252c23 50%, #1a1f19 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE BOTTOM NAV BAR (defined here as base, component adds Tailwind)
+═══════════════════════════════════════════════════════════════ */
+.mobile-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: rgba(11, 15, 10, 0.95);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-top: 1px solid rgba(167, 201, 87, 0.15);
 }

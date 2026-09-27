@@ -32,7 +32,7 @@ const MovieRow = ({ title, fetchCategory, initialMovies = null, fallbackType = '
   const showSkeletons = isLoading;
 
   return (
-    <div className="w-full flex flex-col space-y-2 py-4">
+    <div className="w-full flex flex-col space-y-2 py-4 cv-auto">
       <div className="flex items-baseline justify-between px-6 md:px-16">
         <h2 className="text-xl md:text-2xl font-heading font-bold text-[#1d1d1f] dark:text-gray-100 transition-colors duration-300">
           {title}
@@ -46,7 +46,7 @@ const MovieRow = ({ title, fetchCategory, initialMovies = null, fallbackType = '
         </Link>
       </div>
 
-      <div className="flex overflow-x-auto scrollbar-hide space-x-4 py-4 px-6 md:px-16 pb-12">
+      <div className="flex overflow-x-auto scrollbar-hide mobile-row space-x-4 py-4 px-6 md:px-16 pb-12">
         {showSkeletons ? (
           [...Array(8)].map((_, i) => (
             <SkeletonCard key={i} />

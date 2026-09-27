@@ -156,54 +156,51 @@ export default function FloatingNav() {
     <>
       {/* ─────────────────────────────────────────────────────────────
           1. MOBILE TOP HEADER (Screen width < md)
-          Persistent brand logo, search trigger, theme toggle & menu button
+          Slim bar: Logo + Brand name | Right: Search, Theme, Menu
       ───────────────────────────────────────────────────────────── */}
-      <header className="md:hidden fixed top-0 left-0 right-0 z-40 h-16 px-4 bg-white/85 dark:bg-[#0b0f0a]/90 backdrop-blur-xl border-b border-black/5 dark:border-white/10 flex items-center justify-between transition-colors duration-300">
-        {/* Brand Logo & Name */}
-        <Link href="/" className="flex items-center gap-2.5">
-          <Image
-            src="/logo.png"
-            alt="Fan Hub Plus Logo"
-            width={36}
-            height={36}
-            className="object-contain"
-            priority
-          />
-          <div className="flex flex-col">
-            <span className="font-heading font-black text-lg tracking-tight text-gray-900 dark:text-white leading-none">
+      <header className="md:hidden fixed top-0 left-0 right-0 z-40 safe-top">
+        <div className="h-14 px-4 bg-[#0b0f0a]/95 dark:bg-[#0b0f0a]/95 backdrop-blur-2xl border-b border-white/8 flex items-center justify-between">
+          {/* Brand Logo */}
+          <Link href="/" className="flex items-center gap-2 active:opacity-70 transition-opacity">
+            <Image
+              src="/logo.png"
+              alt="Fan Hub Plus"
+              width={32}
+              height={32}
+              className="object-contain"
+              priority
+            />
+            <span className="font-heading font-black text-base tracking-tight text-white leading-none">
               FanHub<span className="text-[#a7c957]">+</span>
             </span>
-            <span className="text-[9px] font-bold tracking-widest text-[#a7c957] uppercase">
-              Fandom Universe
-            </span>
+          </Link>
+
+          {/* Right Actions */}
+          <div className="flex items-center gap-1">
+            <button
+              onClick={openSearch}
+              className="w-10 h-10 rounded-full text-gray-300 flex items-center justify-center active:bg-white/10 transition-colors"
+              aria-label="Search"
+            >
+              <Search size={20} />
+            </button>
+
+            <button
+              onClick={toggleTheme}
+              className="w-10 h-10 rounded-full text-gray-300 flex items-center justify-center active:bg-white/10 transition-colors"
+              aria-label="Toggle theme"
+            >
+              {isDark ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="w-10 h-10 rounded-full bg-[#a7c957]/10 border border-[#a7c957]/30 text-[#a7c957] flex items-center justify-center active:scale-90 transition-all"
+              aria-label="Open menu"
+            >
+              {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
           </div>
-        </Link>
-
-        {/* Right Action Icons: Search, Theme, Hamburger */}
-        <div className="flex items-center gap-1.5">
-          <button
-            onClick={openSearch}
-            className="w-9 h-9 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-gray-700 dark:text-gray-300 flex items-center justify-center hover:text-[#a7c957] transition-colors"
-            aria-label="Open Search"
-          >
-            <Search size={16} />
-          </button>
-
-          <button
-            onClick={toggleTheme}
-            className="w-9 h-9 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-gray-700 dark:text-gray-300 flex items-center justify-center hover:text-[#a7c957] transition-colors"
-            aria-label="Toggle Theme"
-          >
-            {isDark ? <Sun size={16} /> : <Moon size={16} />}
-          </button>
-
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="w-10 h-10 rounded-full bg-[#a7c957] text-[#0b0f0a] flex items-center justify-center font-bold shadow-[0_0_15px_rgba(167,201,87,0.3)] transition-transform active:scale-95"
-            aria-label="Toggle Mobile Menu"
-          >
-            {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
         </div>
       </header>
 

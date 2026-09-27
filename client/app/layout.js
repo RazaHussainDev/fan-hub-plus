@@ -45,7 +45,9 @@ export const viewport = {
 };
 
 import FloatingNav from '@/components/FloatingNav';
+import MobileBottomNav from '@/components/MobileBottomNav';
 import SplashIntro from '@/components/SplashIntro';
+import NavigationProgress from '@/components/NavigationProgress';
 import { SearchProvider } from '@/context/SearchContext';
 import { AuthProvider } from '@/context/AuthContext';
 import SearchModal from '@/components/SearchModal';
@@ -53,6 +55,7 @@ import { Toaster } from 'react-hot-toast';
 import NetworkDetector from '@/components/NetworkDetector';
 import MaintenanceGuard from '@/components/MaintenanceGuard';
 import FanHubAI from '@/components/FanHubAI';
+import 'nprogress/nprogress.css';
 
 export default function RootLayout({ children }) {
   return (
@@ -62,12 +65,14 @@ export default function RootLayout({ children }) {
       suppressHydrationWarning
     >
       <body className="bg-[#FBFBFD] text-[#1d1d1f] dark:bg-brand-bg dark:text-brand-light transition-colors duration-500 min-h-screen font-body flex flex-col" suppressHydrationWarning>
+        <NavigationProgress />
         <SplashIntro />
         <AuthProvider>
           <SearchProvider>
             <MaintenanceGuard>
               {children}
               <FloatingNav />
+              <MobileBottomNav />
               <SearchModal />
               <FanHubAI />
             </MaintenanceGuard>
