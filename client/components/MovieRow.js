@@ -36,15 +36,13 @@ const MovieRow = ({ title, fetchCategory, initialMovies = null, fallbackType = '
         <h2 className="text-xl md:text-2xl font-heading font-bold text-[#1d1d1f] dark:text-gray-100 transition-colors duration-300">
           {title}
         </h2>
-        {href ? (
-          <Link href={href} className="text-sm font-semibold text-brand-primary cursor-pointer hover:opacity-70 transition-opacity">
-            See All
-          </Link>
-        ) : (
-          <span className="text-sm font-semibold text-brand-primary cursor-pointer hover:opacity-70 transition-opacity">
-            See All
-          </span>
-        )}
+        <Link 
+          href={href || `/explore?category=${fetchCategory || 'trending'}`} 
+          className="text-xs md:text-sm font-semibold text-brand-primary hover:text-[#c2e078] cursor-pointer hover:opacity-80 transition-all flex items-center gap-1 group py-1 px-2 rounded-lg hover:bg-brand-primary/10"
+        >
+          <span>See All</span>
+          <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+        </Link>
       </div>
 
       <div className="flex overflow-x-auto scrollbar-hide space-x-4 py-4 px-6 md:px-16 pb-12">

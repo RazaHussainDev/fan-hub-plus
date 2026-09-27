@@ -50,12 +50,12 @@ export default async function Home() {
       
       <div className="flex flex-col space-y-6 mt-[-100px] relative z-20">
         <CurvedCategorySlider />
-        <DynamicMovieRow title="Trending Now" initialMovies={trendingData.results} fetchCategory="trending" href="/explore" />
-        <DynamicMovieRow title="New Releases" initialMovies={newReleasesData.results} fetchCategory="newReleases" href="/explore" />
-        <DynamicMovieRow title="Action & Thrillers" initialMovies={actionData.results} fetchCategory="action" />
-        <DynamicMovieRow title="Blockbuster Bollywood" initialMovies={bollywoodData.results} fetchCategory="bollywood" fallbackType="movie" />
-        <DynamicMovieRow title="Trending Anime" initialMovies={animeData.results} fetchCategory="anime" fallbackType="tv" />
-        <DynamicMovieRow title="Top K-Dramas" initialMovies={kdramasData.results} fetchCategory="kdramas" fallbackType="tv" />
+        <DynamicMovieRow title="Trending Now" initialMovies={trendingData.results} fetchCategory="trending" href="/explore?category=trending" />
+        <DynamicMovieRow title="New Releases" initialMovies={newReleasesData.results} fetchCategory="newReleases" href="/explore?category=newReleases" />
+        <DynamicMovieRow title="Action & Thrillers" initialMovies={actionData.results} fetchCategory="action" href="/explore?category=action" />
+        <DynamicMovieRow title="Blockbuster Bollywood" initialMovies={bollywoodData.results} fetchCategory="bollywood" fallbackType="movie" href="/explore?category=bollywood" />
+        <DynamicMovieRow title="Trending Anime" initialMovies={animeData.results} fetchCategory="anime" fallbackType="tv" href="/explore?category=anime" />
+        <DynamicMovieRow title="Top K-Dramas" initialMovies={kdramasData.results} fetchCategory="kdramas" fallbackType="tv" href="/explore?category=kdramas" />
       </div>
     </main>
   );

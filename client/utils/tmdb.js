@@ -7,7 +7,7 @@ const fetchWithTimeout = async (url, options = {}) => {
   try {
     const res = await fetch(url, {
       ...options,
-      signal: AbortSignal.timeout(3000) // 3-second strict timeout
+      signal: AbortSignal.timeout(4000) // 4-second strict timeout
     });
     if (!res.ok) throw new Error("TMDB HTTP Error: " + res.status);
     return await res.json();
@@ -17,16 +17,16 @@ const fetchWithTimeout = async (url, options = {}) => {
   }
 };
 
-export const fetchTrending = async () => {
-  return fetchWithTimeout(`${BASE_URL}/trending/all/week?api_key=${API_KEY}&language=en-US`, { next: { revalidate: 3600 } });
+export const fetchTrending = async (page = 1) => {
+  return fetchWithTimeout(`${BASE_URL}/trending/all/week?api_key=${API_KEY}&language=en-US&page=${page}`, { next: { revalidate: 3600 } });
 };
 
-export const fetchNewReleases = async () => {
-  return fetchWithTimeout(`${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1`, { next: { revalidate: 3600 } });
+export const fetchNewReleases = async (page = 1) => {
+  return fetchWithTimeout(`${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=en-US&page=${page}`, { next: { revalidate: 3600 } });
 };
 
-export const fetchActionMovies = async () => {
-  return fetchWithTimeout(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=28&language=en-US`, { next: { revalidate: 3600 } });
+export const fetchActionMovies = async (page = 1) => {
+  return fetchWithTimeout(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=28&language=en-US&page=${page}`, { next: { revalidate: 3600 } });
 };
 
 export const fetchDetails = async (id, type = 'tv') => {
@@ -48,21 +48,63 @@ export const fetchExternalIds = async (id, type = 'tv') => {
   return fetchWithTimeout(`${BASE_URL}/${type}/${id}/external_ids?api_key=${API_KEY}`, { next: { revalidate: 3600 } });
 };
 
-export const fetchBollywood = async () => {
-  return fetchWithTimeout(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_original_language=hi&sort_by=popularity.desc`, { next: { revalidate: 3600 } });
+export const fetchBollywood = async (page = 1) => {
+  return fetchWithTimeout(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_original_language=hi&sort_by=popularity.desc&page=${page}`, { next: { revalidate: 3600 } });
 };
 
-export const fetchAnime = async () => {
-  return fetchWithTimeout(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ja&with_genres=16&sort_by=popularity.desc`, { next: { revalidate: 3600 } });
+export const fetchAnime = async (page = 1) => {
+  return fetchWithTimeout(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ja&with_genres=16&sort_by=popularity.desc&page=${page}`, { next: { revalidate: 3600 } });
 };
 
-export const fetchKDramas = async () => {
-  return fetchWithTimeout(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ko&sort_by=popularity.desc`, { next: { revalidate: 3600 } });
+export const fetchKDramas = async (page = 1) => {
+  return fetchWithTimeout(`${BASE_URL}/discover/tv?api_key=${API_KEY}&with_original_language=ko&sort_by=popularity.desc&page=${page}`, { next: { revalidate: 3600 } });
 };
 
-export const fetchSearch = async (query) => {
+export const fetchGamingOrSciFi = async (page = 1) => {
+  return fetchWithTimeout(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=878,14&sort_by=popularity.desc&page=${page}`, { next: { revalidate: 3600 } });
+};
+
+export const fetchComics = async (page = 1) => {
+  return fetchWithTimeout(`${BASE_URL}/discover/movie?api_key=${API_KEY}&with_keywords=9715,9717,180547&sort_by=popularity.desc&page=${page}`, { next: { revalidate: 3600 } });
+};
+
+export const fetchSearch = async (query, page = 1) => {
   if (!query) return { results: [] };
-  return fetchWithTimeout(`${BASE_URL}/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}&include_adult=false`);
+  return fetchWithTimeout(`${BASE_URL}/search/multi?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=${page}&include_adult=false`);
+};
+
+export const fetchCategoryMovies = async (category = 'trending', page = 1) => {
+  const cat = (category || 'trending').toLowerCase();
+  switch (cat) {
+    case 'trending':
+    case 'all':
+    case 'all fandoms':
+    case 'movies':
+      return fetchTrending(page);
+    case 'newreleases':
+    case 'new':
+      return fetchNewReleases(page);
+    case 'action':
+      return fetchActionMovies(page);
+    case 'bollywood':
+      return fetchBollywood(page);
+    case 'anime':
+    case 'manga':
+      return fetchAnime(page);
+    case 'kdramas':
+    case 'k-pop':
+    case 'kpop':
+      return fetchKDramas(page);
+    case 'gaming':
+      return fetchGamingOrSciFi(page);
+    case 'comics':
+      return fetchComics(page);
+    case 'tv':
+    case 'tv shows':
+      return fetchWithTimeout(`${BASE_URL}/tv/popular?api_key=${API_KEY}&language=en-US&page=${page}`, { next: { revalidate: 3600 } });
+    default:
+      return fetchTrending(page);
+  }
 };
 
 export const fetchCredits = async (id, type = 'tv') => {
@@ -78,5 +120,5 @@ export const fetchSimilar = async (id, type = 'tv') => {
 };
 
 export const fetchExplore = async (page = 1) => {
-  return fetchWithTimeout(`${BASE_URL}/trending/all/week?api_key=${API_KEY}&language=en-US&page=${page}`, { next: { revalidate: 3600 } });
+  return fetchTrending(page);
 };

@@ -1,23 +1,16 @@
 import { NextResponse } from 'next/server';
-import { fetchTrending, fetchNewReleases, fetchActionMovies, fetchBollywood, fetchAnime, fetchKDramas } from '@/utils/tmdb';
+import { fetchCategoryMovies } from '@/utils/tmdb';
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
-  const category = searchParams.get('category');
+  const category = searchParams.get('category') || 'trending';
+  const page = parseInt(searchParams.get('page') || '1', 10);
   
   try {
-    let data;
-    switch (category) {
-      case 'trending': data = await fetchTrending(); break;
-      case 'newReleases': data = await fetchNewReleases(); break;
-      case 'action': data = await fetchActionMovies(); break;
-      case 'bollywood': data = await fetchBollywood(); break;
-      case 'anime': data = await fetchAnime(); break;
-      case 'kdramas': data = await fetchKDramas(); break;
-      default: data = await fetchTrending(); break;
-    }
+    const data = await fetchCategoryMovies(category, page);
     return NextResponse.json(data);
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch movies' }, { status: 500 });
+    console.error('Movies API route error:', error);
+    return NextResponse.json({ error: 'Failed to fetch movies', results: [] }, { status: 500 });
   }
 }
