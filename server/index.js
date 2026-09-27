@@ -58,6 +58,8 @@ if (!fs.existsSync(hlsDir)) {
 }
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
+// Trust Railway / Vercel / any single reverse proxy (required for rate-limiter)
+app.set('trust proxy', 1);
 app.use('/hls', express.static(hlsDir));
 
 app.use(
