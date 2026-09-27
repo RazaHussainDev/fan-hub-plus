@@ -5,10 +5,12 @@ import { fetchDetails, BASE_IMG_URL, fetchCredits, fetchVideos, fetchSimilar } f
 import { useParams, useSearchParams } from 'next/navigation';
 import MovieRow from '@/components/MovieRow';
 import Breadcrumbs from '@/components/Breadcrumbs';
-import { Play, X, Plus, Check } from 'lucide-react';
+import { Play, X, Plus, Check, Download, Share2 } from 'lucide-react';
 import { useWatchlist } from '@/hooks/useWatchlist';
 import CustomHTML5Player from '@/components/CustomHTML5Player';
 import MediaRatingSection from '@/components/MediaRatingSection';
+import DownloadModal from '@/components/DownloadModal';
+import toast from 'react-hot-toast';
 
 export default function StreamPage() {
   const params = useParams();
@@ -29,7 +31,51 @@ export default function StreamPage() {
   const [trailer, setTrailer] = useState(null);
   const [similar, setSimilar] = useState([]);
   const [isTrailerOpen, setIsTrailerOpen] = useState(false);
+  const [isDownloadOpen, setIsDownloadOpen] = useState(false);
   const [isPlayingIntro, setIsPlayingIntro] = useState(true);
+
+  const handleShare = async () => {
+    const movieTitle = metadata?.title || metadata?.name || 'Fandom Stream';
+    const url = typeof window !== 'undefined' ? window.location.href : '';
+
+    if (navigator?.share) {
+      try {
+        await navigator.share({
+          title: movieTitle,
+          text: `Streaming ${movieTitle} on Fan Hub Plus!`,
+          url: url
+        });
+        return;
+      } catch (err) {}
+    }
+
+    if (navigator?.clipboard?.writeText) {
+      try {
+        await navigator.clipboard.writeText(url);
+        toast.success(`Stream link for "${movieTitle}" copied!`, {
+          style: { background: '#0b0f0a', color: '#a7c957', border: '1px solid #a7c957' }
+        });
+        return;
+      } catch (err) {}
+    }
+
+    try {
+      const tempInput = document.createElement('textarea');
+      tempInput.value = url;
+      tempInput.style.position = 'fixed';
+      tempInput.style.opacity = '0';
+      document.body.appendChild(tempInput);
+      tempInput.focus();
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+      toast.success(`Stream link for "${movieTitle}" copied!`, {
+        style: { background: '#0b0f0a', color: '#a7c957', border: '1px solid #a7c957' }
+      });
+    } catch (err) {
+      toast.error("Could not copy link to clipboard");
+    }
+  };
 
   const handleVideoEnded = () => {
     if (isPlayingIntro) {
@@ -124,11 +170,11 @@ export default function StreamPage() {
           </h1>
           <p className="text-brand-primary font-medium mb-4">Hydra Cascade Engine Active</p>
           
-          <div className="flex flex-wrap items-center justify-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-3">
             {trailer && (
               <button
                 onClick={() => setIsTrailerOpen(true)}
-                className="inline-flex items-center gap-2 px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-full font-bold transition-all shadow-lg hover:shadow-red-900/50"
+                className="inline-flex items-center gap-2 px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-full font-bold transition-all shadow-lg hover:shadow-red-900/50 cursor-pointer active:scale-95"
               >
                 <Play size={18} fill="currentColor" /> Watch Trailer
               </button>
@@ -137,7 +183,7 @@ export default function StreamPage() {
             {metadata && (
               <button
                 onClick={() => isInWatchlist(metadata.id) ? removeFromWatchlist(metadata.id) : addToWatchlist({...metadata, media_type: contentType})}
-                className={`inline-flex items-center gap-2 px-6 py-2 rounded-full font-bold transition-all shadow-lg ${
+                className={`inline-flex items-center gap-2 px-5 py-2 rounded-full font-bold transition-all shadow-lg cursor-pointer active:scale-95 ${
                   isInWatchlist(metadata?.id)
                     ? 'bg-brand-primary/20 text-brand-primary border border-brand-primary hover:bg-brand-primary/30'
                     : 'bg-gray-800 hover:bg-gray-700 text-white'
@@ -150,6 +196,24 @@ export default function StreamPage() {
                 )}
               </button>
             )}
+
+            {metadata && (
+              <button
+                onClick={() => setIsDownloadOpen(true)}
+                className="inline-flex items-center gap-2 px-5 py-2 rounded-full font-bold transition-all shadow-lg bg-black/40 dark:bg-white/10 hover:bg-[#a7c957] hover:text-[#0b0f0a] text-gray-800 dark:text-white border border-black/10 dark:border-white/15 cursor-pointer active:scale-95"
+                title="Download for offline viewing"
+              >
+                <Download size={18} /> Download
+              </button>
+            )}
+
+            <button
+              onClick={handleShare}
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-full font-bold transition-all shadow-lg bg-black/40 dark:bg-white/10 hover:bg-[#a7c957] hover:text-[#0b0f0a] text-gray-800 dark:text-white border border-black/10 dark:border-white/15 cursor-pointer active:scale-95"
+              title="Share stream link"
+            >
+              <Share2 size={18} /> Share
+            </button>
           </div>
         </header>
 
@@ -320,6 +384,20 @@ export default function StreamPage() {
             ></iframe>
           </div>
         </div>
+      )}
+
+      {/* Offline Download Modal */}
+      {metadata && (
+        <DownloadModal
+          isOpen={isDownloadOpen}
+          onClose={() => setIsDownloadOpen(false)}
+          movie={{
+            id: tmdbId,
+            title: metadata.title || metadata.name,
+            poster_path: metadata.poster_path,
+            media_type: contentType
+          }}
+        />
       )}
     </main>
   );

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Star, ThumbsUp, ThumbsDown, MessageSquare, Send, CheckCircle, User } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
+import { apiFetch } from '@/utils/apiClient';
 import toast from 'react-hot-toast';
 
 export default function MediaRatingSection({ mediaId, mediaType = 'movie', title = 'This Content' }) {
@@ -59,14 +60,10 @@ export default function MediaRatingSection({ mediaId, mediaType = 'movie', title
 
     setIsSubmitting(true);
     try {
-      const backendBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-      const token = localStorage.getItem('fanhub_token') || localStorage.getItem('token');
-
-      const res = await fetch(`${backendBase}/api/ratings/${mediaId}`, {
+      const res = await apiFetch(`/api/ratings/${mediaId}`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           stars: selectedStars,
