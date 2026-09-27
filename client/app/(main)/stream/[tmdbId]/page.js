@@ -136,17 +136,21 @@ export default function StreamPage() {
 
   /* Build real, battle-tested embed URLs for TMDB */
   const getEmbedUrl = (server) => {
+    const timestamp = Date.now();
+    let url = '';
     if (contentType === 'tv') {
-      if (server === 'primary') return `https://vidsrc.me/embed/tv?tmdb=${tmdbId}&season=${season}&episode=${episode}`;
-      if (server === 'backup1') return `https://multiembed.mov/directstream.php?video_id=${tmdbId}&tmdb=1&s=${season}&e=${episode}`;
-      if (server === 'backup2') return `https://vidsrc.pro/embed/tv/${tmdbId}/${season}/${episode}`;
-      return `https://vidsrc.xyz/embed/tv/${tmdbId}/${season}/${episode}`;
+      if (server === 'primary') url = `https://vidsrc.me/embed/tv?tmdb=${tmdbId}&season=${season}&episode=${episode}`;
+      else if (server === 'backup1') url = `https://multiembed.mov/directstream.php?video_id=${tmdbId}&tmdb=1&s=${season}&e=${episode}`;
+      else if (server === 'backup2') url = `https://vidsrc.pro/embed/tv/${tmdbId}/${season}/${episode}`;
+      else url = `https://vidsrc.xyz/embed/tv/${tmdbId}/${season}/${episode}`;
     } else {
-      if (server === 'primary') return `https://vidsrc.me/embed/movie?tmdb=${tmdbId}`;
-      if (server === 'backup1') return `https://multiembed.mov/directstream.php?video_id=${tmdbId}&tmdb=1`;
-      if (server === 'backup2') return `https://vidsrc.pro/embed/movie/${tmdbId}`;
-      return `https://vidsrc.xyz/embed/movie/${tmdbId}`;
+      if (server === 'primary') url = `https://vidsrc.me/embed/movie?tmdb=${tmdbId}`;
+      else if (server === 'backup1') url = `https://multiembed.mov/directstream.php?video_id=${tmdbId}&tmdb=1`;
+      else if (server === 'backup2') url = `https://vidsrc.pro/embed/movie/${tmdbId}`;
+      else url = `https://vidsrc.xyz/embed/movie/${tmdbId}`;
     }
+    const separator = url.includes('?') ? '&' : '?';
+    return `${url}${separator}v=${timestamp}`;
   };
 
   /* ─── loading skeleton ──────────────────────────────────────────────────── */
@@ -363,7 +367,9 @@ export default function StreamPage() {
               allowFullScreen={true}
               webkitallowfullscreen="true"
               mozallowfullscreen="true"
-              allow="autoplay; fullscreen; picture-in-picture; encrypted-media; accelerometer; gyroscope"
+              allow="autoplay; fullscreen"
+              sandbox="allow-scripts allow-same-origin allow-presentation"
+              referrerPolicy="origin"
             />
           )}
           <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_30px_rgba(167,201,87,0.06)] rounded-2xl" />
