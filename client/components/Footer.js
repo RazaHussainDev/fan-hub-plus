@@ -58,6 +58,7 @@ export default function Footer() {
 
   const discoveryLinks = [
     { name: 'Character Dossiers', href: '/characters', icon: Users },
+    { name: 'Live Watch Party Arena', href: '/live', icon: Radio },
     { name: 'Lore & Theory Articles', href: '/articles', icon: BookOpen },
     { name: 'Soundtrack & Vinyl Lounge', href: '/audio', icon: Headphones },
     { name: 'Collector Drops & Merch', href: '/merchandise', icon: ShoppingBag },

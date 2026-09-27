@@ -22,6 +22,7 @@ import {
   Calendar, 
   Headphones, 
   MessageSquare,
+  Radio,
   ChevronRight
 } from 'lucide-react';
 import { useSearch } from '@/context/SearchContext';
@@ -140,6 +141,7 @@ export default function FloatingNav() {
     { name: 'My Collection', icon: List, href: '/mylist' },
     { name: 'Merchandise Showcase', icon: ShoppingBag, href: '/merchandise' },
     { name: 'Events & Conventions', icon: Calendar, href: '/events' },
+    { name: 'Live Watch Arena', icon: Radio, href: '/live', badge: 'LIVE 🔴' },
     { name: 'Audio & Soundtracks', icon: Headphones, href: '/audio' },
     { name: 'Feedback & Queries', icon: MessageSquare, href: '/feedback' },
   ];
