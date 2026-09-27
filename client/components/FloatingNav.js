@@ -17,17 +17,44 @@ import {
   Sun, 
   Menu, 
   X, 
+  Grip,
   ShoppingBag, 
   Calendar, 
   Headphones, 
   MessageSquare,
-  Radio,
-  ShieldCheck,
   ChevronRight
 } from 'lucide-react';
 import { useSearch } from '@/context/SearchContext';
 import { useAuth } from '@/context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
+
+const containerVariants = {
+  expanded: { 
+    transition: { staggerChildren: 0.08, delayChildren: 0.1 } 
+  },
+  collapsed: { 
+    transition: { staggerChildren: 0.06, staggerDirection: -1 } 
+  }
+};
+
+const itemVariants = {
+  expanded: { 
+    opacity: 1, 
+    x: 0,
+    y: 0, 
+    scale: 1, 
+    filter: "blur(0px)", 
+    transition: { type: "spring", stiffness: 200, damping: 20 } 
+  },
+  collapsed: { 
+    opacity: 0, 
+    x: -60, 
+    y: 15, 
+    scale: 0, 
+    filter: "blur(6px)", 
+    transition: { duration: 0.6, ease: [0.32, 0.72, 0, 1] } 
+  }
+};
 
 export default function FloatingNav() {
   const { openSearch } = useSearch();
@@ -35,6 +62,7 @@ export default function FloatingNav() {
   const pathname = usePathname();
 
   const [isDark, setIsDark] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [fontSize, setFontSize] = useState(16);
   const [mounted, setMounted] = useState(false);
@@ -56,6 +84,17 @@ export default function FloatingNav() {
 
     setFontSize(savedFontSize);
     document.documentElement.style.fontSize = `${savedFontSize}px`;
+
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setIsExpanded(false);
+      } else {
+        setIsExpanded(true);
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   // Close mobile drawer on route change
@@ -117,8 +156,8 @@ export default function FloatingNav() {
           <Image
             src="/logo.png"
             alt="Fan Hub Plus Logo"
-            width={34}
-            height={34}
+            width={36}
+            height={36}
             className="object-contain"
             priority
           />
@@ -298,125 +337,188 @@ export default function FloatingNav() {
 
       {/* ─────────────────────────────────────────────────────────────
           3. DESKTOP FLOATING DOCK (Screen width >= md)
-          Clean, perfectly centered, zero screen clutter, theme integrated
+          9-dot Snake Collapse/Expand + Prominent Logo + Integrated Theme
       ───────────────────────────────────────────────────────────── */}
-      <nav 
-        className="hidden md:flex fixed bottom-8 left-1/2 -translate-x-1/2 z-40 items-center px-3 py-2 rounded-full bg-white/80 dark:bg-[#0b0f0a]/85 backdrop-blur-2xl border border-black/10 dark:border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.3),0_0_20px_rgba(167,201,87,0.15)] transition-colors duration-500"
+      <motion.nav 
+        layout
+        initial={false}
+        className={`hidden md:flex fixed z-40 items-center p-2 backdrop-blur-2xl border shadow-2xl overflow-hidden
+          transition-colors duration-700
+          ${isExpanded 
+            ? "bottom-8 left-1/2 -translate-x-1/2 rounded-full bg-white/85 dark:bg-[#0b0f0a]/90 border-black/10 dark:border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.3),0_0_25px_rgba(167,201,87,0.18)]" 
+            : "top-6 left-6 rounded-2xl bg-white/95 dark:bg-[#0b0f0a]/95 border-black/15 dark:border-white/20 shadow-[0_10px_30px_rgba(0,0,0,0.4)]"
+          }`}
+        style={{ borderRadius: isExpanded ? 9999 : 20 }}
+        transition={{ type: "spring", stiffness: 120, damping: 22 }}
         aria-label="Desktop Fandom Navigation"
       >
-        <div className="flex items-center space-x-1">
-          {desktopNavItems.map((item, index) => {
-            if (item.isLogo) {
-              return (
-                <Link 
-                  key="logo" 
-                  href="/" 
-                  className="mx-3 group flex items-center justify-center hover:scale-105 transition-transform"
-                  title="Fan Hub Plus Home"
-                >
-                  <Image
-                    src="/logo.png"
-                    alt="Fan Hub Plus Logo"
-                    width={56}
-                    height={26}
-                    className="object-contain drop-shadow-[0_0_10px_rgba(167,201,87,0.3)]"
-                    priority
-                  />
-                </Link>
-              );
-            }
+        {/* Master Toggle Button (9-Dot Snake Head) */}
+        <motion.button 
+          layout
+          onClick={() => setIsExpanded(!isExpanded)}
+          animate={{
+            scale: isExpanded ? 1 : [1, 1.3, 0.8, 1.2, 0.9, 1.1, 1],
+            rotate: isExpanded ? 0 : -90
+          }}
+          transition={{ duration: isExpanded ? 0.4 : 1.2, ease: "easeInOut" }}
+          title={isExpanded ? "Collapse Navigation" : "Expand Navigation"}
+          className={`p-3 z-10 flex items-center justify-center transition-colors duration-300 cursor-pointer
+            ${isExpanded 
+              ? 'rounded-full bg-black/5 dark:bg-white/10 text-gray-700 dark:text-gray-300 hover:text-[#a7c957] hover:bg-[#a7c957]/20' 
+              : 'rounded-xl bg-[#a7c957] text-[#0b0f0a] shadow-[0_0_25px_rgba(167,201,87,0.7)]'
+            }`}
+        >
+          <Grip size={20} className={`transition-transform duration-500 ${isExpanded ? 'rotate-0' : '-rotate-90'}`} />
+        </motion.button>
 
-            const Icon = item.icon;
-            const isActive = pathname === item.href;
+        <AnimatePresence initial={false} mode="popLayout">
+          {isExpanded && (
+            <motion.div 
+              layout
+              variants={containerVariants}
+              initial="collapsed"
+              animate="expanded"
+              exit="collapsed"
+              className="flex items-center ml-2 space-x-1 pr-1"
+            >
+              {desktopNavItems.map((item) => {
+                if (item.isLogo) {
+                  return (
+                    <motion.div key="logo" variants={itemVariants} layout className="mx-2">
+                      <Link 
+                        href="/" 
+                        className="group flex items-center justify-center hover:scale-105 transition-transform"
+                        title="Fan Hub Plus Home"
+                      >
+                        <Image
+                          src="/logo.png"
+                          alt="Fan Hub Plus Logo"
+                          width={82}
+                          height={36}
+                          className="object-contain drop-shadow-[0_0_12px_rgba(167,201,87,0.35)]"
+                          priority
+                        />
+                      </Link>
+                    </motion.div>
+                  );
+                }
 
-            if (item.onClick) {
-              return (
-                <button
-                  key={item.name}
-                  onClick={item.onClick}
-                  title={item.name}
-                  className="p-3 rounded-full text-gray-700 dark:text-gray-300 hover:text-[#a7c957] hover:bg-[#a7c957]/15 transition-all duration-300 active:scale-95"
-                >
-                  <Icon size={20} />
-                </button>
-              );
-            }
+                const Icon = item.icon;
+                const isActive = pathname === item.href;
 
-            return (
-              <Link
-                key={item.name}
-                href={item.href}
-                title={item.name}
-                className={`relative p-3 rounded-full transition-all duration-300 ${
-                  isActive
-                    ? 'text-[#a7c957] bg-[#a7c957]/20 shadow-[0_0_15px_rgba(167,201,87,0.3)]'
-                    : 'text-gray-700 dark:text-gray-300 hover:text-[#a7c957] hover:bg-white/10 dark:hover:bg-white/5'
-                }`}
+                const IconWrapper = ({ children, tooltip }) => (
+                  <div className="relative group flex flex-col items-center">
+                    <div className="absolute -top-12 px-2.5 py-1 bg-[#a7c957] text-[#0b0f0a] text-xs font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none whitespace-nowrap shadow-lg scale-90 group-hover:scale-100 z-50">
+                      {tooltip}
+                    </div>
+                    <div className={`p-3 rounded-full transition-all duration-300 active:scale-95 ${
+                      isActive 
+                        ? 'text-[#a7c957] bg-[#a7c957]/20 shadow-[0_0_15px_rgba(167,201,87,0.3)]' 
+                        : 'text-gray-700 dark:text-gray-300 hover:text-[#a7c957] hover:bg-white/10 dark:hover:bg-white/5'
+                    }`}>
+                      {children}
+                      {isActive && (
+                        <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[#a7c957] rounded-full" />
+                      )}
+                    </div>
+                  </div>
+                );
+
+                if (item.onClick) {
+                  return (
+                    <motion.button key={item.name} variants={itemVariants} layout onClick={item.onClick}>
+                      <IconWrapper tooltip={item.name}>
+                        <Icon size={20} />
+                      </IconWrapper>
+                    </motion.button>
+                  );
+                }
+
+                return (
+                  <motion.div key={item.name} variants={itemVariants} layout>
+                    <Link href={item.href}>
+                      <IconWrapper tooltip={item.name}>
+                        <Icon size={20} />
+                      </IconWrapper>
+                    </Link>
+                  </motion.div>
+                );
+              })}
+
+              {/* Divider */}
+              <motion.div variants={itemVariants} layout className="w-px h-6 bg-black/10 dark:bg-white/10 mx-1" />
+
+              {/* Integrated Theme Toggle */}
+              <motion.button
+                variants={itemVariants}
+                layout
+                onClick={toggleTheme}
+                title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+                className="relative group flex flex-col items-center"
               >
-                <Icon size={20} />
-                {isActive && (
-                  <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[#a7c957] rounded-full" />
-                )}
-              </Link>
-            );
-          })}
+                <div className="absolute -top-12 px-2.5 py-1 bg-[#a7c957] text-[#0b0f0a] text-xs font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none whitespace-nowrap shadow-lg scale-90 group-hover:scale-100 z-50">
+                  {isDark ? "Light Mode" : "Dark Mode"}
+                </div>
+                <div className="p-3 rounded-full text-gray-700 dark:text-gray-300 hover:text-[#a7c957] hover:bg-[#a7c957]/15 transition-all duration-300 active:scale-95">
+                  {isDark ? <Sun size={20} /> : <Moon size={20} />}
+                </div>
+              </motion.button>
 
-          {/* Divider */}
-          <div className="w-px h-6 bg-black/10 dark:bg-white/10 mx-1" />
+              {/* Admin Command Link (if admin) */}
+              {user?.role === 'admin' && (
+                <motion.div variants={itemVariants} layout>
+                  <Link
+                    href="/admin"
+                    title="Admin Command Center"
+                    className="relative group flex flex-col items-center"
+                  >
+                    <div className="absolute -top-12 px-2.5 py-1 bg-[#a7c957] text-[#0b0f0a] text-xs font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none whitespace-nowrap shadow-lg scale-90 group-hover:scale-100 z-50">
+                      Admin Panel
+                    </div>
+                    <div className={`p-3 rounded-full transition-all duration-300 ${
+                      pathname.startsWith('/admin')
+                        ? 'text-[#a7c957] bg-[#a7c957]/20 shadow-[0_0_15px_rgba(167,201,87,0.3)]'
+                        : 'text-gray-700 dark:text-gray-300 hover:text-[#a7c957] hover:bg-white/10'
+                    }`}>
+                      <Settings size={20} />
+                    </div>
+                  </Link>
+                </motion.div>
+              )}
 
-          {/* Integrated Theme Toggle (Clean inside Navbar!) */}
-          <button
-            onClick={toggleTheme}
-            title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-            className="p-3 rounded-full text-gray-700 dark:text-gray-300 hover:text-[#a7c957] hover:bg-[#a7c957]/15 transition-all duration-300 active:scale-95"
-          >
-            {isDark ? <Sun size={20} /> : <Moon size={20} />}
-          </button>
-
-          {/* Admin Command Link (if admin) */}
-          {user?.role === 'admin' && (
-            <Link
-              href="/admin"
-              title="Admin Command Center"
-              className={`p-3 rounded-full transition-all duration-300 ${
-                pathname.startsWith('/admin')
-                  ? 'text-[#a7c957] bg-[#a7c957]/20 shadow-[0_0_15px_rgba(167,201,87,0.3)]'
-                  : 'text-gray-700 dark:text-gray-300 hover:text-[#a7c957] hover:bg-white/10'
-              }`}
-            >
-              <Settings size={20} />
-            </Link>
-          )}
-
-          {/* User Profile Avatar / Sign In */}
-          {user ? (
-            <Link
-              href="/profile"
-              title={`Profile: ${user.name}`}
-              className="ml-1 pl-1 pr-2 py-1 rounded-full bg-black/5 dark:bg-white/5 hover:bg-[#a7c957]/20 border border-black/10 dark:border-white/10 flex items-center gap-2 transition-all duration-300"
-            >
-              <div className="w-7 h-7 rounded-full bg-[#a7c957] text-[#0b0f0a] flex items-center justify-center font-bold text-xs shadow-sm overflow-hidden">
-                {user.avatar ? (
-                  <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+              {/* User Profile Avatar / Sign In */}
+              <motion.div variants={itemVariants} layout>
+                {user ? (
+                  <Link
+                    href="/profile"
+                    title={`Profile: ${user.name}`}
+                    className="ml-1 pl-1 pr-2.5 py-1 rounded-full bg-black/5 dark:bg-white/5 hover:bg-[#a7c957]/20 border border-black/10 dark:border-white/10 flex items-center gap-2 transition-all duration-300"
+                  >
+                    <div className="w-7 h-7 rounded-full bg-[#a7c957] text-[#0b0f0a] flex items-center justify-center font-bold text-xs shadow-sm overflow-hidden">
+                      {user.avatar ? (
+                        <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                      ) : (
+                        user.name.charAt(0).toUpperCase()
+                      )}
+                    </div>
+                    <span className="text-xs font-bold text-gray-800 dark:text-gray-200 max-w-[80px] truncate">
+                      {user.name.split(' ')[0]}
+                    </span>
+                  </Link>
                 ) : (
-                  user.name.charAt(0).toUpperCase()
+                  <Link
+                    href="/login"
+                    title="Sign In"
+                    className="ml-1 px-4 py-2 rounded-full bg-[#a7c957] text-[#0b0f0a] font-bold text-xs hover:brightness-110 transition-all shadow-[0_0_15px_rgba(167,201,87,0.3)] flex items-center gap-1.5"
+                  >
+                    <LogIn size={15} /> Sign In
+                  </Link>
                 )}
-              </div>
-              <span className="text-xs font-bold text-gray-800 dark:text-gray-200 max-w-[80px] truncate">
-                {user.name.split(' ')[0]}
-              </span>
-            </Link>
-          ) : (
-            <Link
-              href="/login"
-              title="Sign In"
-              className="ml-1 px-4 py-2 rounded-full bg-[#a7c957] text-[#0b0f0a] font-bold text-xs hover:brightness-110 transition-all shadow-[0_0_15px_rgba(167,201,87,0.3)] flex items-center gap-1.5"
-            >
-              <LogIn size={15} /> Sign In
-            </Link>
+              </motion.div>
+            </motion.div>
           )}
-        </div>
-      </nav>
+        </AnimatePresence>
+      </motion.nav>
     </>
   );
 }
