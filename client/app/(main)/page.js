@@ -57,15 +57,6 @@ export default async function Home() {
         <DynamicMovieRow title="Trending Anime" initialMovies={animeData.results} fetchCategory="anime" fallbackType="tv" />
         <DynamicMovieRow title="Top K-Dramas" initialMovies={kdramasData.results} fetchCategory="kdramas" fallbackType="tv" />
       </div>
-
-      <footer className="w-full text-center py-12 mt-12 border-t border-gray-800">
-        <Link href="/sitemap" className="text-gray-500 hover:text-brand-primary transition-colors text-sm font-medium">
-          Sitemap
-        </Link>
-      </footer>
-
-      {/* Padding for Floating Nav Dock */}
-      <div className="pb-32"></div>
     </main>
   );
 }
