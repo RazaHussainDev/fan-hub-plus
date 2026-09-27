@@ -3,184 +3,420 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Home, Search, List, LogIn, Grip, Settings, Compass, Users, BookOpen } from 'lucide-react';
+import { usePathname } from 'next/navigation';
+import { 
+  Home, 
+  Search, 
+  List, 
+  LogIn, 
+  Settings, 
+  Compass, 
+  Users, 
+  BookOpen, 
+  Moon, 
+  Sun, 
+  Menu, 
+  X, 
+  ShoppingBag, 
+  Calendar, 
+  Headphones, 
+  MessageSquare,
+  Radio,
+  ShieldCheck,
+  ChevronRight
+} from 'lucide-react';
 import { useSearch } from '@/context/SearchContext';
 import { useAuth } from '@/context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import AccessibilityControls from './AccessibilityControls';
 
-const containerVariants = {
-  expanded: { 
-    transition: { staggerChildren: 0.15, delayChildren: 0.2 } 
-  },
-  collapsed: { 
-    transition: { staggerChildren: 0.15, staggerDirection: -1 } 
-  }
-};
-
-const itemVariants = {
-  expanded: { 
-    opacity: 1, 
-    x: 0,
-    y: 0, 
-    scale: 1, 
-    filter: "blur(0px)", 
-    transition: { type: "spring", stiffness: 200, damping: 20 } 
-  },
-  collapsed: { 
-    opacity: 0, 
-    x: -80, // Pulls strongly towards the toggle button
-    y: 20, // Slight arc
-    scale: 0, // completely disappear
-    filter: "blur(8px)", 
-    transition: { duration: 0.7, ease: [0.32, 0.72, 0, 1] } // Very slow and buttery
-  }
-};
-
-const FloatingNav = () => {
+export default function FloatingNav() {
   const { openSearch } = useSearch();
   const { user } = useAuth();
-  const [isExpanded, setIsExpanded] = useState(true);
+  const pathname = usePathname();
 
+  const [isDark, setIsDark] = useState(true);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [fontSize, setFontSize] = useState(16);
+  const [mounted, setMounted] = useState(false);
+
+  // Synchronize theme on mount
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) setIsExpanded(false);
-      else setIsExpanded(true);
-    };
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    setMounted(true);
+    const storedTheme = localStorage.getItem('theme');
+    const savedFontSize = parseInt(localStorage.getItem('fanhub_font_size') || '16', 10);
+    const html = document.documentElement;
+
+    if (storedTheme === 'light') {
+      html.classList.remove('dark');
+      setIsDark(false);
+    } else {
+      html.classList.add('dark');
+      setIsDark(true);
+    }
+
+    setFontSize(savedFontSize);
+    document.documentElement.style.fontSize = `${savedFontSize}px`;
   }, []);
 
-  const navItems = [
+  // Close mobile drawer on route change
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
+  const toggleTheme = () => {
+    const html = document.documentElement;
+    if (html.classList.contains('dark')) {
+      html.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+      setIsDark(false);
+    } else {
+      html.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+      setIsDark(true);
+    }
+  };
+
+  const changeFontSize = (delta) => {
+    const newSize = Math.max(12, Math.min(22, fontSize + delta));
+    setFontSize(newSize);
+    document.documentElement.style.fontSize = `${newSize}px`;
+    localStorage.setItem('fanhub_font_size', newSize.toString());
+  };
+
+  const desktopNavItems = [
     { name: 'Home', icon: Home, href: '/' },
     { name: 'Explore', icon: Compass, href: '/explore' },
     { name: 'Characters', icon: Users, href: '/characters' },
-    { name: 'Logo', isLogo: true, href: '/' },
     { name: 'Articles', icon: BookOpen, href: '/articles' },
-    { name: 'Search', icon: Search, onClick: openSearch },
+    { name: 'Logo', isLogo: true, href: '/' },
     { name: 'My List', icon: List, href: '/mylist' },
+    { name: 'Search', icon: Search, onClick: openSearch },
   ];
 
-  if (user?.role === 'admin') {
-    navItems.push({ name: 'Admin', icon: Settings, href: '/admin' });
-  }
-
-  navItems.push(
-    user
-      ? {
-          name: user.name.split(' ')[0],
-          isAvatar: true,
-          href: '/profile',
-        }
-      : { name: 'Sign In', icon: LogIn, href: '/login' }
-  );
+  const mobileDrawerLinks = [
+    { name: 'Home', icon: Home, href: '/' },
+    { name: 'Fandom Explorer', icon: Compass, href: '/explore', badge: '8 Categories' },
+    { name: 'Character Dossiers', icon: Users, href: '/characters' },
+    { name: 'Lore & Articles', icon: BookOpen, href: '/articles' },
+    { name: 'My Collection', icon: List, href: '/mylist' },
+    { name: 'Merchandise Showcase', icon: ShoppingBag, href: '/merchandise' },
+    { name: 'Events & Conventions', icon: Calendar, href: '/events' },
+    { name: 'Audio & Soundtracks', icon: Headphones, href: '/audio' },
+    { name: 'Feedback & Queries', icon: MessageSquare, href: '/feedback' },
+  ];
 
   return (
     <>
-      <motion.div 
-        layout
-        initial={false}
-        className={`fixed z-50 flex items-center p-2 backdrop-blur-2xl border shadow-2xl overflow-hidden
-          transition-colors duration-1000
-          ${isExpanded 
-            ? "bottom-8 left-1/2 -translate-x-1/2 rounded-full bg-white/70 dark:bg-black/50 border-white/60 dark:border-white/10" 
-            : "top-6 left-6 rounded-2xl bg-white/90 dark:bg-black/80 border-black/10 dark:border-white/20"
-          }`}
-        style={{ borderRadius: isExpanded ? 9999 : 24 }} // forces smooth corner rounding
-        transition={{ type: "spring", stiffness: 120, damping: 25 }} // Ultra smooth layout transition
-      >
-        {/* Master Toggle Button (Snake Head) */}
-        <motion.button 
-          layout
-          onClick={() => setIsExpanded(!isExpanded)}
-          animate={{
-            scale: isExpanded ? 1 : [1, 1.3, 0.8, 1.2, 0.9, 1.1, 1], // The "swallowing" snake game effect
-            rotate: isExpanded ? 0 : -90
-          }}
-          transition={{ duration: isExpanded ? 0.5 : 1.5, ease: "easeInOut" }}
-          className={`p-3 z-10 flex items-center justify-center transition-colors duration-500 cursor-pointer
-            ${isExpanded 
-              ? 'rounded-full bg-black/5 dark:bg-white/10 text-gray-600 dark:text-gray-300 hover:text-brand-primary hover:bg-brand-primary/20 dark:hover:bg-brand-primary/20' 
-              : 'rounded-xl bg-brand-primary text-[#0b0f0a] shadow-[0_0_30px_rgba(167,201,87,0.8)]'
-            }`}
-        >
-          <Grip size={22} className={`transition-transform duration-500 ${isExpanded ? 'rotate-0' : '-rotate-90'}`} />
-        </motion.button>
+      {/* ─────────────────────────────────────────────────────────────
+          1. MOBILE TOP HEADER (Screen width < md)
+          Persistent brand logo, search trigger, theme toggle & menu button
+      ───────────────────────────────────────────────────────────── */}
+      <header className="md:hidden fixed top-0 left-0 right-0 z-40 h-16 px-4 bg-white/85 dark:bg-[#0b0f0a]/90 backdrop-blur-xl border-b border-black/5 dark:border-white/10 flex items-center justify-between transition-colors duration-300">
+        {/* Brand Logo & Name */}
+        <Link href="/" className="flex items-center gap-2.5">
+          <Image
+            src="/logo.png"
+            alt="Fan Hub Plus Logo"
+            width={34}
+            height={34}
+            className="object-contain"
+            priority
+          />
+          <div className="flex flex-col">
+            <span className="font-heading font-black text-lg tracking-tight text-gray-900 dark:text-white leading-none">
+              FanHub<span className="text-[#a7c957]">+</span>
+            </span>
+            <span className="text-[9px] font-bold tracking-widest text-[#a7c957] uppercase">
+              Fandom Universe
+            </span>
+          </div>
+        </Link>
 
-        {/* mode="popLayout" allows exiting elements to float absolute while the parent shrinks! */}
-        <AnimatePresence initial={false} mode="popLayout">
-          {isExpanded && (
-            <motion.div 
-              layout
-              variants={containerVariants}
-              initial="collapsed"
-              animate="expanded"
-              exit="collapsed"
-              className="flex items-center ml-2 space-x-1 pr-1"
+        {/* Right Action Icons: Search, Theme, Hamburger */}
+        <div className="flex items-center gap-1.5">
+          <button
+            onClick={openSearch}
+            className="w-9 h-9 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-gray-700 dark:text-gray-300 flex items-center justify-center hover:text-[#a7c957] transition-colors"
+            aria-label="Open Search"
+          >
+            <Search size={16} />
+          </button>
+
+          <button
+            onClick={toggleTheme}
+            className="w-9 h-9 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-gray-700 dark:text-gray-300 flex items-center justify-center hover:text-[#a7c957] transition-colors"
+            aria-label="Toggle Theme"
+          >
+            {isDark ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
+
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="w-10 h-10 rounded-full bg-[#a7c957] text-[#0b0f0a] flex items-center justify-center font-bold shadow-[0_0_15px_rgba(167,201,87,0.3)] transition-transform active:scale-95"
+            aria-label="Toggle Mobile Menu"
+          >
+            {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
+      </header>
+
+      {/* ─────────────────────────────────────────────────────────────
+          2. MOBILE SLIDE-OVER NAVIGATION DRAWER
+      ───────────────────────────────────────────────────────────── */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="md:hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex flex-col justify-end"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <motion.div
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 28, stiffness: 280 }}
+              className="bg-[#0b0f0a] border-t border-white/15 rounded-t-[32px] w-full max-h-[85vh] overflow-y-auto p-6 space-y-6 shadow-2xl relative"
+              onClick={(e) => e.stopPropagation()}
             >
-              {navItems.map((item, index) => {
-                const IconWrapper = ({ children }) => (
-                  <div className="relative group flex flex-col items-center cursor-pointer">
-                    <div className="absolute -top-14 px-3 py-1.5 bg-brand-primary text-[#0b0f0a] text-xs font-semibold rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap backdrop-blur-md scale-90 group-hover:scale-100 shadow-xl">
-                      {item.name}
-                    </div>
-                    <div className="p-3 bg-transparent hover:bg-brand-primary/20 hover:text-brand-primary rounded-full transition-all duration-300 active:scale-90">
-                      {children}
-                    </div>
-                  </div>
-                );
+              {/* Drawer Top Handle */}
+              <div className="w-12 h-1 bg-white/20 rounded-full mx-auto" />
 
-                const iconContent = item.isLogo ? (
-                  <div className="flex items-center justify-center mx-2">
-                    <Image 
-                      src="/logo.png" 
-                      alt="Fan Hub Plus" 
-                      width={75} 
-                      height={25} 
-                      className="object-contain drop-shadow-md" 
-                      priority={true} 
-                    />
-                  </div>
-                ) : item.isAvatar ? (
-                  user.avatar ? (
-                    <img src={user.avatar} alt={user.name} className="w-6 h-6 rounded-full object-cover shadow-sm" />
-                  ) : (
-                    <span className="w-6 h-6 rounded-full bg-brand-primary text-[#0b0f0a] flex items-center justify-center text-xs font-bold shadow-sm">
-                      {user.name.charAt(0).toUpperCase()}
-                    </span>
-                  )
+              {/* User Profile Card */}
+              <div className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between">
+                {user ? (
+                  <Link 
+                    href="/profile" 
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center gap-3"
+                  >
+                    <div className="w-11 h-11 rounded-full bg-[#a7c957]/20 border border-[#a7c957]/40 flex items-center justify-center text-[#a7c957] font-bold text-lg">
+                      {user.avatar ? (
+                        <img src={user.avatar} alt={user.name} className="w-full h-full rounded-full object-cover" />
+                      ) : (
+                        user.name.charAt(0).toUpperCase()
+                      )}
+                    </div>
+                    <div>
+                      <div className="text-white font-bold text-sm flex items-center gap-1.5">
+                        {user.name}
+                        {user.role === 'admin' && (
+                          <span className="px-1.5 py-0.2 rounded bg-[#a7c957]/20 text-[#a7c957] text-[10px] font-bold uppercase">
+                            Admin
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-xs text-gray-400">View Fandom Profile</span>
+                    </div>
+                  </Link>
                 ) : (
-                  <item.icon size={22} className="text-gray-700 dark:text-gray-300 group-hover:text-brand-primary transition-colors" />
-                );
-
-                if (item.onClick) {
-                  return (
-                    <motion.button key={index} variants={itemVariants} layout onClick={item.onClick}>
-                      <IconWrapper>{iconContent}</IconWrapper>
-                    </motion.button>
-                  );
-                }
-
-                return (
-                  <motion.div key={index} variants={itemVariants} layout>
-                    <Link href={item.href}>
-                      <IconWrapper>{iconContent}</IconWrapper>
+                  <div className="flex items-center justify-between w-full">
+                    <div>
+                      <div className="text-white font-bold text-sm">Welcome, Fan!</div>
+                      <div className="text-xs text-gray-400">Join the universal fandom hub</div>
+                    </div>
+                    <Link
+                      href="/login"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#a7c957] text-[#0b0f0a] text-xs font-bold shadow-md"
+                    >
+                      <LogIn size={14} /> Sign In
                     </Link>
-                  </motion.div>
-                );
-              })}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
+                  </div>
+                )}
 
-      {/* Accessibility controls stay fixed based on state */}
-      <div className={`fixed z-40 transition-all duration-1000 ease-[cubic-bezier(0.25,0.8,0.25,1)] ${isExpanded ? "bottom-24 left-1/2 -translate-x-1/2" : "bottom-6 left-6"}`}>
-        <AccessibilityControls />
-      </div>
+                {user?.role === 'admin' && (
+                  <Link
+                    href="/admin"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="p-2 rounded-xl bg-white/5 border border-white/10 text-[#a7c957] text-xs font-bold flex items-center gap-1"
+                  >
+                    <Settings size={14} /> Panel
+                  </Link>
+                )}
+              </div>
+
+              {/* Navigation Links Grid */}
+              <div className="grid grid-cols-1 gap-1.5">
+                {mobileDrawerLinks.map((link) => {
+                  const Icon = link.icon;
+                  const isActive = pathname === link.href;
+                  return (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={`flex items-center justify-between p-3.5 rounded-2xl transition-all ${
+                        isActive
+                          ? 'bg-[#a7c957]/15 text-[#a7c957] border border-[#a7c957]/30'
+                          : 'text-gray-300 hover:text-white hover:bg-white/5'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`p-2 rounded-xl ${isActive ? 'bg-[#a7c957] text-[#0b0f0a]' : 'bg-white/5 text-gray-400'}`}>
+                          <Icon size={18} />
+                        </div>
+                        <span className="font-semibold text-sm">{link.name}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {link.badge && (
+                          <span className="px-2 py-0.5 rounded-md bg-white/10 text-[10px] text-gray-300 font-medium">
+                            {link.badge}
+                          </span>
+                        )}
+                        <ChevronRight size={16} className="text-gray-600" />
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+
+              {/* Accessibility Font Size & Theme Row */}
+              <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs text-gray-400">
+                <span className="font-medium">Text Sizing:</span>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => changeFontSize(-1)}
+                    className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-white font-mono font-bold"
+                  >
+                    A-
+                  </button>
+                  <span className="text-white font-bold font-mono">{fontSize}px</span>
+                  <button
+                    onClick={() => changeFontSize(1)}
+                    className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-white font-mono font-bold"
+                  >
+                    A+
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ─────────────────────────────────────────────────────────────
+          3. DESKTOP FLOATING DOCK (Screen width >= md)
+          Clean, perfectly centered, zero screen clutter, theme integrated
+      ───────────────────────────────────────────────────────────── */}
+      <nav 
+        className="hidden md:flex fixed bottom-8 left-1/2 -translate-x-1/2 z-40 items-center px-3 py-2 rounded-full bg-white/80 dark:bg-[#0b0f0a]/85 backdrop-blur-2xl border border-black/10 dark:border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.3),0_0_20px_rgba(167,201,87,0.15)] transition-colors duration-500"
+        aria-label="Desktop Fandom Navigation"
+      >
+        <div className="flex items-center space-x-1">
+          {desktopNavItems.map((item, index) => {
+            if (item.isLogo) {
+              return (
+                <Link 
+                  key="logo" 
+                  href="/" 
+                  className="mx-3 group flex items-center justify-center hover:scale-105 transition-transform"
+                  title="Fan Hub Plus Home"
+                >
+                  <Image
+                    src="/logo.png"
+                    alt="Fan Hub Plus Logo"
+                    width={56}
+                    height={26}
+                    className="object-contain drop-shadow-[0_0_10px_rgba(167,201,87,0.3)]"
+                    priority
+                  />
+                </Link>
+              );
+            }
+
+            const Icon = item.icon;
+            const isActive = pathname === item.href;
+
+            if (item.onClick) {
+              return (
+                <button
+                  key={item.name}
+                  onClick={item.onClick}
+                  title={item.name}
+                  className="p-3 rounded-full text-gray-700 dark:text-gray-300 hover:text-[#a7c957] hover:bg-[#a7c957]/15 transition-all duration-300 active:scale-95"
+                >
+                  <Icon size={20} />
+                </button>
+              );
+            }
+
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                title={item.name}
+                className={`relative p-3 rounded-full transition-all duration-300 ${
+                  isActive
+                    ? 'text-[#a7c957] bg-[#a7c957]/20 shadow-[0_0_15px_rgba(167,201,87,0.3)]'
+                    : 'text-gray-700 dark:text-gray-300 hover:text-[#a7c957] hover:bg-white/10 dark:hover:bg-white/5'
+                }`}
+              >
+                <Icon size={20} />
+                {isActive && (
+                  <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[#a7c957] rounded-full" />
+                )}
+              </Link>
+            );
+          })}
+
+          {/* Divider */}
+          <div className="w-px h-6 bg-black/10 dark:bg-white/10 mx-1" />
+
+          {/* Integrated Theme Toggle (Clean inside Navbar!) */}
+          <button
+            onClick={toggleTheme}
+            title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
+            className="p-3 rounded-full text-gray-700 dark:text-gray-300 hover:text-[#a7c957] hover:bg-[#a7c957]/15 transition-all duration-300 active:scale-95"
+          >
+            {isDark ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
+
+          {/* Admin Command Link (if admin) */}
+          {user?.role === 'admin' && (
+            <Link
+              href="/admin"
+              title="Admin Command Center"
+              className={`p-3 rounded-full transition-all duration-300 ${
+                pathname.startsWith('/admin')
+                  ? 'text-[#a7c957] bg-[#a7c957]/20 shadow-[0_0_15px_rgba(167,201,87,0.3)]'
+                  : 'text-gray-700 dark:text-gray-300 hover:text-[#a7c957] hover:bg-white/10'
+              }`}
+            >
+              <Settings size={20} />
+            </Link>
+          )}
+
+          {/* User Profile Avatar / Sign In */}
+          {user ? (
+            <Link
+              href="/profile"
+              title={`Profile: ${user.name}`}
+              className="ml-1 pl-1 pr-2 py-1 rounded-full bg-black/5 dark:bg-white/5 hover:bg-[#a7c957]/20 border border-black/10 dark:border-white/10 flex items-center gap-2 transition-all duration-300"
+            >
+              <div className="w-7 h-7 rounded-full bg-[#a7c957] text-[#0b0f0a] flex items-center justify-center font-bold text-xs shadow-sm overflow-hidden">
+                {user.avatar ? (
+                  <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                ) : (
+                  user.name.charAt(0).toUpperCase()
+                )}
+              </div>
+              <span className="text-xs font-bold text-gray-800 dark:text-gray-200 max-w-[80px] truncate">
+                {user.name.split(' ')[0]}
+              </span>
+            </Link>
+          ) : (
+            <Link
+              href="/login"
+              title="Sign In"
+              className="ml-1 px-4 py-2 rounded-full bg-[#a7c957] text-[#0b0f0a] font-bold text-xs hover:brightness-110 transition-all shadow-[0_0_15px_rgba(167,201,87,0.3)] flex items-center gap-1.5"
+            >
+              <LogIn size={15} /> Sign In
+            </Link>
+          )}
+        </div>
+      </nav>
     </>
   );
-};
-
-export default FloatingNav;
+}
