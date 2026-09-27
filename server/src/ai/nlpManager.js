@@ -1,58 +1,103 @@
 const { NlpManager } = require('node-nlp');
+const path = require('path');
+const Movie = require('../models/Movie');
+const FandomContent = require('../models/FandomContent');
 
-// Initialize manager. We use 'en' as base but will feed it Roman Urdu too.
-const manager = new NlpManager({ languages: ['en'], forceNER: true });
+const manager = new NlpManager({ languages: ['en'], forceNER: true, nlu: { log: false } });
 
-// Intent: Greetings
-manager.addDocument('en', 'hello', 'greeting');
-manager.addDocument('en', 'hi', 'greeting');
-manager.addDocument('en', 'hey', 'greeting');
-manager.addDocument('en', 'salam', 'greeting');
-manager.addDocument('en', 'assalam o alaikum', 'greeting');
-manager.addDocument('en', 'kya haal hai', 'greeting');
-manager.addDocument('en', 'kaise ho', 'greeting');
-manager.addDocument('en', 'kese ho', 'greeting');
-manager.addAnswer('en', 'greeting', 'Hi there! 👋 I am FanHub AI. Kaise madad kar sakta hu aapki?');
-manager.addAnswer('en', 'greeting', 'Hello! Welcome to FanHub Plus. What would you like to watch today?');
-manager.addAnswer('en', 'greeting', 'Walaikum Assalam! Welcome to the Fandom Universe. Kaise hain aap?');
+const DEFAULT_GENRES = [
+  'action',
+  'anime',
+  'gaming',
+  'scifi',
+  'sci-fi',
+  'cyberpunk',
+  'fantasy',
+  'horror',
+  'thriller',
+  'adventure',
+  'comedy',
+  'drama',
+  'shonen',
+  'superhero',
+  'mystery',
+  'romance',
+  'animation',
+  'k-pop',
+  'comics',
+  'manga',
+  'cosplay'
+];
 
-// Intent: Trending Movies
-manager.addDocument('en', 'whats trending', 'movie.trending');
-manager.addDocument('en', 'show me trending movies', 'movie.trending');
-manager.addDocument('en', 'trending', 'movie.trending');
-manager.addDocument('en', 'aaj kya dekhu', 'movie.trending');
-manager.addDocument('en', 'top movies dikhao', 'movie.trending');
-manager.addDocument('en', 'naya kya hai', 'movie.trending');
-manager.addDocument('en', 'trending shows', 'movie.trending');
-// Note: We append a special action tag to trigger the UI cards later
-manager.addAnswer('en', 'movie.trending', 'Here are the latest trending movies on FanHub! 🍿||ACTION:FETCH_TRENDING');
+const DEFAULT_TITLES = [
+  'Arcane',
+  'Cyberpunk: Edgerunners',
+  'Dune',
+  'Elden Ring',
+  'Jujutsu Kaisen',
+  'Attack on Titan',
+  'Spider-Man',
+  'The Batman',
+  'Demon Slayer',
+  'Solo Leveling',
+  'Interstellar',
+  'Breaking Bad',
+  'Stranger Things'
+];
 
-// Intent: Recommendations
-manager.addDocument('en', 'recommend something', 'movie.recommend');
-manager.addDocument('en', 'movie recommendation', 'movie.recommend');
-manager.addDocument('en', 'kuch acha batao', 'movie.recommend');
-manager.addDocument('en', 'koi achi movie batao', 'movie.recommend');
-manager.addDocument('en', 'anime recommend karo', 'movie.recommend');
-manager.addDocument('en', 'content recommendations', 'movie.recommend');
-manager.addAnswer('en', 'movie.recommend', 'Looking for recommendations? Tell me your favorite genre or check out trending anime and movies in our Fandom Explorer!||ACTION:FETCH_TRENDING');
-
-// Intent: Help/Features
-manager.addDocument('en', 'help', 'agent.help');
-manager.addDocument('en', 'help with features', 'agent.help');
-manager.addDocument('en', 'what can you do', 'agent.help');
-manager.addDocument('en', 'features', 'agent.help');
-manager.addDocument('en', 'tum kya kar sakte ho', 'agent.help');
-manager.addDocument('en', 'yeh website kya hai', 'agent.help');
-manager.addAnswer('en', 'agent.help', 'I can recommend movies, show you what is trending, and help you navigate FanHub. Bas apni pasand batayein!');
-
-// Function to train and save the model
 const trainAI = async () => {
   try {
+    // 1. Load massive static corpus
+    const corpusPath = path.join(__dirname, 'corpus.json');
+    await manager.addCorpus(corpusPath);
+
+    // 2. Dynamic Database Entity Extraction (The Secret Weapon)
+    const genres = new Set(DEFAULT_GENRES);
+    const titles = new Set(DEFAULT_TITLES);
+
+    try {
+      const [movies, fandomItems] = await Promise.all([
+        Movie.find().select('title genre genres category').lean(),
+        FandomContent.find().select('title category genres fandom').lean()
+      ]);
+
+      if (movies && movies.length > 0) {
+        movies.forEach(m => {
+          if (m.title) titles.add(m.title);
+          if (m.genre) genres.add(m.genre.toLowerCase());
+          if (Array.isArray(m.genres)) m.genres.forEach(g => genres.add(g.toLowerCase()));
+          if (m.category) genres.add(m.category.toLowerCase());
+        });
+      }
+
+      if (fandomItems && fandomItems.length > 0) {
+        fandomItems.forEach(f => {
+          if (f.title) titles.add(f.title);
+          if (f.category) genres.add(f.category.toLowerCase());
+          if (f.fandom) genres.add(f.fandom.toLowerCase());
+          if (Array.isArray(f.genres)) f.genres.forEach(g => genres.add(g.toLowerCase()));
+        });
+      }
+    } catch (dbErr) {
+      console.warn('DB Entity Fetch Warning (using defaults):', dbErr.message);
+    }
+
+    // Train AI to recognize exact movie titles (NER: %movie%)
+    titles.forEach(title => {
+      manager.addNamedEntityText('movie', title, ['en'], [title.toLowerCase(), title]);
+    });
+
+    // Train AI to recognize dynamic genres (NER: %genre%)
+    genres.forEach(g => {
+      manager.addNamedEntityText('genre', g, ['en'], [g.toLowerCase(), g]);
+    });
+
+    // 3. Train and Save
     await manager.train();
     manager.save();
-    console.log('✅ FanHub AI Brain trained successfully!');
+    console.log('✅ Enterprise NLP Brain Trained with DB Entities!');
   } catch (err) {
-    console.error('AI Training Error:', err.message);
+    console.error('AI Training Error:', err);
   }
 };
 

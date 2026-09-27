@@ -4,6 +4,9 @@
       "en"
     ],
     "forceNER": true,
+    "nlu": {
+      "log": false
+    },
     "tag": "nlp",
     "threshold": 0.5,
     "autoLoad": true,
@@ -14,7 +17,8 @@
   },
   "nluManager": {
     "settings": {
-      "tag": "nlu-manager"
+      "tag": "nlu-manager",
+      "log": false
     },
     "locales": [
       "en"
@@ -47,11 +51,19 @@
             "intent": "greeting",
             "domain": "default"
           },
+          "hey,there": {
+            "intent": "greeting",
+            "domain": "default"
+          },
           "salam": {
             "intent": "greeting",
             "domain": "default"
           },
           "alaikum,assalam,o": {
+            "intent": "greeting",
+            "domain": "default"
+          },
+          "aoa": {
             "intent": "greeting",
             "domain": "default"
           },
@@ -63,8 +75,232 @@
             "intent": "greeting",
             "domain": "default"
           },
-          "ho,kese": {
+          "aap,ho,kese": {
             "intent": "greeting",
+            "domain": "default"
+          },
+          "good,morn": {
+            "intent": "greeting",
+            "domain": "default"
+          },
+          "even,good": {
+            "intent": "greeting",
+            "domain": "default"
+          },
+          "namast": {
+            "intent": "greeting",
+            "domain": "default"
+          },
+          "fanhub,yo": {
+            "intent": "greeting",
+            "domain": "default"
+          },
+          "assist,hey": {
+            "intent": "greeting",
+            "domain": "default"
+          },
+          "chaal,haal,kya": {
+            "intent": "greeting",
+            "domain": "default"
+          },
+          "chal,hai,kese,raha": {
+            "intent": "greeting",
+            "domain": "default"
+          },
+          "fanhub,hello": {
+            "intent": "greeting",
+            "domain": "default"
+          },
+          "bot,hi": {
+            "intent": "greeting",
+            "domain": "default"
+          },
+          "up,what": {
+            "intent": "greeting",
+            "domain": "default"
+          },
+          "sup": {
+            "intent": "greeting",
+            "domain": "default"
+          },
+          "%genre%,me,movi,show,some": {
+            "intent": "movie.genre",
+            "domain": "default"
+          },
+          "%genre%,an,i,movi,to,want,watch": {
+            "intent": "movie.genre",
+            "domain": "default"
+          },
+          "%genre%,achi,dikhao,koi,movi": {
+            "intent": "movie.genre",
+            "domain": "default"
+          },
+          "%genre%,dekhni,hai,mujh": {
+            "intent": "movie.genre",
+            "domain": "default"
+          },
+          "%genre%,give,me,recommend": {
+            "intent": "movie.genre",
+            "domain": "default"
+          },
+          "%genre%,film,recommend,some": {
+            "intent": "movie.genre",
+            "domain": "default"
+          },
+          "%genre%,best,show": {
+            "intent": "movie.genre",
+            "domain": "default"
+          },
+          "%genre%,anim,batao,koi,movi,ya": {
+            "intent": "movie.genre",
+            "domain": "default"
+          },
+          "%genre%,categori,dikhao": {
+            "intent": "movie.genre",
+            "domain": "default"
+          },
+          "%genre%,movi,top": {
+            "intent": "movie.genre",
+            "domain": "default"
+          },
+          "%genre%,i,love": {
+            "intent": "movie.genre",
+            "domain": "default"
+          },
+          "%genre%,watch": {
+            "intent": "movie.genre",
+            "domain": "default"
+          },
+          "%genre%,find,movi": {
+            "intent": "movie.genre",
+            "domain": "default"
+          },
+          "%genre%,pleas,recommend": {
+            "intent": "movie.genre",
+            "domain": "default"
+          },
+          "%genre%,list,show": {
+            "intent": "movie.genre",
+            "domain": "default"
+          },
+          "%genre%,content,dikhao,kuch": {
+            "intent": "movie.genre",
+            "domain": "default"
+          },
+          "%genre%,hai,mujh,pasand": {
+            "intent": "movie.genre",
+            "domain": "default"
+          },
+          "%genre%,seri,suggest": {
+            "intent": "movie.genre",
+            "domain": "default"
+          },
+          "%genre%,explor": {
+            "intent": "movie.genre",
+            "domain": "default"
+          },
+          "%genre%,ani,good,to,watch": {
+            "intent": "movie.genre",
+            "domain": "default"
+          },
+          "%genre%,some,suggest,titl": {
+            "intent": "movie.genre",
+            "domain": "default"
+          },
+          "%genre%,dekhn,hain,mujh,show": {
+            "intent": "movie.genre",
+            "domain": "default"
+          },
+          "%genre%,movi,search": {
+            "intent": "movie.genre",
+            "domain": "default"
+          },
+          "%movie%,for,search": {
+            "intent": "movie.search",
+            "domain": "default"
+          },
+          "%movie%,find": {
+            "intent": "movie.search",
+            "domain": "default"
+          },
+          "%movie%,dekhni,hai,mujh": {
+            "intent": "movie.search",
+            "domain": "default"
+          },
+          "%movie%,hai,kya,paa,tumhar": {
+            "intent": "movie.search",
+            "domain": "default"
+          },
+          "%movie%,i,to,want,watch": {
+            "intent": "movie.search",
+            "domain": "default"
+          },
+          "%movie%,play": {
+            "intent": "movie.search",
+            "domain": "default"
+          },
+          "%movie%,stream": {
+            "intent": "movie.search",
+            "domain": "default"
+          },
+          "%movie%,can,i,watch,where": {
+            "intent": "movie.search",
+            "domain": "default"
+          },
+          "%movie%,me,show": {
+            "intent": "movie.search",
+            "domain": "default"
+          },
+          "%movie%,avail,hai,kya": {
+            "intent": "movie.search",
+            "domain": "default"
+          },
+          "%movie%,dhundo": {
+            "intent": "movie.search",
+            "domain": "default"
+          },
+          "%movie%,karo,search": {
+            "intent": "movie.search",
+            "domain": "default"
+          },
+          "%movie%,look,up": {
+            "intent": "movie.search",
+            "domain": "default"
+          },
+          "%movie%,fanhub,is,on": {
+            "intent": "movie.search",
+            "domain": "default"
+          },
+          "%movie%,can,i,stream": {
+            "intent": "movie.search",
+            "domain": "default"
+          },
+          "%movie%,open": {
+            "intent": "movie.search",
+            "domain": "default"
+          },
+          "%movie%,detail,give,me,on": {
+            "intent": "movie.search",
+            "domain": "default"
+          },
+          "%movie%,now,watch": {
+            "intent": "movie.search",
+            "domain": "default"
+          },
+          "%movie%,dikhao,film": {
+            "intent": "movie.search",
+            "domain": "default"
+          },
+          "%movie%,check": {
+            "intent": "movie.search",
+            "domain": "default"
+          },
+          "%movie%,chahi,movi,mujh": {
+            "intent": "movie.search",
+            "domain": "default"
+          },
+          "%movie%,find,titl": {
+            "intent": "movie.search",
             "domain": "default"
           },
           "trend,what": {
@@ -72,10 +308,6 @@
             "domain": "default"
           },
           "me,movi,show,trend": {
-            "intent": "movie.trending",
-            "domain": "default"
-          },
-          "trend": {
             "intent": "movie.trending",
             "domain": "default"
           },
@@ -95,35 +327,67 @@
             "intent": "movie.trending",
             "domain": "default"
           },
-          "recommend,someth": {
-            "intent": "movie.recommend",
+          "is,now,popular,right,what": {
+            "intent": "movie.trending",
             "domain": "default"
           },
-          "movi,recommend": {
-            "intent": "movie.recommend",
+          "movi,popular,sabs": {
+            "intent": "movie.trending",
             "domain": "default"
           },
-          "acha,batao,kuch": {
-            "intent": "movie.recommend",
+          "content,rate,top": {
+            "intent": "movie.trending",
             "domain": "default"
           },
-          "achi,batao,koi,movi": {
-            "intent": "movie.recommend",
+          "anim,trend": {
+            "intent": "movie.trending",
             "domain": "default"
           },
-          "anim,karo,recommend": {
-            "intent": "movie.recommend",
+          "and,movi,seri,trend": {
+            "intent": "movie.trending",
             "domain": "default"
           },
-          "content,recommend": {
-            "intent": "movie.recommend",
+          "aaj,chal,hai,kal,kya,raha": {
+            "intent": "movie.trending",
+            "domain": "default"
+          },
+          "i,should,today,watch,what": {
+            "intent": "movie.trending",
+            "domain": "default"
+          },
+          "hot,releas": {
+            "intent": "movie.trending",
+            "domain": "default"
+          },
+          "fanhub,latest,on,releas": {
+            "intent": "movie.trending",
+            "domain": "default"
+          },
+          "list,trend": {
+            "intent": "movie.trending",
+            "domain": "default"
+          },
+          "popular,titl": {
+            "intent": "movie.trending",
+            "domain": "default"
+          },
+          "hai,kya,trend": {
+            "intent": "movie.trending",
+            "domain": "default"
+          },
+          "aaj,aaya,batao,hai,kya,naya": {
+            "intent": "movie.trending",
+            "domain": "default"
+          },
+          "hot,me,show,what": {
+            "intent": "movie.trending",
+            "domain": "default"
+          },
+          "is,this,trend,week,what": {
+            "intent": "movie.trending",
             "domain": "default"
           },
           "help": {
-            "intent": "agent.help",
-            "domain": "default"
-          },
-          "featur,help,with": {
             "intent": "agent.help",
             "domain": "default"
           },
@@ -131,24 +395,257 @@
             "intent": "agent.help",
             "domain": "default"
           },
-          "featur": {
+          "ho,kar,kya,sakt,tum": {
             "intent": "agent.help",
             "domain": "default"
           },
-          "ho,kar,kya,sakt,tum": {
+          "featur,help,with": {
+            "intent": "agent.help",
+            "domain": "default"
+          },
+          "fanhub,featur,of": {
             "intent": "agent.help",
             "domain": "default"
           },
           "hai,kya,websit,yeh": {
             "intent": "agent.help",
             "domain": "default"
+          },
+          "doe,how,this,work": {
+            "intent": "agent.help",
+            "domain": "default"
+          },
+          "kais,karein,use": {
+            "intent": "agent.help",
+            "domain": "default"
+          },
+          "guid,platform": {
+            "intent": "agent.help",
+            "domain": "default"
+          },
+          "featur,hain,kya": {
+            "intent": "agent.help",
+            "domain": "default"
+          },
+          "fanhub,is,plus,what": {
+            "intent": "agent.help",
+            "domain": "default"
+          },
+          "can,guid,me,you": {
+            "intent": "agent.help",
+            "domain": "default"
+          },
+          "help,me,navig": {
+            "intent": "agent.help",
+            "domain": "default"
+          },
+          "chahiy,madad": {
+            "intent": "agent.help",
+            "domain": "default"
+          },
+          "fanhub,guid": {
+            "intent": "agent.help",
+            "domain": "default"
+          },
+          "assist,me": {
+            "intent": "agent.help",
+            "domain": "default"
+          },
+          "are,fandom,the,what": {
+            "intent": "agent.help",
+            "domain": "default"
+          },
+          "about,fan,hub,me,tell": {
+            "intent": "agent.help",
+            "domain": "default"
+          },
+          "featur,system": {
+            "intent": "agent.help",
+            "domain": "default"
+          },
+          "avail,option": {
+            "intent": "agent.help",
+            "domain": "default"
+          },
+          "about,charact,me,tell": {
+            "intent": "fandom.lore",
+            "domain": "default"
+          },
+          "charact,dossier": {
+            "intent": "fandom.lore",
+            "domain": "default"
+          },
+          "gojo,is,who": {
+            "intent": "fandom.lore",
+            "domain": "default"
+          },
+          "johnni,silverhand": {
+            "intent": "fandom.lore",
+            "domain": "default"
+          },
+          "lore,malenia": {
+            "intent": "fandom.lore",
+            "domain": "default"
+          },
+          "anim,lore": {
+            "intent": "fandom.lore",
+            "domain": "default"
+          },
+          "articl,fandom": {
+            "intent": "fandom.lore",
+            "domain": "default"
+          },
+          "lore,read": {
+            "intent": "fandom.lore",
+            "domain": "default"
+          },
+          "charact,hain,kahan": {
+            "intent": "fandom.lore",
+            "domain": "default"
+          },
+          "articl,dikhao,lore": {
+            "intent": "fandom.lore",
+            "domain": "default"
+          },
+          "abil,and,charact,power": {
+            "intent": "fandom.lore",
+            "domain": "default"
+          },
+          "communiti,submiss": {
+            "intent": "fandom.lore",
+            "domain": "default"
+          },
+          "charact,me,stori,tell": {
+            "intent": "fandom.lore",
+            "domain": "default"
+          },
+          "music": {
+            "intent": "fandom.audio",
+            "domain": "default"
+          },
+          "audio,player": {
+            "intent": "fandom.audio",
+            "domain": "default"
+          },
+          "soundtrack": {
+            "intent": "fandom.audio",
+            "domain": "default"
+          },
+          "anim,ost": {
+            "intent": "fandom.audio",
+            "domain": "default"
+          },
+          "listen,song,to": {
+            "intent": "fandom.audio",
+            "domain": "default"
+          },
+          "game,ost": {
+            "intent": "fandom.audio",
+            "domain": "default"
+          },
+          "gaan,hain,sunn": {
+            "intent": "fandom.audio",
+            "domain": "default"
+          },
+          "hai,kahan,music,player": {
+            "intent": "fandom.audio",
+            "domain": "default"
+          },
+          "turntabl": {
+            "intent": "fandom.audio",
+            "domain": "default"
+          },
+          "cyberpunk,soundtrack": {
+            "intent": "fandom.audio",
+            "domain": "default"
+          },
+          "bgm,player": {
+            "intent": "fandom.audio",
+            "domain": "default"
+          },
+          "convent": {
+            "intent": "fandom.events",
+            "domain": "default"
+          },
+          "comic,con": {
+            "intent": "fandom.events",
+            "domain": "default"
+          },
+          "event,me,near": {
+            "intent": "fandom.events",
+            "domain": "default"
+          },
+          "event,upcom": {
+            "intent": "fandom.events",
+            "domain": "default"
+          },
+          "anim,convent": {
+            "intent": "fandom.events",
+            "domain": "default"
+          },
+          "calendar,event": {
+            "intent": "fandom.events",
+            "domain": "default"
+          },
+          "event,hain,kahan": {
+            "intent": "fandom.events",
+            "domain": "default"
+          },
+          "comic,con,pakistan": {
+            "intent": "fandom.events",
+            "domain": "default"
+          },
+          "cosplay,meetup": {
+            "intent": "fandom.events",
+            "domain": "default"
+          },
+          "convent,find": {
+            "intent": "fandom.events",
+            "domain": "default"
+          },
+          "blah": {
+            "intent": "fallback",
+            "domain": "default"
+          },
+          "asdfgh": {
+            "intent": "fallback",
+            "domain": "default"
+          },
+          "random,stuff": {
+            "intent": "fallback",
+            "domain": "default"
+          },
+          "bhi,kuch": {
+            "intent": "fallback",
+            "domain": "default"
+          },
+          "hai,kya,ye": {
+            "intent": "fallback",
+            "domain": "default"
+          },
+          "xyz": {
+            "intent": "fallback",
+            "domain": "default"
+          },
+          "gibberish": {
+            "intent": "fallback",
+            "domain": "default"
+          },
+          "qwerti": {
+            "intent": "fallback",
+            "domain": "default"
           }
         },
         "intentDict": {
           "greeting": "default",
+          "movie.genre": "default",
+          "movie.search": "default",
           "movie.trending": "default",
-          "movie.recommend": "default",
-          "agent.help": "default"
+          "agent.help": "default",
+          "fandom.lore": "default",
+          "fandom.audio": "default",
+          "fandom.events": "default",
+          "fallback": "default"
         },
         "sentences": [
           {
@@ -168,12 +665,22 @@
           },
           {
             "domain": "default",
+            "utterance": "hey there",
+            "intent": "greeting"
+          },
+          {
+            "domain": "default",
             "utterance": "salam",
             "intent": "greeting"
           },
           {
             "domain": "default",
             "utterance": "assalam o alaikum",
+            "intent": "greeting"
+          },
+          {
+            "domain": "default",
+            "utterance": "aoa",
             "intent": "greeting"
           },
           {
@@ -188,8 +695,288 @@
           },
           {
             "domain": "default",
-            "utterance": "kese ho",
+            "utterance": "kese ho aap",
             "intent": "greeting"
+          },
+          {
+            "domain": "default",
+            "utterance": "good morning",
+            "intent": "greeting"
+          },
+          {
+            "domain": "default",
+            "utterance": "good evening",
+            "intent": "greeting"
+          },
+          {
+            "domain": "default",
+            "utterance": "namaste",
+            "intent": "greeting"
+          },
+          {
+            "domain": "default",
+            "utterance": "yo fanhub",
+            "intent": "greeting"
+          },
+          {
+            "domain": "default",
+            "utterance": "hey assistant",
+            "intent": "greeting"
+          },
+          {
+            "domain": "default",
+            "utterance": "kya haal chaal",
+            "intent": "greeting"
+          },
+          {
+            "domain": "default",
+            "utterance": "kese chal raha hai",
+            "intent": "greeting"
+          },
+          {
+            "domain": "default",
+            "utterance": "hello fanhub",
+            "intent": "greeting"
+          },
+          {
+            "domain": "default",
+            "utterance": "hi bot",
+            "intent": "greeting"
+          },
+          {
+            "domain": "default",
+            "utterance": "whats up",
+            "intent": "greeting"
+          },
+          {
+            "domain": "default",
+            "utterance": "sup",
+            "intent": "greeting"
+          },
+          {
+            "domain": "default",
+            "utterance": "show me some %genre% movies",
+            "intent": "movie.genre"
+          },
+          {
+            "domain": "default",
+            "utterance": "i want to watch an %genre% movie",
+            "intent": "movie.genre"
+          },
+          {
+            "domain": "default",
+            "utterance": "koi achi %genre% movie dikhao",
+            "intent": "movie.genre"
+          },
+          {
+            "domain": "default",
+            "utterance": "mujhe %genre% dekhni hai",
+            "intent": "movie.genre"
+          },
+          {
+            "domain": "default",
+            "utterance": "give me %genre% recommendations",
+            "intent": "movie.genre"
+          },
+          {
+            "domain": "default",
+            "utterance": "recommend some %genre% films",
+            "intent": "movie.genre"
+          },
+          {
+            "domain": "default",
+            "utterance": "best %genre% shows",
+            "intent": "movie.genre"
+          },
+          {
+            "domain": "default",
+            "utterance": "koi %genre% anime ya movie batao",
+            "intent": "movie.genre"
+          },
+          {
+            "domain": "default",
+            "utterance": "%genre% category dikhao",
+            "intent": "movie.genre"
+          },
+          {
+            "domain": "default",
+            "utterance": "top %genre% movies",
+            "intent": "movie.genre"
+          },
+          {
+            "domain": "default",
+            "utterance": "i love %genre%",
+            "intent": "movie.genre"
+          },
+          {
+            "domain": "default",
+            "utterance": "watch %genre%",
+            "intent": "movie.genre"
+          },
+          {
+            "domain": "default",
+            "utterance": "find %genre% movies",
+            "intent": "movie.genre"
+          },
+          {
+            "domain": "default",
+            "utterance": "%genre% recommendations please",
+            "intent": "movie.genre"
+          },
+          {
+            "domain": "default",
+            "utterance": "show %genre% list",
+            "intent": "movie.genre"
+          },
+          {
+            "domain": "default",
+            "utterance": "kuch %genre% content dikhao",
+            "intent": "movie.genre"
+          },
+          {
+            "domain": "default",
+            "utterance": "mujhe %genre% pasand hai",
+            "intent": "movie.genre"
+          },
+          {
+            "domain": "default",
+            "utterance": "suggest %genre% series",
+            "intent": "movie.genre"
+          },
+          {
+            "domain": "default",
+            "utterance": "explore %genre%",
+            "intent": "movie.genre"
+          },
+          {
+            "domain": "default",
+            "utterance": "any good %genre% to watch",
+            "intent": "movie.genre"
+          },
+          {
+            "domain": "default",
+            "utterance": "suggest some %genre% titles",
+            "intent": "movie.genre"
+          },
+          {
+            "domain": "default",
+            "utterance": "mujhe %genre% shows dekhne hain",
+            "intent": "movie.genre"
+          },
+          {
+            "domain": "default",
+            "utterance": "search %genre% movies",
+            "intent": "movie.genre"
+          },
+          {
+            "domain": "default",
+            "utterance": "search for %movie%",
+            "intent": "movie.search"
+          },
+          {
+            "domain": "default",
+            "utterance": "find %movie%",
+            "intent": "movie.search"
+          },
+          {
+            "domain": "default",
+            "utterance": "mujhe %movie% dekhni hai",
+            "intent": "movie.search"
+          },
+          {
+            "domain": "default",
+            "utterance": "kya tumhare paas %movie% hai",
+            "intent": "movie.search"
+          },
+          {
+            "domain": "default",
+            "utterance": "i want to watch %movie%",
+            "intent": "movie.search"
+          },
+          {
+            "domain": "default",
+            "utterance": "play %movie%",
+            "intent": "movie.search"
+          },
+          {
+            "domain": "default",
+            "utterance": "stream %movie%",
+            "intent": "movie.search"
+          },
+          {
+            "domain": "default",
+            "utterance": "where can i watch %movie%",
+            "intent": "movie.search"
+          },
+          {
+            "domain": "default",
+            "utterance": "show me %movie%",
+            "intent": "movie.search"
+          },
+          {
+            "domain": "default",
+            "utterance": "kya %movie% available hai",
+            "intent": "movie.search"
+          },
+          {
+            "domain": "default",
+            "utterance": "%movie% dhundo",
+            "intent": "movie.search"
+          },
+          {
+            "domain": "default",
+            "utterance": "%movie% search karo",
+            "intent": "movie.search"
+          },
+          {
+            "domain": "default",
+            "utterance": "look up %movie%",
+            "intent": "movie.search"
+          },
+          {
+            "domain": "default",
+            "utterance": "is %movie% on fanhub",
+            "intent": "movie.search"
+          },
+          {
+            "domain": "default",
+            "utterance": "can i stream %movie%",
+            "intent": "movie.search"
+          },
+          {
+            "domain": "default",
+            "utterance": "open %movie%",
+            "intent": "movie.search"
+          },
+          {
+            "domain": "default",
+            "utterance": "give me details on %movie%",
+            "intent": "movie.search"
+          },
+          {
+            "domain": "default",
+            "utterance": "watch %movie% now",
+            "intent": "movie.search"
+          },
+          {
+            "domain": "default",
+            "utterance": "%movie% film dikhao",
+            "intent": "movie.search"
+          },
+          {
+            "domain": "default",
+            "utterance": "check %movie%",
+            "intent": "movie.search"
+          },
+          {
+            "domain": "default",
+            "utterance": "mujhe %movie% movie chahie",
+            "intent": "movie.search"
+          },
+          {
+            "domain": "default",
+            "utterance": "find title %movie%",
+            "intent": "movie.search"
           },
           {
             "domain": "default",
@@ -199,11 +986,6 @@
           {
             "domain": "default",
             "utterance": "show me trending movies",
-            "intent": "movie.trending"
-          },
-          {
-            "domain": "default",
-            "utterance": "trending",
             "intent": "movie.trending"
           },
           {
@@ -228,42 +1010,82 @@
           },
           {
             "domain": "default",
-            "utterance": "recommend something",
-            "intent": "movie.recommend"
+            "utterance": "what is popular right now",
+            "intent": "movie.trending"
           },
           {
             "domain": "default",
-            "utterance": "movie recommendation",
-            "intent": "movie.recommend"
+            "utterance": "sabse popular movies",
+            "intent": "movie.trending"
           },
           {
             "domain": "default",
-            "utterance": "kuch acha batao",
-            "intent": "movie.recommend"
+            "utterance": "top rated content",
+            "intent": "movie.trending"
           },
           {
             "domain": "default",
-            "utterance": "koi achi movie batao",
-            "intent": "movie.recommend"
+            "utterance": "trending anime",
+            "intent": "movie.trending"
           },
           {
             "domain": "default",
-            "utterance": "anime recommend karo",
-            "intent": "movie.recommend"
+            "utterance": "trending movies and series",
+            "intent": "movie.trending"
           },
           {
             "domain": "default",
-            "utterance": "content recommendations",
-            "intent": "movie.recommend"
+            "utterance": "aaj kal kya chal raha hai",
+            "intent": "movie.trending"
+          },
+          {
+            "domain": "default",
+            "utterance": "what should i watch today",
+            "intent": "movie.trending"
+          },
+          {
+            "domain": "default",
+            "utterance": "hot releases",
+            "intent": "movie.trending"
+          },
+          {
+            "domain": "default",
+            "utterance": "latest releases on fanhub",
+            "intent": "movie.trending"
+          },
+          {
+            "domain": "default",
+            "utterance": "trending list",
+            "intent": "movie.trending"
+          },
+          {
+            "domain": "default",
+            "utterance": "popular titles",
+            "intent": "movie.trending"
+          },
+          {
+            "domain": "default",
+            "utterance": "kya trending hai",
+            "intent": "movie.trending"
+          },
+          {
+            "domain": "default",
+            "utterance": "batao aaj kya naya aaya hai",
+            "intent": "movie.trending"
+          },
+          {
+            "domain": "default",
+            "utterance": "show me whats hot",
+            "intent": "movie.trending"
+          },
+          {
+            "domain": "default",
+            "utterance": "what is trending this week",
+            "intent": "movie.trending"
           },
           {
             "domain": "default",
             "utterance": "help",
-            "intent": "agent.help"
-          },
-          {
-            "domain": "default",
-            "utterance": "help with features",
             "intent": "agent.help"
           },
           {
@@ -273,18 +1095,303 @@
           },
           {
             "domain": "default",
-            "utterance": "features",
+            "utterance": "tum kya kar sakte ho",
             "intent": "agent.help"
           },
           {
             "domain": "default",
-            "utterance": "tum kya kar sakte ho",
+            "utterance": "help with features",
+            "intent": "agent.help"
+          },
+          {
+            "domain": "default",
+            "utterance": "features of fanhub",
             "intent": "agent.help"
           },
           {
             "domain": "default",
             "utterance": "yeh website kya hai",
             "intent": "agent.help"
+          },
+          {
+            "domain": "default",
+            "utterance": "how does this work",
+            "intent": "agent.help"
+          },
+          {
+            "domain": "default",
+            "utterance": "kaise use karein",
+            "intent": "agent.help"
+          },
+          {
+            "domain": "default",
+            "utterance": "platform guide",
+            "intent": "agent.help"
+          },
+          {
+            "domain": "default",
+            "utterance": "kya kya features hain",
+            "intent": "agent.help"
+          },
+          {
+            "domain": "default",
+            "utterance": "what is fanhub plus",
+            "intent": "agent.help"
+          },
+          {
+            "domain": "default",
+            "utterance": "can you guide me",
+            "intent": "agent.help"
+          },
+          {
+            "domain": "default",
+            "utterance": "help me navigate",
+            "intent": "agent.help"
+          },
+          {
+            "domain": "default",
+            "utterance": "madad chahiye",
+            "intent": "agent.help"
+          },
+          {
+            "domain": "default",
+            "utterance": "fanhub guide",
+            "intent": "agent.help"
+          },
+          {
+            "domain": "default",
+            "utterance": "assist me",
+            "intent": "agent.help"
+          },
+          {
+            "domain": "default",
+            "utterance": "what are the fandoms",
+            "intent": "agent.help"
+          },
+          {
+            "domain": "default",
+            "utterance": "tell me about fan hub",
+            "intent": "agent.help"
+          },
+          {
+            "domain": "default",
+            "utterance": "system features",
+            "intent": "agent.help"
+          },
+          {
+            "domain": "default",
+            "utterance": "options available",
+            "intent": "agent.help"
+          },
+          {
+            "domain": "default",
+            "utterance": "tell me about characters",
+            "intent": "fandom.lore"
+          },
+          {
+            "domain": "default",
+            "utterance": "character dossiers",
+            "intent": "fandom.lore"
+          },
+          {
+            "domain": "default",
+            "utterance": "who is gojo",
+            "intent": "fandom.lore"
+          },
+          {
+            "domain": "default",
+            "utterance": "johnny silverhand",
+            "intent": "fandom.lore"
+          },
+          {
+            "domain": "default",
+            "utterance": "malenia lore",
+            "intent": "fandom.lore"
+          },
+          {
+            "domain": "default",
+            "utterance": "anime lore",
+            "intent": "fandom.lore"
+          },
+          {
+            "domain": "default",
+            "utterance": "fandom articles",
+            "intent": "fandom.lore"
+          },
+          {
+            "domain": "default",
+            "utterance": "read lore",
+            "intent": "fandom.lore"
+          },
+          {
+            "domain": "default",
+            "utterance": "characters kahan hain",
+            "intent": "fandom.lore"
+          },
+          {
+            "domain": "default",
+            "utterance": "lore articles dikhao",
+            "intent": "fandom.lore"
+          },
+          {
+            "domain": "default",
+            "utterance": "character powers and abilities",
+            "intent": "fandom.lore"
+          },
+          {
+            "domain": "default",
+            "utterance": "community submissions",
+            "intent": "fandom.lore"
+          },
+          {
+            "domain": "default",
+            "utterance": "tell me character stories",
+            "intent": "fandom.lore"
+          },
+          {
+            "domain": "default",
+            "utterance": "music",
+            "intent": "fandom.audio"
+          },
+          {
+            "domain": "default",
+            "utterance": "audio player",
+            "intent": "fandom.audio"
+          },
+          {
+            "domain": "default",
+            "utterance": "soundtracks",
+            "intent": "fandom.audio"
+          },
+          {
+            "domain": "default",
+            "utterance": "anime ost",
+            "intent": "fandom.audio"
+          },
+          {
+            "domain": "default",
+            "utterance": "listen to songs",
+            "intent": "fandom.audio"
+          },
+          {
+            "domain": "default",
+            "utterance": "gaming ost",
+            "intent": "fandom.audio"
+          },
+          {
+            "domain": "default",
+            "utterance": "gaane sunne hain",
+            "intent": "fandom.audio"
+          },
+          {
+            "domain": "default",
+            "utterance": "music player kahan hai",
+            "intent": "fandom.audio"
+          },
+          {
+            "domain": "default",
+            "utterance": "turntable",
+            "intent": "fandom.audio"
+          },
+          {
+            "domain": "default",
+            "utterance": "cyberpunk soundtrack",
+            "intent": "fandom.audio"
+          },
+          {
+            "domain": "default",
+            "utterance": "bgm player",
+            "intent": "fandom.audio"
+          },
+          {
+            "domain": "default",
+            "utterance": "conventions",
+            "intent": "fandom.events"
+          },
+          {
+            "domain": "default",
+            "utterance": "comic con",
+            "intent": "fandom.events"
+          },
+          {
+            "domain": "default",
+            "utterance": "events near me",
+            "intent": "fandom.events"
+          },
+          {
+            "domain": "default",
+            "utterance": "upcoming events",
+            "intent": "fandom.events"
+          },
+          {
+            "domain": "default",
+            "utterance": "anime convention",
+            "intent": "fandom.events"
+          },
+          {
+            "domain": "default",
+            "utterance": "events calendar",
+            "intent": "fandom.events"
+          },
+          {
+            "domain": "default",
+            "utterance": "events kahan hain",
+            "intent": "fandom.events"
+          },
+          {
+            "domain": "default",
+            "utterance": "comic con pakistan",
+            "intent": "fandom.events"
+          },
+          {
+            "domain": "default",
+            "utterance": "cosplay meetup",
+            "intent": "fandom.events"
+          },
+          {
+            "domain": "default",
+            "utterance": "find conventions",
+            "intent": "fandom.events"
+          },
+          {
+            "domain": "default",
+            "utterance": "blah blah",
+            "intent": "fallback"
+          },
+          {
+            "domain": "default",
+            "utterance": "asdfgh",
+            "intent": "fallback"
+          },
+          {
+            "domain": "default",
+            "utterance": "random stuff",
+            "intent": "fallback"
+          },
+          {
+            "domain": "default",
+            "utterance": "kuch bhi",
+            "intent": "fallback"
+          },
+          {
+            "domain": "default",
+            "utterance": "ye kya hai",
+            "intent": "fallback"
+          },
+          {
+            "domain": "default",
+            "utterance": "xyz",
+            "intent": "fallback"
+          },
+          {
+            "domain": "default",
+            "utterance": "gibberish",
+            "intent": "fallback"
+          },
+          {
+            "domain": "default",
+            "utterance": "qwerty",
+            "intent": "fallback"
           }
         ],
         "domains": {
@@ -304,69 +1411,315 @@
               "hello": 1,
               "hi": 1,
               "hey": 1,
+              "there": 1,
               "salam": 1,
               "assalam": 1,
               "o": 1,
               "alaikum": 1,
+              "aoa": 1,
               "kya": 1,
               "haal": 1,
               "hai": 1,
               "kais": 1,
               "ho": 1,
               "kese": 1,
+              "aap": 1,
+              "good": 1,
+              "morn": 1,
+              "even": 1,
+              "namast": 1,
+              "yo": 1,
+              "fanhub": 1,
+              "assist": 1,
+              "chaal": 1,
+              "chal": 1,
+              "raha": 1,
+              "bot": 1,
               "what": 1,
-              "trend": 1,
+              "up": 1,
+              "sup": 1,
               "show": 1,
               "me": 1,
+              "some": 1,
+              "%genre%": 1,
               "movi": 1,
-              "aaj": 1,
-              "dekhu": 1,
-              "top": 1,
-              "dikhao": 1,
-              "naya": 1,
-              "recommend": 1,
-              "someth": 1,
-              "kuch": 1,
-              "acha": 1,
-              "batao": 1,
+              "i": 1,
+              "want": 1,
+              "to": 1,
+              "watch": 1,
+              "an": 1,
               "koi": 1,
               "achi": 1,
+              "dikhao": 1,
+              "mujh": 1,
+              "dekhni": 1,
+              "give": 1,
+              "recommend": 1,
+              "film": 1,
+              "best": 1,
               "anim": 1,
-              "karo": 1,
+              "ya": 1,
+              "batao": 1,
+              "categori": 1,
+              "top": 1,
+              "love": 1,
+              "find": 1,
+              "pleas": 1,
+              "list": 1,
+              "kuch": 1,
               "content": 1,
-              "help": 1,
-              "with": 1,
-              "featur": 1,
+              "pasand": 1,
+              "suggest": 1,
+              "seri": 1,
+              "explor": 1,
+              "ani": 1,
+              "titl": 1,
+              "dekhn": 1,
+              "hain": 1,
+              "search": 1,
+              "for": 1,
+              "%movie%": 1,
+              "tumhar": 1,
+              "paa": 1,
+              "play": 1,
+              "stream": 1,
+              "where": 1,
               "can": 1,
+              "avail": 1,
+              "dhundo": 1,
+              "karo": 1,
+              "look": 1,
+              "is": 1,
+              "on": 1,
+              "open": 1,
+              "detail": 1,
+              "now": 1,
+              "check": 1,
+              "chahi": 1,
+              "trend": 1,
+              "aaj": 1,
+              "dekhu": 1,
+              "naya": 1,
+              "popular": 1,
+              "right": 1,
+              "sabs": 1,
+              "rate": 1,
+              "and": 1,
+              "kal": 1,
+              "should": 1,
+              "today": 1,
+              "hot": 1,
+              "releas": 1,
+              "latest": 1,
+              "aaya": 1,
+              "this": 1,
+              "week": 1,
+              "help": 1,
               "you": 1,
               "do": 1,
               "tum": 1,
               "kar": 1,
               "sakt": 1,
+              "with": 1,
+              "featur": 1,
+              "of": 1,
               "yeh": 1,
-              "websit": 1
+              "websit": 1,
+              "how": 1,
+              "doe": 1,
+              "work": 1,
+              "use": 1,
+              "karein": 1,
+              "platform": 1,
+              "guid": 1,
+              "plus": 1,
+              "navig": 1,
+              "madad": 1,
+              "chahiy": 1,
+              "are": 1,
+              "the": 1,
+              "fandom": 1,
+              "tell": 1,
+              "about": 1,
+              "fan": 1,
+              "hub": 1,
+              "system": 1,
+              "option": 1,
+              "charact": 1,
+              "dossier": 1,
+              "who": 1,
+              "gojo": 1,
+              "johnni": 1,
+              "silverhand": 1,
+              "malenia": 1,
+              "lore": 1,
+              "articl": 1,
+              "read": 1,
+              "kahan": 1,
+              "power": 1,
+              "abil": 1,
+              "communiti": 1,
+              "submiss": 1,
+              "stori": 1,
+              "music": 1,
+              "audio": 1,
+              "player": 1,
+              "soundtrack": 1,
+              "ost": 1,
+              "listen": 1,
+              "song": 1,
+              "game": 1,
+              "gaan": 1,
+              "sunn": 1,
+              "turntabl": 1,
+              "cyberpunk": 1,
+              "bgm": 1,
+              "convent": 1,
+              "comic": 1,
+              "con": 1,
+              "event": 1,
+              "near": 1,
+              "upcom": 1,
+              "calendar": 1,
+              "pakistan": 1,
+              "cosplay": 1,
+              "meetup": 1,
+              "blah": 1,
+              "asdfgh": 1,
+              "random": 1,
+              "stuff": 1,
+              "bhi": 1,
+              "ye": 1,
+              "xyz": 1,
+              "gibberish": 1,
+              "qwerti": 1
             },
             "intents": {
               "greeting": 1,
+              "movie.genre": 1,
+              "movie.search": 1,
               "movie.trending": 1,
-              "movie.recommend": 1,
-              "agent.help": 1
+              "agent.help": 1,
+              "fandom.lore": 1,
+              "fandom.audio": 1,
+              "fandom.events": 1,
+              "fallback": 1
             },
             "intentFeatures": {
               "greeting": {
                 "hello": 1,
                 "hi": 1,
                 "hey": 1,
+                "there": 1,
                 "salam": 1,
                 "assalam": 1,
                 "o": 1,
                 "alaikum": 1,
+                "aoa": 1,
                 "kya": 1,
                 "haal": 1,
                 "hai": 1,
                 "kais": 1,
                 "ho": 1,
-                "kese": 1
+                "kese": 1,
+                "aap": 1,
+                "good": 1,
+                "morn": 1,
+                "even": 1,
+                "namast": 1,
+                "yo": 1,
+                "fanhub": 1,
+                "assist": 1,
+                "chaal": 1,
+                "chal": 1,
+                "raha": 1,
+                "bot": 1,
+                "what": 1,
+                "up": 1,
+                "sup": 1
+              },
+              "movie.genre": {
+                "show": 1,
+                "me": 1,
+                "some": 1,
+                "%genre%": 1,
+                "movi": 1,
+                "i": 1,
+                "want": 1,
+                "to": 1,
+                "watch": 1,
+                "an": 1,
+                "koi": 1,
+                "achi": 1,
+                "dikhao": 1,
+                "mujh": 1,
+                "dekhni": 1,
+                "hai": 1,
+                "give": 1,
+                "recommend": 1,
+                "film": 1,
+                "best": 1,
+                "anim": 1,
+                "ya": 1,
+                "batao": 1,
+                "categori": 1,
+                "top": 1,
+                "love": 1,
+                "find": 1,
+                "pleas": 1,
+                "list": 1,
+                "kuch": 1,
+                "content": 1,
+                "pasand": 1,
+                "suggest": 1,
+                "seri": 1,
+                "explor": 1,
+                "ani": 1,
+                "good": 1,
+                "titl": 1,
+                "dekhn": 1,
+                "hain": 1,
+                "search": 1
+              },
+              "movie.search": {
+                "search": 1,
+                "for": 1,
+                "%movie%": 1,
+                "find": 1,
+                "mujh": 1,
+                "dekhni": 1,
+                "hai": 1,
+                "kya": 1,
+                "tumhar": 1,
+                "paa": 1,
+                "i": 1,
+                "want": 1,
+                "to": 1,
+                "watch": 1,
+                "play": 1,
+                "stream": 1,
+                "where": 1,
+                "can": 1,
+                "show": 1,
+                "me": 1,
+                "avail": 1,
+                "dhundo": 1,
+                "karo": 1,
+                "look": 1,
+                "up": 1,
+                "is": 1,
+                "on": 1,
+                "fanhub": 1,
+                "open": 1,
+                "give": 1,
+                "detail": 1,
+                "now": 1,
+                "film": 1,
+                "dikhao": 1,
+                "check": 1,
+                "movi": 1,
+                "chahi": 1,
+                "titl": 1
               },
               "movie.trending": {
                 "what": 1,
@@ -380,25 +1733,38 @@
                 "top": 1,
                 "dikhao": 1,
                 "naya": 1,
-                "hai": 1
-              },
-              "movie.recommend": {
-                "recommend": 1,
-                "someth": 1,
-                "movi": 1,
-                "kuch": 1,
-                "acha": 1,
-                "batao": 1,
-                "koi": 1,
-                "achi": 1,
+                "hai": 1,
+                "is": 1,
+                "popular": 1,
+                "right": 1,
+                "now": 1,
+                "sabs": 1,
+                "rate": 1,
+                "content": 1,
                 "anim": 1,
-                "karo": 1,
-                "content": 1
+                "and": 1,
+                "seri": 1,
+                "kal": 1,
+                "chal": 1,
+                "raha": 1,
+                "should": 1,
+                "i": 1,
+                "watch": 1,
+                "today": 1,
+                "hot": 1,
+                "releas": 1,
+                "latest": 1,
+                "on": 1,
+                "fanhub": 1,
+                "list": 1,
+                "titl": 1,
+                "batao": 1,
+                "aaya": 1,
+                "this": 1,
+                "week": 1
               },
               "agent.help": {
                 "help": 1,
-                "with": 1,
-                "featur": 1,
                 "what": 1,
                 "can": 1,
                 "you": 1,
@@ -408,9 +1774,118 @@
                 "kar": 1,
                 "sakt": 1,
                 "ho": 1,
+                "with": 1,
+                "featur": 1,
+                "of": 1,
+                "fanhub": 1,
                 "yeh": 1,
                 "websit": 1,
-                "hai": 1
+                "hai": 1,
+                "how": 1,
+                "doe": 1,
+                "this": 1,
+                "work": 1,
+                "kais": 1,
+                "use": 1,
+                "karein": 1,
+                "platform": 1,
+                "guid": 1,
+                "hain": 1,
+                "is": 1,
+                "plus": 1,
+                "me": 1,
+                "navig": 1,
+                "madad": 1,
+                "chahiy": 1,
+                "assist": 1,
+                "are": 1,
+                "the": 1,
+                "fandom": 1,
+                "tell": 1,
+                "about": 1,
+                "fan": 1,
+                "hub": 1,
+                "system": 1,
+                "option": 1,
+                "avail": 1
+              },
+              "fandom.lore": {
+                "tell": 1,
+                "me": 1,
+                "about": 1,
+                "charact": 1,
+                "dossier": 1,
+                "who": 1,
+                "is": 1,
+                "gojo": 1,
+                "johnni": 1,
+                "silverhand": 1,
+                "malenia": 1,
+                "lore": 1,
+                "anim": 1,
+                "fandom": 1,
+                "articl": 1,
+                "read": 1,
+                "kahan": 1,
+                "hain": 1,
+                "dikhao": 1,
+                "power": 1,
+                "and": 1,
+                "abil": 1,
+                "communiti": 1,
+                "submiss": 1,
+                "stori": 1
+              },
+              "fandom.audio": {
+                "music": 1,
+                "audio": 1,
+                "player": 1,
+                "soundtrack": 1,
+                "anim": 1,
+                "ost": 1,
+                "listen": 1,
+                "to": 1,
+                "song": 1,
+                "game": 1,
+                "gaan": 1,
+                "sunn": 1,
+                "hain": 1,
+                "kahan": 1,
+                "hai": 1,
+                "turntabl": 1,
+                "cyberpunk": 1,
+                "bgm": 1
+              },
+              "fandom.events": {
+                "convent": 1,
+                "comic": 1,
+                "con": 1,
+                "event": 1,
+                "near": 1,
+                "me": 1,
+                "upcom": 1,
+                "anim": 1,
+                "calendar": 1,
+                "kahan": 1,
+                "hain": 1,
+                "pakistan": 1,
+                "cosplay": 1,
+                "meetup": 1,
+                "find": 1
+              },
+              "fallback": {
+                "blah": 1,
+                "asdfgh": 1,
+                "random": 1,
+                "stuff": 1,
+                "kuch": 1,
+                "bhi": 1,
+                "ye": 1,
+                "kya": 1,
+                "hai": 1,
+                "xyz": 1,
+                "gibberish": 1,
+                "qwerti": 1
               }
             },
             "featuresToIntent": {
@@ -421,6 +1896,9 @@
                 "greeting"
               ],
               "hey": [
+                "greeting"
+              ],
+              "there": [
                 "greeting"
               ],
               "salam": [
@@ -435,21 +1913,31 @@
               "alaikum": [
                 "greeting"
               ],
+              "aoa": [
+                "greeting"
+              ],
               "kya": [
                 "greeting",
+                "movie.search",
                 "movie.trending",
-                "agent.help"
+                "agent.help",
+                "fallback"
               ],
               "haal": [
                 "greeting"
               ],
               "hai": [
                 "greeting",
+                "movie.genre",
+                "movie.search",
                 "movie.trending",
-                "agent.help"
+                "agent.help",
+                "fandom.audio",
+                "fallback"
               ],
               "kais": [
-                "greeting"
+                "greeting",
+                "agent.help"
               ],
               "ho": [
                 "greeting",
@@ -458,22 +1946,286 @@
               "kese": [
                 "greeting"
               ],
-              "what": [
+              "aap": [
+                "greeting"
+              ],
+              "good": [
+                "greeting",
+                "movie.genre"
+              ],
+              "morn": [
+                "greeting"
+              ],
+              "even": [
+                "greeting"
+              ],
+              "namast": [
+                "greeting"
+              ],
+              "yo": [
+                "greeting"
+              ],
+              "fanhub": [
+                "greeting",
+                "movie.search",
                 "movie.trending",
                 "agent.help"
               ],
-              "trend": [
+              "assist": [
+                "greeting",
+                "agent.help"
+              ],
+              "chaal": [
+                "greeting"
+              ],
+              "chal": [
+                "greeting",
                 "movie.trending"
               ],
+              "raha": [
+                "greeting",
+                "movie.trending"
+              ],
+              "bot": [
+                "greeting"
+              ],
+              "what": [
+                "greeting",
+                "movie.trending",
+                "agent.help"
+              ],
+              "up": [
+                "greeting",
+                "movie.search"
+              ],
+              "sup": [
+                "greeting"
+              ],
               "show": [
+                "movie.genre",
+                "movie.search",
                 "movie.trending"
               ],
               "me": [
-                "movie.trending"
+                "movie.genre",
+                "movie.search",
+                "movie.trending",
+                "agent.help",
+                "fandom.lore",
+                "fandom.events"
+              ],
+              "some": [
+                "movie.genre"
+              ],
+              "%genre%": [
+                "movie.genre"
               ],
               "movi": [
+                "movie.genre",
+                "movie.search",
+                "movie.trending"
+              ],
+              "i": [
+                "movie.genre",
+                "movie.search",
+                "movie.trending"
+              ],
+              "want": [
+                "movie.genre",
+                "movie.search"
+              ],
+              "to": [
+                "movie.genre",
+                "movie.search",
+                "fandom.audio"
+              ],
+              "watch": [
+                "movie.genre",
+                "movie.search",
+                "movie.trending"
+              ],
+              "an": [
+                "movie.genre"
+              ],
+              "koi": [
+                "movie.genre"
+              ],
+              "achi": [
+                "movie.genre"
+              ],
+              "dikhao": [
+                "movie.genre",
+                "movie.search",
                 "movie.trending",
-                "movie.recommend"
+                "fandom.lore"
+              ],
+              "mujh": [
+                "movie.genre",
+                "movie.search"
+              ],
+              "dekhni": [
+                "movie.genre",
+                "movie.search"
+              ],
+              "give": [
+                "movie.genre",
+                "movie.search"
+              ],
+              "recommend": [
+                "movie.genre"
+              ],
+              "film": [
+                "movie.genre",
+                "movie.search"
+              ],
+              "best": [
+                "movie.genre"
+              ],
+              "anim": [
+                "movie.genre",
+                "movie.trending",
+                "fandom.lore",
+                "fandom.audio",
+                "fandom.events"
+              ],
+              "ya": [
+                "movie.genre"
+              ],
+              "batao": [
+                "movie.genre",
+                "movie.trending"
+              ],
+              "categori": [
+                "movie.genre"
+              ],
+              "top": [
+                "movie.genre",
+                "movie.trending"
+              ],
+              "love": [
+                "movie.genre"
+              ],
+              "find": [
+                "movie.genre",
+                "movie.search",
+                "fandom.events"
+              ],
+              "pleas": [
+                "movie.genre"
+              ],
+              "list": [
+                "movie.genre",
+                "movie.trending"
+              ],
+              "kuch": [
+                "movie.genre",
+                "fallback"
+              ],
+              "content": [
+                "movie.genre",
+                "movie.trending"
+              ],
+              "pasand": [
+                "movie.genre"
+              ],
+              "suggest": [
+                "movie.genre"
+              ],
+              "seri": [
+                "movie.genre",
+                "movie.trending"
+              ],
+              "explor": [
+                "movie.genre"
+              ],
+              "ani": [
+                "movie.genre"
+              ],
+              "titl": [
+                "movie.genre",
+                "movie.search",
+                "movie.trending"
+              ],
+              "dekhn": [
+                "movie.genre"
+              ],
+              "hain": [
+                "movie.genre",
+                "agent.help",
+                "fandom.lore",
+                "fandom.audio",
+                "fandom.events"
+              ],
+              "search": [
+                "movie.genre",
+                "movie.search"
+              ],
+              "for": [
+                "movie.search"
+              ],
+              "%movie%": [
+                "movie.search"
+              ],
+              "tumhar": [
+                "movie.search"
+              ],
+              "paa": [
+                "movie.search"
+              ],
+              "play": [
+                "movie.search"
+              ],
+              "stream": [
+                "movie.search"
+              ],
+              "where": [
+                "movie.search"
+              ],
+              "can": [
+                "movie.search",
+                "agent.help"
+              ],
+              "avail": [
+                "movie.search",
+                "agent.help"
+              ],
+              "dhundo": [
+                "movie.search"
+              ],
+              "karo": [
+                "movie.search"
+              ],
+              "look": [
+                "movie.search"
+              ],
+              "is": [
+                "movie.search",
+                "movie.trending",
+                "agent.help",
+                "fandom.lore"
+              ],
+              "on": [
+                "movie.search",
+                "movie.trending"
+              ],
+              "open": [
+                "movie.search"
+              ],
+              "detail": [
+                "movie.search"
+              ],
+              "now": [
+                "movie.search",
+                "movie.trending"
+              ],
+              "check": [
+                "movie.search"
+              ],
+              "chahi": [
+                "movie.search"
+              ],
+              "trend": [
+                "movie.trending"
               ],
               "aaj": [
                 "movie.trending"
@@ -481,55 +2233,54 @@
               "dekhu": [
                 "movie.trending"
               ],
-              "top": [
-                "movie.trending"
-              ],
-              "dikhao": [
-                "movie.trending"
-              ],
               "naya": [
                 "movie.trending"
               ],
-              "recommend": [
-                "movie.recommend"
+              "popular": [
+                "movie.trending"
               ],
-              "someth": [
-                "movie.recommend"
+              "right": [
+                "movie.trending"
               ],
-              "kuch": [
-                "movie.recommend"
+              "sabs": [
+                "movie.trending"
               ],
-              "acha": [
-                "movie.recommend"
+              "rate": [
+                "movie.trending"
               ],
-              "batao": [
-                "movie.recommend"
+              "and": [
+                "movie.trending",
+                "fandom.lore"
               ],
-              "koi": [
-                "movie.recommend"
+              "kal": [
+                "movie.trending"
               ],
-              "achi": [
-                "movie.recommend"
+              "should": [
+                "movie.trending"
               ],
-              "anim": [
-                "movie.recommend"
+              "today": [
+                "movie.trending"
               ],
-              "karo": [
-                "movie.recommend"
+              "hot": [
+                "movie.trending"
               ],
-              "content": [
-                "movie.recommend"
+              "releas": [
+                "movie.trending"
+              ],
+              "latest": [
+                "movie.trending"
+              ],
+              "aaya": [
+                "movie.trending"
+              ],
+              "this": [
+                "movie.trending",
+                "agent.help"
+              ],
+              "week": [
+                "movie.trending"
               ],
               "help": [
-                "agent.help"
-              ],
-              "with": [
-                "agent.help"
-              ],
-              "featur": [
-                "agent.help"
-              ],
-              "can": [
                 "agent.help"
               ],
               "you": [
@@ -547,11 +2298,229 @@
               "sakt": [
                 "agent.help"
               ],
+              "with": [
+                "agent.help"
+              ],
+              "featur": [
+                "agent.help"
+              ],
+              "of": [
+                "agent.help"
+              ],
               "yeh": [
                 "agent.help"
               ],
               "websit": [
                 "agent.help"
+              ],
+              "how": [
+                "agent.help"
+              ],
+              "doe": [
+                "agent.help"
+              ],
+              "work": [
+                "agent.help"
+              ],
+              "use": [
+                "agent.help"
+              ],
+              "karein": [
+                "agent.help"
+              ],
+              "platform": [
+                "agent.help"
+              ],
+              "guid": [
+                "agent.help"
+              ],
+              "plus": [
+                "agent.help"
+              ],
+              "navig": [
+                "agent.help"
+              ],
+              "madad": [
+                "agent.help"
+              ],
+              "chahiy": [
+                "agent.help"
+              ],
+              "are": [
+                "agent.help"
+              ],
+              "the": [
+                "agent.help"
+              ],
+              "fandom": [
+                "agent.help",
+                "fandom.lore"
+              ],
+              "tell": [
+                "agent.help",
+                "fandom.lore"
+              ],
+              "about": [
+                "agent.help",
+                "fandom.lore"
+              ],
+              "fan": [
+                "agent.help"
+              ],
+              "hub": [
+                "agent.help"
+              ],
+              "system": [
+                "agent.help"
+              ],
+              "option": [
+                "agent.help"
+              ],
+              "charact": [
+                "fandom.lore"
+              ],
+              "dossier": [
+                "fandom.lore"
+              ],
+              "who": [
+                "fandom.lore"
+              ],
+              "gojo": [
+                "fandom.lore"
+              ],
+              "johnni": [
+                "fandom.lore"
+              ],
+              "silverhand": [
+                "fandom.lore"
+              ],
+              "malenia": [
+                "fandom.lore"
+              ],
+              "lore": [
+                "fandom.lore"
+              ],
+              "articl": [
+                "fandom.lore"
+              ],
+              "read": [
+                "fandom.lore"
+              ],
+              "kahan": [
+                "fandom.lore",
+                "fandom.audio",
+                "fandom.events"
+              ],
+              "power": [
+                "fandom.lore"
+              ],
+              "abil": [
+                "fandom.lore"
+              ],
+              "communiti": [
+                "fandom.lore"
+              ],
+              "submiss": [
+                "fandom.lore"
+              ],
+              "stori": [
+                "fandom.lore"
+              ],
+              "music": [
+                "fandom.audio"
+              ],
+              "audio": [
+                "fandom.audio"
+              ],
+              "player": [
+                "fandom.audio"
+              ],
+              "soundtrack": [
+                "fandom.audio"
+              ],
+              "ost": [
+                "fandom.audio"
+              ],
+              "listen": [
+                "fandom.audio"
+              ],
+              "song": [
+                "fandom.audio"
+              ],
+              "game": [
+                "fandom.audio"
+              ],
+              "gaan": [
+                "fandom.audio"
+              ],
+              "sunn": [
+                "fandom.audio"
+              ],
+              "turntabl": [
+                "fandom.audio"
+              ],
+              "cyberpunk": [
+                "fandom.audio"
+              ],
+              "bgm": [
+                "fandom.audio"
+              ],
+              "convent": [
+                "fandom.events"
+              ],
+              "comic": [
+                "fandom.events"
+              ],
+              "con": [
+                "fandom.events"
+              ],
+              "event": [
+                "fandom.events"
+              ],
+              "near": [
+                "fandom.events"
+              ],
+              "upcom": [
+                "fandom.events"
+              ],
+              "calendar": [
+                "fandom.events"
+              ],
+              "pakistan": [
+                "fandom.events"
+              ],
+              "cosplay": [
+                "fandom.events"
+              ],
+              "meetup": [
+                "fandom.events"
+              ],
+              "blah": [
+                "fallback"
+              ],
+              "asdfgh": [
+                "fallback"
+              ],
+              "random": [
+                "fallback"
+              ],
+              "stuff": [
+                "fallback"
+              ],
+              "bhi": [
+                "fallback"
+              ],
+              "ye": [
+                "fallback"
+              ],
+              "xyz": [
+                "fallback"
+              ],
+              "gibberish": [
+                "fallback"
+              ],
+              "qwerti": [
+                "fallback"
               ]
             },
             "neuralNetwork": {
@@ -563,249 +2532,1898 @@
                 "nonedeltaMultiplier": 1.2,
                 "spellCheck": false,
                 "spellCheckDistance": 1,
-                "filterZeros": true,
-                "log": true
+                "filterZeros": true
               },
               "features": [
                 "hello",
                 "hi",
                 "hey",
+                "there",
                 "salam",
                 "assalam",
                 "o",
                 "alaikum",
+                "aoa",
                 "kya",
                 "haal",
                 "hai",
                 "kais",
                 "ho",
                 "kese",
+                "aap",
+                "good",
+                "morn",
+                "even",
+                "namast",
+                "yo",
+                "fanhub",
+                "assist",
+                "chaal",
+                "chal",
+                "raha",
+                "bot",
                 "what",
-                "trend",
+                "up",
+                "sup",
                 "show",
                 "me",
+                "some",
+                "%genre%",
                 "movi",
-                "aaj",
-                "dekhu",
-                "top",
-                "dikhao",
-                "naya",
-                "recommend",
-                "someth",
-                "kuch",
-                "acha",
-                "batao",
+                "i",
+                "want",
+                "to",
+                "watch",
+                "an",
                 "koi",
                 "achi",
+                "dikhao",
+                "mujh",
+                "dekhni",
+                "give",
+                "recommend",
+                "film",
+                "best",
                 "anim",
-                "karo",
+                "ya",
+                "batao",
+                "categori",
+                "top",
+                "love",
+                "find",
+                "pleas",
+                "list",
+                "kuch",
                 "content",
-                "help",
-                "with",
-                "featur",
+                "pasand",
+                "suggest",
+                "seri",
+                "explor",
+                "ani",
+                "titl",
+                "dekhn",
+                "hain",
+                "search",
+                "for",
+                "%movie%",
+                "tumhar",
+                "paa",
+                "play",
+                "stream",
+                "where",
                 "can",
+                "avail",
+                "dhundo",
+                "karo",
+                "look",
+                "is",
+                "on",
+                "open",
+                "detail",
+                "now",
+                "check",
+                "chahi",
+                "trend",
+                "aaj",
+                "dekhu",
+                "naya",
+                "popular",
+                "right",
+                "sabs",
+                "rate",
+                "and",
+                "kal",
+                "should",
+                "today",
+                "hot",
+                "releas",
+                "latest",
+                "aaya",
+                "this",
+                "week",
+                "help",
                 "you",
                 "do",
                 "tum",
                 "kar",
                 "sakt",
+                "with",
+                "featur",
+                "of",
                 "yeh",
-                "websit"
+                "websit",
+                "how",
+                "doe",
+                "work",
+                "use",
+                "karein",
+                "platform",
+                "guid",
+                "plus",
+                "navig",
+                "madad",
+                "chahiy",
+                "are",
+                "the",
+                "fandom",
+                "tell",
+                "about",
+                "fan",
+                "hub",
+                "system",
+                "option",
+                "charact",
+                "dossier",
+                "who",
+                "gojo",
+                "johnni",
+                "silverhand",
+                "malenia",
+                "lore",
+                "articl",
+                "read",
+                "kahan",
+                "power",
+                "abil",
+                "communiti",
+                "submiss",
+                "stori",
+                "music",
+                "audio",
+                "player",
+                "soundtrack",
+                "ost",
+                "listen",
+                "song",
+                "game",
+                "gaan",
+                "sunn",
+                "turntabl",
+                "cyberpunk",
+                "bgm",
+                "convent",
+                "comic",
+                "con",
+                "event",
+                "near",
+                "upcom",
+                "calendar",
+                "pakistan",
+                "cosplay",
+                "meetup",
+                "blah",
+                "asdfgh",
+                "random",
+                "stuff",
+                "bhi",
+                "ye",
+                "xyz",
+                "gibberish",
+                "qwerti"
               ],
               "intents": [
                 "greeting",
+                "movie.genre",
+                "movie.search",
                 "movie.trending",
-                "movie.recommend",
-                "agent.help"
+                "agent.help",
+                "fandom.lore",
+                "fandom.audio",
+                "fandom.events",
+                "fallback"
               ],
               "perceptrons": [
                 [
-                  8.13673210144043,
-                  8.136613845825195,
-                  8.136140823364258,
-                  8.135580062866211,
-                  2.712355136871338,
-                  2.712355136871338,
-                  2.712355136871338,
-                  -2.7504336833953857,
-                  9.231954574584961,
-                  1.6542681455612183,
-                  3.594653606414795,
-                  4.542359828948975,
-                  3.594479560852051,
-                  -2.4331483840942383,
-                  -6.148654937744141,
-                  -1.349806547164917,
-                  -0.4418111741542816,
-                  -3.0865366458892822,
-                  -1.749435305595398,
-                  -1.749435305595398,
-                  -1.5605666637420654,
-                  -1.5605666637420654,
-                  -5.051626682281494,
-                  -4.609083652496338,
-                  -1.6412230730056763,
-                  -1.8900138139724731,
-                  -1.8900138139724731,
-                  -2.3891563415527344,
-                  -0.47931963205337524,
-                  -0.47931963205337524,
-                  -0.9287437796592712,
-                  -0.9287437796592712,
-                  -1.551446557044983,
-                  -6.147075653076172,
-                  -0.7994915246963501,
-                  -6.146317005157471,
-                  -1.2384967803955078,
-                  -1.2384967803955078,
-                  -1.2384967803955078,
-                  -2.6467864513397217,
-                  -2.6467864513397217,
-                  -2.6467864513397217,
-                  -2.5260884761810303,
-                  -2.5260884761810303,
-                  6.148473991660282
+                  10.353163719177246,
+                  10.559280395507812,
+                  10.534806251525879,
+                  0.49496322870254517,
+                  10.833234786987305,
+                  3.6196694374084473,
+                  3.6196694374084473,
+                  3.6196694374084473,
+                  10.817131042480469,
+                  -2.927373170852661,
+                  11.646651268005371,
+                  1.98587167263031,
+                  4.577986717224121,
+                  6.185875415802002,
+                  4.66604471206665,
+                  0.035858046263456345,
+                  7.030791759490967,
+                  3.8195812702178955,
+                  3.8155109882354736,
+                  10.768447875976562,
+                  9.66930866241455,
+                  0.9137812256813049,
+                  0.3313728868961334,
+                  2.177388906478882,
+                  2.083193778991699,
+                  2.083193778991699,
+                  0.47823137044906616,
+                  1.9929991960525513,
+                  8.659418106079102,
+                  10.72140884399414,
+                  -1.8893166780471802,
+                  -3.7611336708068848,
+                  -0.9567568898200989,
+                  -6.660893440246582,
+                  -3.042109727859497,
+                  -1.7388861179351807,
+                  -0.5011051297187805,
+                  -2.036952018737793,
+                  -2.3088111877441406,
+                  -0.2956945300102234,
+                  -0.4440763592720032,
+                  -0.2442808896303177,
+                  -1.3868225812911987,
+                  -1.2822438478469849,
+                  -1.0123207569122314,
+                  -0.3288255035877228,
+                  -0.9650440216064453,
+                  -0.27998727560043335,
+                  -0.27379152178764343,
+                  -1.817487120628357,
+                  -0.07765501737594604,
+                  -0.2008151262998581,
+                  -0.23880629241466522,
+                  -2.0221033096313477,
+                  -0.18655720353126526,
+                  -1.1525235176086426,
+                  -0.12936809659004211,
+                  -0.8201994895935059,
+                  -1.7694995403289795,
+                  -1.5397390127182007,
+                  -0.15510441362857819,
+                  -0.21483080089092255,
+                  -0.2644891142845154,
+                  -0.23516395688056946,
+                  -0.5804262757301331,
+                  -1.5121065378189087,
+                  0,
+                  -1.5413819551467896,
+                  -0.8906357288360596,
+                  -0.621082603931427,
+                  -8.862197875976562,
+                  -0.47545772790908813,
+                  -0.47545772790908813,
+                  -0.4261830449104309,
+                  -0.43601545691490173,
+                  -0.032594069838523865,
+                  -1.8654344081878662,
+                  -2.0273778438568115,
+                  -0.3201485872268677,
+                  -0.14388510584831238,
+                  -3.159468412399292,
+                  -4.070215702056885,
+                  -1.6657930612564087,
+                  -0.17854146659374237,
+                  0,
+                  -0.6747133135795593,
+                  -0.15040655434131622,
+                  0,
+                  -5.3189592361450195,
+                  -4.102306365966797,
+                  -1.3088282346725464,
+                  -2.8066775798797607,
+                  -2.7954211235046387,
+                  -0.6747133135795593,
+                  -0.4564976990222931,
+                  -1.4029607772827148,
+                  -0.5386027693748474,
+                  -2.550309181213379,
+                  -0.6854472756385803,
+                  -0.6854472756385803,
+                  -1.528171420097351,
+                  -3.0275888442993164,
+                  -1.3920650482177734,
+                  -0.05521196126937866,
+                  -1.1886729001998901,
+                  -0.042530059814453125,
+                  -3.5490453243255615,
+                  -1.8002465963363647,
+                  -1.7456611394882202,
+                  -2.392075777053833,
+                  -2.392075777053833,
+                  -2.392075777053833,
+                  -0.556814968585968,
+                  -3.3461520671844482,
+                  -1.9650105237960815,
+                  -1.424621820449829,
+                  -1.424621820449829,
+                  -1.1037788391113281,
+                  -1.1037788391113281,
+                  -1.1037788391113281,
+                  -3.986386299133301,
+                  -3.986386299133301,
+                  -1.1934090852737427,
+                  -4.669509410858154,
+                  -2.3999669551849365,
+                  -0.10574452579021454,
+                  -1.864464282989502,
+                  -1.864464282989502,
+                  -1.36136794090271,
+                  -1.36136794090271,
+                  -2.6837334632873535,
+                  -0.3172712028026581,
+                  -0.3172712028026581,
+                  -0.26470327377319336,
+                  -0.26470327377319336,
+                  -0.6060888767242432,
+                  -1.568477749824524,
+                  -2.284365177154541,
+                  -1.3139671087265015,
+                  -0.49754223227500916,
+                  -0.49754223227500916,
+                  -1.7784684896469116,
+                  -1.7784684896469116,
+                  -1.139705777168274,
+                  -2.544457197189331,
+                  -1.3111522197723389,
+                  -1.030869722366333,
+                  -0.6128658056259155,
+                  -0.49617862701416016,
+                  -0.49617862701416016,
+                  -1.7585455179214478,
+                  -1.7585455179214478,
+                  0,
+                  -3.3988068103790283,
+                  -1.2127270698547363,
+                  -2.401825428009033,
+                  -3.401397466659546,
+                  -1.9570850133895874,
+                  -0.7266650199890137,
+                  -0.7266650199890137,
+                  -1.4793710708618164,
+                  -0.9672736525535583,
+                  -0.9672736525535583,
+                  -3.3825438022613525,
+                  -0.826991617679596,
+                  -1.014968991279602,
+                  -3.3771214485168457,
+                  -1.7066874504089355,
+                  -1.7066874504089355,
+                  -2.297779083251953,
+                  0,
+                  -1.1235014200210571,
+                  -1.115294098854065,
+                  -0.4499019682407379,
+                  -1.7063723802566528,
+                  -1.7063723802566528,
+                  -3.3584957122802734,
+                  -3.3485324382781982,
+                  -1.7016417980194092,
+                  -1.7016417980194092,
+                  -1.6331297159194946,
+                  -2.391263008117676,
+                  -3.3219916820526123,
+                  -3.310227632522583,
+                  -3.297990083694458,
+                  3.3963744080474316
                 ],
                 [
-                  -1.7896034717559814,
-                  -1.7890981435775757,
-                  -1.7885658740997314,
-                  -1.7880057096481323,
-                  -0.597918689250946,
-                  -0.597918689250946,
-                  -0.597918689250946,
-                  3.511930465698242,
-                  -5.590759754180908,
-                  0.2861921191215515,
-                  -0.1817656308412552,
-                  -1.6370269060134888,
-                  -0.15960267186164856,
-                  0.33825403451919556,
-                  12.250783920288086,
-                  0.3253130614757538,
-                  -1.1563458442687988,
-                  1.0690994262695312,
-                  4.486605644226074,
-                  4.486605644226074,
-                  5.709395885467529,
-                  5.709395885467529,
-                  8.685169219970703,
-                  -3.3835573196411133,
-                  -0.5161631107330322,
-                  -0.5229973793029785,
-                  -0.5229973793029785,
-                  -1.836020588874817,
-                  -1.205353856086731,
-                  -1.205353856086731,
-                  -0.2634153664112091,
-                  -0.2634153664112091,
-                  -0.2341669797897339,
-                  -1.7912266254425049,
-                  -0.3951546847820282,
-                  -1.790817141532898,
-                  -1.299666404724121,
-                  -1.299666404724121,
-                  -1.299666404724121,
-                  -1.2463712692260742,
-                  -1.2463712692260742,
-                  -1.2463712692260742,
-                  -2.8074631690979004,
-                  -2.8074631690979004,
-                  1.796951311671058
+                  -0.03648537024855614,
+                  -0.0444067120552063,
+                  -0.051188014447689056,
+                  -0.019603656604886055,
+                  -0.03250765800476074,
+                  -0.020788569003343582,
+                  -0.020788569003343582,
+                  -0.020788569003343582,
+                  -0.030608097091317177,
+                  -0.901151716709137,
+                  0,
+                  -0.10277639329433441,
+                  -0.10622036457061768,
+                  -0.024753078818321228,
+                  -0.06898953765630722,
+                  -0.011496447958052158,
+                  0.10169648379087448,
+                  -0.06842394918203354,
+                  -0.06831785291433334,
+                  -0.025827599689364433,
+                  0,
+                  -0.24531929194927216,
+                  -0.09380602836608887,
+                  0,
+                  -0.1350981444120407,
+                  -0.1350981444120407,
+                  -0.01156952977180481,
+                  -0.8145433068275452,
+                  -0.0068880715407431126,
+                  -0.022414233535528183,
+                  0.265627920627594,
+                  -0.47891169786453247,
+                  0.37682992219924927,
+                  13.793232917785645,
+                  0.6192952990531921,
+                  -0.13546572625637054,
+                  -0.36561909317970276,
+                  -0.33833980560302734,
+                  0.7839153409004211,
+                  0.23026899993419647,
+                  0.3001125156879425,
+                  0.19536909461021423,
+                  -0.333527535200119,
+                  0.5058382749557495,
+                  0.39396607875823975,
+                  0.6053141355514526,
+                  0.6728716492652893,
+                  -0.2520630657672882,
+                  0.5417008996009827,
+                  -0.2721468508243561,
+                  0.10423652827739716,
+                  0.05172046646475792,
+                  1.1147170066833496,
+                  0.07556647062301636,
+                  0.9291239380836487,
+                  0.18732541799545288,
+                  0.11087262630462646,
+                  0.524087131023407,
+                  0.5673871040344238,
+                  0.5367353558540344,
+                  0.38197824358940125,
+                  0.5206993818283081,
+                  0.26703178882598877,
+                  0.7989621758460999,
+                  0.24185623228549957,
+                  -0.10624948143959045,
+                  0.05490530654788017,
+                  -0.03945741057395935,
+                  0.18148690462112427,
+                  -0.17512653768062592,
+                  -3.462000846862793,
+                  -0.14981813728809357,
+                  -0.14981813728809357,
+                  -0.07081053406000137,
+                  -0.11653817445039749,
+                  -0.13616998493671417,
+                  -0.37890028953552246,
+                  -0.15146200358867645,
+                  -0.010598136112093925,
+                  0,
+                  -0.0068880715407431126,
+                  -0.1850183755159378,
+                  -0.16152584552764893,
+                  -0.0000049264313020103145,
+                  -0.043324653059244156,
+                  -0.1136665940284729,
+                  0,
+                  -0.2316664755344391,
+                  -1.54094660282135,
+                  -0.2960766851902008,
+                  -0.12931467592716217,
+                  -0.2180430293083191,
+                  -0.6755982637405396,
+                  -0.06353984773159027,
+                  -0.41386258602142334,
+                  -0.3045905530452728,
+                  -0.21036452054977417,
+                  -0.06046096980571747,
+                  -0.2914207875728607,
+                  -0.2914207875728607,
+                  -0.24454756081104279,
+                  -0.21553480625152588,
+                  -0.07693764567375183,
+                  -0.03565771505236626,
+                  -0.10135945677757263,
+                  0,
+                  -0.3134150207042694,
+                  -0.05383724719285965,
+                  -0.004657214041799307,
+                  -0.006300788372755051,
+                  -0.006300788372755051,
+                  -0.006300788372755051,
+                  -0.06889281421899796,
+                  -0.25355765223503113,
+                  -0.06251950562000275,
+                  -0.014969377778470516,
+                  -0.014969377778470516,
+                  -0.10135945677757263,
+                  -0.10135945677757263,
+                  -0.10135945677757263,
+                  -0.10148444771766663,
+                  -0.10148444771766663,
+                  -0.09356694668531418,
+                  -0.22245822846889496,
+                  0,
+                  -0.0605299137532711,
+                  -0.11215038597583771,
+                  -0.11215038597583771,
+                  0,
+                  0,
+                  -0.05416623130440712,
+                  -0.11429191380739212,
+                  -0.10184307396411896,
+                  -0.04979228228330612,
+                  -0.04979228228330612,
+                  -0.060319073498249054,
+                  -0.08706121891736984,
+                  -0.18569743633270264,
+                  -0.0665636733174324,
+                  -0.05681876093149185,
+                  -0.05681876093149185,
+                  -0.08885268121957779,
+                  -0.08885268121957779,
+                  -0.0393785685300827,
+                  -0.4471532702445984,
+                  -0.31141629815101624,
+                  -0.026305653154850006,
+                  -0.13112734258174896,
+                  -0.005087180528789759,
+                  -0.005087180528789759,
+                  -0.06753256916999817,
+                  -0.06753256916999817,
+                  -0.00019932305440306664,
+                  -0.1580846905708313,
+                  -0.05297718197107315,
+                  -0.17018204927444458,
+                  -0.11214345693588257,
+                  -0.1483527570962906,
+                  -0.18198592960834503,
+                  -0.18198592960834503,
+                  -0.0335555300116539,
+                  -0.03638474643230438,
+                  -0.03638474643230438,
+                  -0.06272229552268982,
+                  -0.03287803381681442,
+                  -0.01899326778948307,
+                  -0.2345876842737198,
+                  -0.06273539364337921,
+                  -0.06273539364337921,
+                  -0.08417169004678726,
+                  -0.0045340037904679775,
+                  -0.03728407621383667,
+                  -0.031083911657333374,
+                  -0.020972130820155144,
+                  -0.04297294840216637,
+                  -0.04297294840216637,
+                  -0.05007833242416382,
+                  -0.04836898669600487,
+                  -0.038225896656513214,
+                  -0.038225896656513214,
+                  -0.27323615550994873,
+                  0,
+                  -0.04053168743848801,
+                  -0.039147477596998215,
+                  -0.037809107452631,
+                  -0.30019419071099307
                 ],
                 [
-                  -1.204573154449463,
-                  -1.196820855140686,
-                  -1.1918202638626099,
-                  -1.188860297203064,
-                  -0.5273758769035339,
-                  -0.5273758769035339,
-                  -0.5273758769035339,
-                  -1.1625133752822876,
-                  -0.1956949084997177,
-                  -0.6014828085899353,
-                  -0.4123011529445648,
-                  -1.1600815057754517,
-                  -0.36885032057762146,
-                  -0.742178201675415,
-                  -1.691373586654663,
-                  -1.1617237329483032,
-                  -1.084261178970337,
-                  2.7272706031799316,
-                  -0.19818131625652313,
-                  -0.19818131625652313,
-                  -1.9545129537582397,
-                  -1.9545129537582397,
-                  -0.03404565900564194,
-                  10.371806144714355,
-                  2.732592821121216,
-                  3.6163299083709717,
-                  3.6163299083709717,
-                  5.869610786437988,
-                  2.253279685974121,
-                  2.253279685974121,
-                  1.3656294345855713,
-                  1.3656294345855713,
-                  2.7320544719696045,
-                  -1.394421100616455,
-                  -0.3550100326538086,
-                  -1.3409574031829834,
-                  -0.46877145767211914,
-                  -0.46877145767211914,
-                  -0.46877145767211914,
-                  -0.27180215716362,
-                  -0.27180215716362,
-                  -0.27180215716362,
-                  -0.2741195857524872,
-                  -0.2741195857524872,
-                  1.1829112284805738
+                  -0.029554402455687523,
+                  -0.045482736080884933,
+                  -0.0502975694835186,
+                  -0.017046794295310974,
+                  -0.025674043223261833,
+                  -0.021267088130116463,
+                  -0.021267088130116463,
+                  -0.021267088130116463,
+                  -0.023857932537794113,
+                  -0.2453034520149231,
+                  -0.019587796181440353,
+                  0.024533774703741074,
+                  -0.15174639225006104,
+                  -0.11551223695278168,
+                  -0.029673028737306595,
+                  -0.0016846340149641037,
+                  -0.09542126953601837,
+                  -0.010169604793190956,
+                  -0.006581332068890333,
+                  -0.021124156191945076,
+                  0,
+                  0.08299249410629272,
+                  -0.17744137346744537,
+                  0,
+                  -0.42336490750312805,
+                  -0.42336490750312805,
+                  -0.013532973825931549,
+                  -1.2751636505126953,
+                  0.3794831931591034,
+                  -0.02089719846844673,
+                  0.5733006596565247,
+                  0.18643350899219513,
+                  0,
+                  -1.2255759239196777,
+                  -0.6204313635826111,
+                  -0.013383841142058372,
+                  0.27911531925201416,
+                  -0.013305784203112125,
+                  0.5006151795387268,
+                  -0.20823857188224792,
+                  0,
+                  0,
+                  0.19771091639995575,
+                  0.6425446271896362,
+                  0.08663343638181686,
+                  0.06650828570127487,
+                  0,
+                  0.5551249384880066,
+                  0,
+                  -0.2746286988258362,
+                  0,
+                  -0.10288617759943008,
+                  0,
+                  -0.48979824781417847,
+                  -0.026038363575935364,
+                  0.7798005938529968,
+                  0,
+                  -0.043317586183547974,
+                  -0.03379698842763901,
+                  -0.21368177235126495,
+                  -0.1324211061000824,
+                  0,
+                  -0.05066508427262306,
+                  0,
+                  -0.056513622403144836,
+                  -0.04768289253115654,
+                  0,
+                  -0.14184638857841492,
+                  0.5025305151939392,
+                  0.2434893548488617,
+                  13.763254165649414,
+                  0.4888797700405121,
+                  0.4888797700405121,
+                  0.7568487524986267,
+                  0.7911306619644165,
+                  0.33136454224586487,
+                  -0.044272515922784805,
+                  0.9709535837173462,
+                  0.7592970728874207,
+                  0.2588343024253845,
+                  0.3794831931591034,
+                  0.24054424464702606,
+                  0.4360526502132416,
+                  0.7521231174468994,
+                  0.06650828570127487,
+                  0.2436080276966095,
+                  0.7444319128990173,
+                  0.7286426424980164,
+                  -1.5402989387512207,
+                  -0.9033770561218262,
+                  -0.20510698854923248,
+                  -0.6690093874931335,
+                  -0.5907175540924072,
+                  -0.13721707463264465,
+                  -0.10972314327955246,
+                  -0.21368177235126495,
+                  -0.12298424541950226,
+                  -0.3130972683429718,
+                  -0.34715595841407776,
+                  -0.34715595841407776,
+                  -0.2944924235343933,
+                  -0.46670106053352356,
+                  -0.20193028450012207,
+                  -0.10288617759943008,
+                  -0.12010233849287033,
+                  0,
+                  -0.4596891403198242,
+                  -0.2298857420682907,
+                  -0.05054308846592903,
+                  -0.09884197264909744,
+                  -0.09884197264909744,
+                  -0.09884197264909744,
+                  -0.11314425617456436,
+                  -0.42267709970474243,
+                  -0.12192536890506744,
+                  -0.18871621787548065,
+                  -0.18871621787548065,
+                  -0.12010233849287033,
+                  -0.12010233849287033,
+                  -0.12010233849287033,
+                  -0.15174639225006104,
+                  -0.15174639225006104,
+                  -0.10764232277870178,
+                  -0.4196455776691437,
+                  -0.006759281270205975,
+                  -0.08093128353357315,
+                  -0.1377398520708084,
+                  -0.1377398520708084,
+                  0,
+                  0,
+                  -0.08974476903676987,
+                  -0.1535075157880783,
+                  -0.14479251205921173,
+                  -0.07226987183094025,
+                  -0.07226987183094025,
+                  -0.059200163930654526,
+                  -0.7368637919425964,
+                  -0.2742763161659241,
+                  -0.09107021987438202,
+                  -0.10635042190551758,
+                  -0.10635042190551758,
+                  -0.10293281823396683,
+                  -0.10293281823396683,
+                  -0.08335468173027039,
+                  -0.28158247470855713,
+                  -0.1382841169834137,
+                  -0.06507068872451782,
+                  -0.22257176041603088,
+                  -0.034320343285799026,
+                  -0.034320343285799026,
+                  -0.08343394845724106,
+                  -0.08343394845724106,
+                  -0.0019367567729204893,
+                  -0.2612795829772949,
+                  -0.06254696846008301,
+                  -0.28230538964271545,
+                  -0.14065319299697876,
+                  -0.10189980268478394,
+                  -0.18074564635753632,
+                  -0.18074564635753632,
+                  -0.060196924954652786,
+                  -0.047974392771720886,
+                  -0.047974392771720886,
+                  -0.07124432921409607,
+                  -0.044081222265958786,
+                  -0.019121378660202026,
+                  -0.6664459705352783,
+                  -0.08866705745458603,
+                  -0.08866705745458603,
+                  -0.13957396149635315,
+                  -0.030486151576042175,
+                  -0.04144133999943733,
+                  -0.03736083582043648,
+                  -0.03107302635908127,
+                  -0.05169416591525078,
+                  -0.05169416591525078,
+                  -0.040948111563920975,
+                  -0.03936251997947693,
+                  -0.03503643348813057,
+                  -0.03503643348813057,
+                  -0.03379698842763901,
+                  -0.04185415804386139,
+                  -0.03331025689840317,
+                  -0.03201814368367195,
+                  -0.03077593445777893,
+                  -0.22820173844831687
                 ],
                 [
-                  -3.308260202407837,
-                  -3.303318500518799,
-                  -3.2982821464538574,
-                  -3.293149709701538,
-                  -1.1188859939575195,
-                  -1.1188859939575195,
-                  -1.1188859939575195,
-                  0.7517644166946411,
-                  -3.2176856994628906,
-                  -0.9036248922348022,
-                  -2.354523181915283,
-                  -0.9979617595672607,
-                  -2.3510169982910156,
-                  0.4378480613231659,
-                  -3.781468391418457,
-                  -0.31628119945526123,
-                  -0.14427515864372253,
-                  -1.5484917163848877,
-                  -2.054159641265869,
-                  -2.054159641265869,
-                  -0.9021912813186646,
-                  -0.9021912813186646,
-                  -3.2066776752471924,
-                  -2.441602945327759,
-                  -0.9114730358123779,
-                  -1.029310941696167,
-                  -1.029310941696167,
-                  -1.291865587234497,
-                  -0.26118090748786926,
-                  -0.26118090748786926,
-                  -0.4597145617008209,
-                  -0.4597145617008209,
-                  -0.9041994214057922,
-                  10.31828784942627,
-                  -9.323476791381836,
-                  10.33786392211914,
-                  3.4943370819091797,
-                  3.4943370819091797,
-                  3.4943370819091797,
-                  3.7107272148132324,
-                  3.7107272148132324,
-                  3.7107272148132324,
-                  5.522190570831299,
-                  5.522190570831299,
-                  3.3932050103946163
+                  -0.3722519874572754,
+                  -0.3744042217731476,
+                  -0.4255591630935669,
+                  -0.15851615369319916,
+                  -0.35065528750419617,
+                  -0.1732926070690155,
+                  -0.1732926070690155,
+                  -0.1732926070690155,
+                  -0.341880202293396,
+                  3.6955771446228027,
+                  -3.5681815147399902,
+                  -0.23143422603607178,
+                  -0.7038094401359558,
+                  -1.3082343339920044,
+                  -1.9499181509017944,
+                  0,
+                  -0.27952295541763306,
+                  -0.13969182968139648,
+                  -0.1305559277534485,
+                  -0.2868087887763977,
+                  -0.10183987021446228,
+                  0.04215671122074127,
+                  -0.706810474395752,
+                  -0.7533839344978333,
+                  1.054226279258728,
+                  1.054226279258728,
+                  -0.035454366356134415,
+                  3.5341835021972656,
+                  -3.567412853240967,
+                  -0.1972399801015854,
+                  3.1385278701782227,
+                  -1.0185725688934326,
+                  -1.3291212320327759,
+                  -8.794960975646973,
+                  1.6104332208633423,
+                  2.515634298324585,
+                  -0.7550942897796631,
+                  -1.0146197080612183,
+                  1.5318400859832764,
+                  -0.7016004323959351,
+                  -0.7634140849113464,
+                  -0.5453107357025146,
+                  5.161965847015381,
+                  -0.48514705896377563,
+                  0,
+                  -0.03427630662918091,
+                  0,
+                  -1.0656737089157104,
+                  -0.06940845400094986,
+                  2.533970355987549,
+                  -0.14347371459007263,
+                  -2.6799724102020264,
+                  0,
+                  7.182794570922852,
+                  0,
+                  -0.7006312608718872,
+                  0,
+                  3.074120283126831,
+                  -0.5090910196304321,
+                  3.4481654167175293,
+                  0,
+                  0,
+                  0.9124863743782043,
+                  0,
+                  0,
+                  4.5618414878845215,
+                  0,
+                  -1.3661564588546753,
+                  -0.011997191235423088,
+                  0,
+                  -4.102169513702393,
+                  -0.2316514104604721,
+                  -0.2316514104604721,
+                  0,
+                  0,
+                  0,
+                  -1.8448283672332764,
+                  -0.616115927696228,
+                  0,
+                  0,
+                  0,
+                  -1.051859974861145,
+                  3.843461036682129,
+                  0,
+                  -0.03427630662918091,
+                  0.5920984745025635,
+                  0,
+                  -0.48514705896377563,
+                  10.987275123596191,
+                  5.523664951324463,
+                  4.985401153564453,
+                  10.411055564880371,
+                  9.593954086303711,
+                  1.5758934020996094,
+                  2.936142921447754,
+                  3.6245970726013184,
+                  0.6013869047164917,
+                  3.00384783744812,
+                  3.301837205886841,
+                  3.301837205886841,
+                  8.163667678833008,
+                  6.296838760375977,
+                  3.908205509185791,
+                  -2.4668822288513184,
+                  -0.03124142810702324,
+                  0.7125904560089111,
+                  -1.9915332794189453,
+                  -1.8448283672332764,
+                  -1.5074622631072998,
+                  -1.3082343339920044,
+                  -1.3082343339920044,
+                  -1.3082343339920044,
+                  -0.40306827425956726,
+                  -2.5760834217071533,
+                  -0.5711401700973511,
+                  -2.258790969848633,
+                  -2.258790969848633,
+                  -0.5904884338378906,
+                  -0.5904884338378906,
+                  -0.5904884338378906,
+                  -0.7038094401359558,
+                  -0.7038094401359558,
+                  -0.6331841945648193,
+                  -1.4473603963851929,
+                  -2.6330947875976562,
+                  -0.3089061379432678,
+                  -0.688151478767395,
+                  -0.688151478767395,
+                  -1.3436434268951416,
+                  -1.3436434268951416,
+                  -1.6162331104278564,
+                  -0.6730851531028748,
+                  -0.5848216414451599,
+                  -0.2824868857860565,
+                  -0.2824868857860565,
+                  -0.12370148301124573,
+                  -0.6077146530151367,
+                  -1.1456758975982666,
+                  -0.3591235876083374,
+                  -0.62237149477005,
+                  -0.62237149477005,
+                  -0.5685744881629944,
+                  -0.5685744881629944,
+                  -0.3080221116542816,
+                  -3.0521223545074463,
+                  -2.167649984359741,
+                  -0.19692066311836243,
+                  -0.48950493335723877,
+                  -0.261608362197876,
+                  -0.261608362197876,
+                  -0.5133741497993469,
+                  -0.5133741497993469,
+                  -0.03687139227986336,
+                  -0.8986483812332153,
+                  -0.3050432503223419,
+                  -0.9290153384208679,
+                  -0.8125966787338257,
+                  -2.429994583129883,
+                  -0.2178325653076172,
+                  -0.2178325653076172,
+                  -0.26216813921928406,
+                  -0.08388423919677734,
+                  -0.08388423919677734,
+                  -0.5850472450256348,
+                  -0.27053722739219666,
+                  -0.15642131865024567,
+                  -2.4211537837982178,
+                  -0.47000521421432495,
+                  -0.47000521421432495,
+                  -0.6786046624183655,
+                  -0.13828063011169434,
+                  -0.2707303762435913,
+                  -0.227279394865036,
+                  -0.1495368331670761,
+                  -0.3668287396430969,
+                  -0.3668287396430969,
+                  -0.4965221583843231,
+                  -0.49007943272590637,
+                  -0.33174946904182434,
+                  -0.33174946904182434,
+                  -0.31870394945144653,
+                  -3.593303918838501,
+                  -0.39718425273895264,
+                  -0.3873451352119446,
+                  -0.38125482201576233,
+                  0.09920894530751505
+                ],
+                [
+                  -5.090400695800781,
+                  -1.1804999113082886,
+                  -8.963205337524414,
+                  -0.2692209780216217,
+                  -1.1777026653289795,
+                  -0.44070127606391907,
+                  -0.44070127606391907,
+                  -0.44070127606391907,
+                  -1.1746357679367065,
+                  3.032013416290283,
+                  -2.8552539348602295,
+                  -3.233630657196045,
+                  0.8509010672569275,
+                  -2.0542962551116943,
+                  -0.7988934516906738,
+                  -0.7559252381324768,
+                  -0.8008346557617188,
+                  -0.40158772468566895,
+                  -0.39834651350975037,
+                  -1.1603728532791138,
+                  -5.153001308441162,
+                  4.192174911499023,
+                  8.602785110473633,
+                  -1.2852140665054321,
+                  -0.17102299630641937,
+                  -0.17102299630641937,
+                  -0.02007402293384075,
+                  3.0947535037994385,
+                  -4.106815814971924,
+                  -1.0505197048187256,
+                  -3.998037338256836,
+                  3.2587339878082275,
+                  -0.3964376747608185,
+                  -1.780273199081421,
+                  -0.4515865743160248,
+                  -1.369746446609497,
+                  0,
+                  -0.8133670091629028,
+                  -1.134301781654358,
+                  0,
+                  0,
+                  0,
+                  -0.361255019903183,
+                  -0.010195140726864338,
+                  -0.010195140726864338,
+                  -1.308609962463379,
+                  -1.308609962463379,
+                  0,
+                  0,
+                  -1.544058084487915,
+                  0,
+                  -0.008029644377529621,
+                  0,
+                  -0.3705737888813019,
+                  0,
+                  -0.44140979647636414,
+                  0,
+                  0,
+                  -0.7476253509521484,
+                  -0.37036481499671936,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  2.566112518310547,
+                  -0.00020953109196852893,
+                  -0.00020953109196852893,
+                  -5.434420108795166,
+                  -0.3638651371002197,
+                  -0.3638651371002197,
+                  0,
+                  -0.20696283876895905,
+                  -0.24261654913425446,
+                  0.9188242554664612,
+                  4.5393853187561035,
+                  0,
+                  0,
+                  0,
+                  0.21998120844364166,
+                  -2.053853988647461,
+                  0,
+                  0,
+                  -1.4907755851745605,
+                  0,
+                  0,
+                  -4.115813732147217,
+                  -2.1314327716827393,
+                  -1.9730744361877441,
+                  -1.045475721359253,
+                  -1.4907755851745605,
+                  -1.4907755851745605,
+                  0,
+                  -0.37036481499671936,
+                  -0.2645111382007599,
+                  -0.12886570394039154,
+                  -0.8439633250236511,
+                  -0.8439633250236511,
+                  -3.4467713832855225,
+                  -1.5977582931518555,
+                  -1.5977582931518555,
+                  -0.008029644377529621,
+                  1.6373721361160278,
+                  -2.1843199729919434,
+                  11.390819549560547,
+                  1.444605827331543,
+                  7.178847789764404,
+                  4.037635803222656,
+                  4.037635803222656,
+                  4.037635803222656,
+                  -5.108621120452881,
+                  7.275827407836914,
+                  1.7149486541748047,
+                  6.658926963806152,
+                  6.658926963806152,
+                  3.822693109512329,
+                  3.822693109512329,
+                  3.822693109512329,
+                  6.127491474151611,
+                  6.127491474151611,
+                  5.191008567810059,
+                  8.082098960876465,
+                  5.7245283126831055,
+                  -0.8779266476631165,
+                  6.594122886657715,
+                  6.594122886657715,
+                  4.153667449951172,
+                  4.153667449951172,
+                  1.6773204803466797,
+                  0.1884177327156067,
+                  1.0839390754699707,
+                  4.274838447570801,
+                  4.274838447570801,
+                  5.610787391662598,
+                  8.49449348449707,
+                  -5.786069869995117,
+                  -0.6820434331893921,
+                  -1.268892765045166,
+                  -1.268892765045166,
+                  -1.265962839126587,
+                  -1.265962839126587,
+                  -0.733189582824707,
+                  -2.7436182498931885,
+                  -2.903668165206909,
+                  -0.6304909586906433,
+                  -1.0137083530426025,
+                  -0.2645111382007599,
+                  -0.2645111382007599,
+                  -1.1558552980422974,
+                  -1.1558552980422974,
+                  -0.8067395687103271,
+                  -1.6501351594924927,
+                  -0.818367063999176,
+                  -1.7637856006622314,
+                  -1.789893388748169,
+                  -1.4412428140640259,
+                  -0.8133670091629028,
+                  -0.8133670091629028,
+                  -0.7886330485343933,
+                  -1.8619192838668823,
+                  -1.8619192838668823,
+                  -1.3397678136825562,
+                  -0.5964551568031311,
+                  -0.49878183007240295,
+                  -1.601528525352478,
+                  -1.0341529846191406,
+                  -1.0341529846191406,
+                  -2.7236921787261963,
+                  -1.8134160041809082,
+                  -0.3489765226840973,
+                  -0.291637659072876,
+                  -0.32463738322257996,
+                  -0.823031485080719,
+                  -0.823031485080719,
+                  -1.2028313875198364,
+                  -1.1973235607147217,
+                  -0.7634806632995605,
+                  -0.7634806632995605,
+                  -0.7476253509521484,
+                  -2.2724382877349854,
+                  -1.1907587051391602,
+                  -1.1886003017425537,
+                  -1.1863389015197754,
+                  1.2169408679474296
+                ],
+                [
+                  -0.9376628398895264,
+                  -0.9607406854629517,
+                  -1.0177931785583496,
+                  -0.31183505058288574,
+                  -0.8965278267860413,
+                  -0.3902823328971863,
+                  -0.3902823328971863,
+                  -0.3902823328971863,
+                  -0.8856343030929565,
+                  -0.9142008423805237,
+                  -0.24385450780391693,
+                  -0.8296293616294861,
+                  -0.5487861633300781,
+                  -0.6320940852165222,
+                  -0.28816601634025574,
+                  -0.2533605992794037,
+                  -0.7298617959022522,
+                  -0.37420010566711426,
+                  -0.3415346145629883,
+                  -0.869706928730011,
+                  -0.20069105923175812,
+                  -1.5193504095077515,
+                  -0.5680460333824158,
+                  -0.16503891348838806,
+                  -0.02386881224811077,
+                  -0.02386881224811077,
+                  -0.2443264275789261,
+                  -3.5440824031829834,
+                  -0.12210045009851456,
+                  -0.8585914373397827,
+                  -0.4369966387748718,
+                  -0.29687049984931946,
+                  -0.12792077660560608,
+                  -1.1635996103286743,
+                  -0.9723666906356812,
+                  -0.07469449937343597,
+                  -0.023198269307613373,
+                  -0.7448433637619019,
+                  -0.07282374054193497,
+                  -0.015405754558742046,
+                  -0.3136047124862671,
+                  -0.08991044759750366,
+                  -3.554354190826416,
+                  -0.021291205659508705,
+                  0,
+                  -0.2686398923397064,
+                  -0.2093072533607483,
+                  -0.14926055073738098,
+                  -0.011512848548591137,
+                  2.117717981338501,
+                  -0.20238810777664185,
+                  -0.20238810777664185,
+                  -0.2149105817079544,
+                  -0.44344156980514526,
+                  -0.014783727936446667,
+                  -0.3203520178794861,
+                  -0.0010773558169603348,
+                  -0.01777677796781063,
+                  -0.6814032196998596,
+                  -0.3109719455242157,
+                  0,
+                  -0.001307332538999617,
+                  -0.17800316214561462,
+                  -0.029194122180342674,
+                  0,
+                  -0.16051648557186127,
+                  -0.021291205659508705,
+                  0.7869707942008972,
+                  -0.08237366378307343,
+                  -0.05921585112810135,
+                  -1.5708361864089966,
+                  0,
+                  0,
+                  -0.06377239525318146,
+                  -0.056751549243927,
+                  -0.01895264908671379,
+                  -0.22975164651870728,
+                  -0.4199119210243225,
+                  -0.03384677693247795,
+                  -0.012418271042406559,
+                  -0.008097084239125252,
+                  3.0880191326141357,
+                  -0.9220066070556641,
+                  -0.002493147039785981,
+                  -0.056955959647893906,
+                  -0.5734965205192566,
+                  0,
+                  0,
+                  -2.7205612659454346,
+                  -0.12019447982311249,
+                  -0.12019447982311249,
+                  0,
+                  -0.7559617161750793,
+                  -0.5734965205192566,
+                  0,
+                  -0.22984682023525238,
+                  0.7107014060020447,
+                  0,
+                  0,
+                  0,
+                  -0.4608350098133087,
+                  -0.4372026324272156,
+                  0,
+                  0,
+                  -0.4926818311214447,
+                  -0.3185378909111023,
+                  -0.8354335427284241,
+                  -0.20071080327033997,
+                  0,
+                  0,
+                  0,
+                  0,
+                  -0.10460638999938965,
+                  -0.6234999299049377,
+                  0,
+                  0,
+                  0,
+                  -0.1440088301897049,
+                  -0.1440088301897049,
+                  -0.1440088301897049,
+                  -0.18208353221416473,
+                  -0.18208353221416473,
+                  -0.33241206407546997,
+                  -0.5522315502166748,
+                  -0.32474687695503235,
+                  -0.19648011028766632,
+                  -0.43700340390205383,
+                  -0.43700340390205383,
+                  -2.082303047180176,
+                  -2.082303047180176,
+                  7.008699893951416,
+                  1.89104163646698,
+                  0.9609423279762268,
+                  -1.7040725946426392,
+                  -1.7040725946426392,
+                  -0.25157982110977173,
+                  -0.4199119210243225,
+                  10.991443634033203,
+                  2.5845346450805664,
+                  5.220710754394531,
+                  5.220710754394531,
+                  6.761014461517334,
+                  6.761014461517334,
+                  2.7583179473876953,
+                  10.91377067565918,
+                  6.316677570343018,
+                  2.6852993965148926,
+                  1.6637109518051147,
+                  0.9103255867958069,
+                  0.9103255867958069,
+                  6.749259948730469,
+                  6.749259948730469,
+                  0.9303364157676697,
+                  -1.5834053754806519,
+                  -0.7322221398353577,
+                  -1.7283345460891724,
+                  -1.607529878616333,
+                  -2.769225597381592,
+                  -0.696855366230011,
+                  -0.696855366230011,
+                  -0.5971260666847229,
+                  -0.9990929365158081,
+                  -0.9990929365158081,
+                  -1.1763280630111694,
+                  -0.5202047228813171,
+                  -0.41420918703079224,
+                  -2.7679829597473145,
+                  -0.9186753630638123,
+                  -0.9186753630638123,
+                  -3.159813642501831,
+                  -0.5637635588645935,
+                  -0.327956885099411,
+                  -0.2687317430973053,
+                  -0.26733580231666565,
+                  -0.6953067779541016,
+                  -0.6953067779541016,
+                  -1.0133978128433228,
+                  -0.9962801933288574,
+                  -0.6497763991355896,
+                  -0.6497763991355896,
+                  -0.5983214974403381,
+                  -0.23869073390960693,
+                  -0.9592630863189697,
+                  -0.9453070163726807,
+                  -0.9324347972869873,
+                  0.7542636053449082
+                ],
+                [
+                  -1.8016904592514038,
+                  -1.80106520652771,
+                  -1.8025693893432617,
+                  -0.47080695629119873,
+                  -1.792281150817871,
+                  -0.6179317831993103,
+                  -0.6179317831993103,
+                  -0.6179317831993103,
+                  -1.7881276607513428,
+                  -2.1018576622009277,
+                  -0.438177227973938,
+                  -3.3083786964416504,
+                  -0.9919339418411255,
+                  -0.9252868890762329,
+                  -0.7408080101013184,
+                  -0.30979499220848083,
+                  -1.3669816255569458,
+                  -0.48300716280937195,
+                  -0.4494047462940216,
+                  -1.782814621925354,
+                  -0.7355794906616211,
+                  -1.0721168518066406,
+                  -0.5783277750015259,
+                  -0.0661097839474678,
+                  -0.3877337574958801,
+                  -0.3877337574958801,
+                  -0.3654073178768158,
+                  -1.1481335163116455,
+                  -0.6616442203521729,
+                  -1.7756764888763428,
+                  -0.6335952281951904,
+                  -1.2119115591049194,
+                  -0.10693228989839554,
+                  -1.8664484024047852,
+                  -0.8853679299354553,
+                  -0.9872684478759766,
+                  -0.9727597236633301,
+                  3.2244808673858643,
+                  -1.3930734395980835,
+                  -0.21566706895828247,
+                  -0.2682948708534241,
+                  -0.026699518784880638,
+                  -0.23346644639968872,
+                  -0.6332730650901794,
+                  -0.18886177241802216,
+                  -0.00917575042694807,
+                  -0.10094545781612396,
+                  -0.06385818123817444,
+                  -0.031753383576869965,
+                  1.389465570449829,
+                  -0.215730220079422,
+                  -0.215730220079422,
+                  -0.028526119887828827,
+                  -0.6964861154556274,
+                  -0.007254306692630053,
+                  -0.5058335661888123,
+                  -0.02326028421521187,
+                  -0.12901541590690613,
+                  -1.0093122720718384,
+                  -0.5554168224334717,
+                  -0.030870141461491585,
+                  -0.03317642584443092,
+                  -0.03317642584443092,
+                  -0.0353061743080616,
+                  -0.40844711661338806,
+                  -0.7743186950683594,
+                  -0.376678466796875,
+                  1.698915958404541,
+                  -0.18585963547229767,
+                  -0.14100565016269684,
+                  -1.7000012397766113,
+                  -0.009537863545119762,
+                  -0.009537863545119762,
+                  -0.13036160171031952,
+                  -0.11464646458625793,
+                  0,
+                  -0.21760952472686768,
+                  -0.894034743309021,
+                  -0.11074948310852051,
+                  -0.03079412505030632,
+                  -0.01034809835255146,
+                  -0.6746871471405029,
+                  -0.07295176386833191,
+                  -0.10865101963281631,
+                  0,
+                  -0.0984254702925682,
+                  -0.10723239183425903,
+                  0,
+                  -3.091259717941284,
+                  -0.010631076991558075,
+                  -0.010631076991558075,
+                  -0.013387994840741158,
+                  -1.0220069885253906,
+                  -0.0984254702925682,
+                  -0.12934298813343048,
+                  -0.5554168224334717,
+                  -0.08797901123762131,
+                  0,
+                  0,
+                  0,
+                  -0.8578900694847107,
+                  -0.9390971064567566,
+                  -0.0717378482222557,
+                  0,
+                  -0.4520452618598938,
+                  -0.0013981321826577187,
+                  -1.7553291320800781,
+                  -0.21760952472686768,
+                  -0.21760952472686768,
+                  0,
+                  0,
+                  0,
+                  -0.165614053606987,
+                  -1.3986467123031616,
+                  -0.015945417806506157,
+                  0,
+                  0,
+                  -0.4492489695549011,
+                  -0.4492489695549011,
+                  -0.4492489695549011,
+                  -0.4027143716812134,
+                  -0.4027143716812134,
+                  -0.8859267234802246,
+                  -0.9055119156837463,
+                  0,
+                  0,
+                  -0.8952341675758362,
+                  -0.8952341675758362,
+                  -0.04589051753282547,
+                  -0.04589051753282547,
+                  -0.9144484400749207,
+                  -0.14714202284812927,
+                  -0.14714202284812927,
+                  -0.14714202284812927,
+                  -0.14714202284812927,
+                  -0.3912806510925293,
+                  -0.894034743309021,
+                  -1.5254569053649902,
+                  -0.26435714960098267,
+                  -0.5590618848800659,
+                  -0.5590618848800659,
+                  -0.8929927945137024,
+                  -0.8929927945137024,
+                  -0.15175700187683105,
+                  -3.0497076511383057,
+                  -0.8628154993057251,
+                  -0.051713865250349045,
+                  -3.941209077835083,
+                  -0.08797901123762131,
+                  -0.08797901123762131,
+                  -0.8879675269126892,
+                  -0.8879675269126892,
+                  0,
+                  12.05135440826416,
+                  4.645846843719482,
+                  7.786074638366699,
+                  11.92918872833252,
+                  10.73811149597168,
+                  4.6059136390686035,
+                  4.6059136390686035,
+                  1.8990247249603271,
+                  5.373537540435791,
+                  5.373537540435791,
+                  12.366374969482422,
+                  0.8310447335243225,
+                  4.596007347106934,
+                  -3.1664414405822754,
+                  -1.3986161947250366,
+                  -1.3986161947250366,
+                  -3.1384177207946777,
+                  -0.5272262096405029,
+                  -0.5960822105407715,
+                  -0.4908427298069,
+                  -0.4039428234100342,
+                  -1.1064401865005493,
+                  -1.1064401865005493,
+                  -1.8151497840881348,
+                  -1.8132768869400024,
+                  -1.0293606519699097,
+                  -1.0293606519699097,
+                  -1.0093122720718384,
+                  -0.7160999178886414,
+                  -1.8097960948944092,
+                  -1.807308316230774,
+                  -1.8046236038208008,
+                  1.8211266580502408
+                ],
+                [
+                  -0.9881927967071533,
+                  -1.0305455923080444,
+                  -1.2178796529769897,
+                  -0.38729527592658997,
+                  -0.837254524230957,
+                  -0.4769318103790283,
+                  -0.4769318103790283,
+                  -0.4769318103790283,
+                  -0.8122804760932922,
+                  -1.0989062786102295,
+                  -0.34694230556488037,
+                  -1.0112228393554688,
+                  -0.5968306064605713,
+                  -0.7703511714935303,
+                  -0.4644681513309479,
+                  -0.2999844551086426,
+                  -0.8406904339790344,
+                  -0.41234898567199707,
+                  -0.36990004777908325,
+                  -0.7655491828918457,
+                  -0.3980754315853119,
+                  -0.683896541595459,
+                  -0.8247483968734741,
+                  -0.13726027309894562,
+                  -0.11941785365343094,
+                  -0.11941785365343094,
+                  -0.2740190923213959,
+                  -0.7188664674758911,
+                  -0.3560810089111328,
+                  -0.7248707413673401,
+                  -0.6846346855163574,
+                  -0.23826782405376434,
+                  -0.20817230641841888,
+                  -1.4393980503082275,
+                  -0.9590378403663635,
+                  -0.1879626214504242,
+                  -0.08528947830200195,
+                  -0.30047744512557983,
+                  -0.18367411196231842,
+                  -0.04567275568842888,
+                  -0.243228480219841,
+                  -0.036589015275239944,
+                  -0.1475074738264084,
+                  -0.10843702405691147,
+                  -0.03413580358028412,
+                  -0.37444332242012024,
+                  -0.28309866786003113,
+                  -0.0345652811229229,
+                  -0.02112547680735588,
+                  0.4088214933872223,
+                  -0.17233726382255554,
+                  -0.17233726382255554,
+                  -0.03319245204329491,
+                  -0.34843188524246216,
+                  -0.02258784882724285,
+                  0.4398311972618103,
+                  -0.004069892223924398,
+                  -0.07840471714735031,
+                  -0.739622950553894,
+                  -0.31289181113243103,
+                  0,
+                  -0.02382376790046692,
+                  -0.02382376790046692,
+                  -0.02085006609559059,
+                  0,
+                  -0.5792261362075806,
+                  -0.06057988107204437,
+                  0.6834510564804077,
+                  -0.13286499679088593,
+                  -0.10060460865497589,
+                  -2.0509493350982666,
+                  0,
+                  0,
+                  -0.06765575706958771,
+                  -0.05109201371669769,
+                  -0.009771378710865974,
+                  -0.3751390278339386,
+                  -0.36689293384552,
+                  -0.027203012257814407,
+                  -0.015456650406122208,
+                  -0.006677188910543919,
+                  -0.32853057980537415,
+                  -0.17154347896575928,
+                  -0.015912042930722237,
+                  -0.11728208512067795,
+                  -0.087122842669487,
+                  -0.0065295821987092495,
+                  0,
+                  -1.4622735977172852,
+                  -0.040572647005319595,
+                  -0.040572647005319595,
+                  0,
+                  -0.3257877230644226,
+                  -0.087122842669487,
+                  -0.027804667130112648,
+                  -0.31289181113243103,
+                  0,
+                  0,
+                  -0.011141976341605186,
+                  -0.011141976341605186,
+                  -0.44444870948791504,
+                  -0.371517539024353,
+                  -0.025750774890184402,
+                  0,
+                  -0.22886718809604645,
+                  0,
+                  -0.8119984269142151,
+                  -0.35515788197517395,
+                  -0.012887486256659031,
+                  0,
+                  0,
+                  0,
+                  -0.09190969169139862,
+                  -0.5412833094596863,
+                  -0.021102434024214745,
+                  0,
+                  0,
+                  -0.22886718809604645,
+                  -0.22886718809604645,
+                  -0.22886718809604645,
+                  -0.14801014959812164,
+                  -0.14801014959812164,
+                  -0.2372952550649643,
+                  -0.6076467633247375,
+                  0,
+                  -0.39896610379219055,
+                  -0.3780965507030487,
+                  -0.3780965507030487,
+                  -0.005874475929886103,
+                  -0.005874475929886103,
+                  -0.35209646821022034,
+                  -0.387766033411026,
+                  -0.35893672704696655,
+                  -0.2360512614250183,
+                  -0.2360512614250183,
+                  -0.21595607697963715,
+                  -0.36689293384552,
+                  -2.698817491531372,
+                  -0.04225991293787956,
+                  -0.22491468489170074,
+                  -0.22491468489170074,
+                  -0.3600964844226837,
+                  -0.3600964844226837,
+                  -0.07631181180477142,
+                  -1.3149380683898926,
+                  -0.3448781371116638,
+                  -0.011283207684755325,
+                  1.4877452850341797,
+                  0,
+                  0,
+                  -0.3298243284225464,
+                  -0.3298243284225464,
+                  -0.01884215883910656,
+                  -0.6248788833618164,
+                  -0.2139875888824463,
+                  -0.4774729907512665,
+                  -0.6238922476768494,
+                  -1.2380397319793701,
+                  -0.1755724549293518,
+                  -0.1755724549293518,
+                  0,
+                  -0.648600161075592,
+                  -0.648600161075592,
+                  -0.617810070514679,
+                  -0.1430603414773941,
+                  -0.1499215066432953,
+                  13.32426643371582,
+                  6.713682174682617,
+                  6.713682174682617,
+                  11.341355323791504,
+                  2.546600818634033,
+                  2.3437230587005615,
+                  2.3476650714874268,
+                  0.3594292998313904,
+                  6.822153568267822,
+                  6.822153568267822,
+                  -1.058874249458313,
+                  -1.049504280090332,
+                  -0.7635562419891357,
+                  -0.7635562419891357,
+                  -0.739622950553894,
+                  -0.4022058844566345,
+                  -0.9565896987915039,
+                  -0.9445903897285461,
+                  -0.9177585244178772,
+                  0.6362608259932795
+                ],
+                [
+                  -2.452981472015381,
+                  -2.4690139293670654,
+                  -2.5565381050109863,
+                  -0.7559971213340759,
+                  -2.4061803817749023,
+                  -0.977790355682373,
+                  -0.977790355682373,
+                  -0.977790355682373,
+                  -2.3964684009552,
+                  -0.1352388560771942,
+                  -2.9280645847320557,
+                  0.6700289845466614,
+                  -1.3801571130752563,
+                  -1.6209591627120972,
+                  -1.3363590240478516,
+                  -0.48497551679611206,
+                  -1.7753491401672363,
+                  -0.9106124639511108,
+                  -0.8457685112953186,
+                  -2.3852195739746094,
+                  -1.020863652229309,
+                  -1.4772566556930542,
+                  -0.9995326399803162,
+                  -0.6728262901306152,
+                  -0.9249634146690369,
+                  -0.9249634146690369,
+                  -0.537125289440155,
+                  -1.6010839939117432,
+                  -0.9078530669212341,
+                  -2.379166603088379,
+                  -0.6060433983802795,
+                  -1.3840808868408203,
+                  -0.20846953988075256,
+                  -3.3162829875946045,
+                  -0.9179502129554749,
+                  -0.34175199270248413,
+                  -0.1127297431230545,
+                  -0.8811571002006531,
+                  -0.3481655716896057,
+                  -0.054761845618486404,
+                  -0.12265791743993759,
+                  -0.07784130424261093,
+                  -2.096616744995117,
+                  -0.4907756447792053,
+                  -0.39077189564704895,
+                  -0.0721144825220108,
+                  -0.2763499319553375,
+                  -0.08235003799200058,
+                  -0.0825919508934021,
+                  -0.9922733902931213,
+                  -0.019648047164082527,
+                  -0.14270110428333282,
+                  -0.06676486134529114,
+                  -0.5078039169311523,
+                  -0.08145159482955933,
+                  -0.5584388971328735,
+                  -0.06410548835992813,
+                  -0.39142125844955444,
+                  5.0782294273376465,
+                  -2.1251704692840576,
+                  -0.08697657287120819,
+                  -0.03782358020544052,
+                  -0.06994246691465378,
+                  -0.04647453501820564,
+                  0,
+                  -0.959140419960022,
+                  0,
+                  -1.0969023704528809,
+                  -0.23925651609897614,
+                  -0.2053084820508957,
+                  -2.337252378463745,
+                  -0.4449180066585541,
+                  -0.4449180066585541,
+                  -0.18897247314453125,
+                  -0.1736399233341217,
+                  -0.0064918771386146545,
+                  -0.30624595284461975,
+                  -1.400081992149353,
+                  -0.13419628143310547,
+                  -0.020064176991581917,
+                  -0.005985058378428221,
+                  -0.8880003690719604,
+                  -0.10926930606365204,
+                  -0.12008988857269287,
+                  0,
+                  -0.11390512436628342,
+                  -0.11319631338119507,
+                  0,
+                  -2.9044296741485596,
+                  -1.2921078205108643,
+                  -1.044329285621643,
+                  -2.907729148864746,
+                  -1.442807674407959,
+                  -0.11390512436628342,
+                  -0.3379603624343872,
+                  -0.34177082777023315,
+                  -0.33790040016174316,
+                  -0.1132388487458229,
+                  -0.09925882518291473,
+                  -0.09925882518291473,
+                  -1.1435613632202148,
+                  -1.2596864700317383,
+                  -0.10926930606365204,
+                  -0.11623836308717728,
+                  -0.5969418883323669,
+                  -0.00039875865331850946,
+                  -2.36093807220459,
+                  -0.2967495024204254,
+                  -0.1823851317167282,
+                  -0.20899878442287445,
+                  -0.20899878442287445,
+                  -0.20899878442287445,
+                  -0.26231101155281067,
+                  -1.4974935054779053,
+                  -0.02074265293776989,
+                  -1.4577018022537231,
+                  -1.4577018022537231,
+                  -0.5961442589759827,
+                  -0.5961442589759827,
+                  -0.5961442589759827,
+                  -0.5025280714035034,
+                  -0.5025280714035034,
+                  -1.134873867034912,
+                  -1.2492386102676392,
+                  0,
+                  -0.08901266008615494,
+                  -1.1919481754302979,
+                  -1.1919481754302979,
+                  -0.032516319304704666,
+                  -0.032516319304704666,
+                  -1.2098956108093262,
+                  -0.2821674942970276,
+                  -0.2821674942970276,
+                  -0.2450454831123352,
+                  -0.2450454831123352,
+                  -0.8859402537345886,
+                  -0.9831812381744385,
+                  -1.432165503501892,
+                  -0.950893759727478,
+                  -0.747900664806366,
+                  -0.747900664806366,
+                  -1.1914294958114624,
+                  -1.1914294958114624,
+                  -0.7309638857841492,
+                  -1.6633672714233398,
+                  -1.172795057296753,
+                  -0.7192031145095825,
+                  -0.3040209412574768,
+                  -0.3096843361854553,
+                  -0.3096843361854553,
+                  -1.191176414489746,
+                  -1.191176414489746,
+                  0,
+                  -2.331066846847534,
+                  -0.7635199427604675,
+                  -1.6485724449157715,
+                  -2.3281679153442383,
+                  -1.399239182472229,
+                  -0.747797966003418,
+                  -0.747797966003418,
+                  -0.9744256734848022,
+                  -0.6396828889846802,
+                  -0.6396828889846802,
+                  -2.3066115379333496,
+                  -0.4779510796070099,
+                  -0.7190176844596863,
+                  -2.299860715866089,
+                  -1.1807045936584473,
+                  -1.1807045936584473,
+                  -1.5801969766616821,
+                  0,
+                  -0.7881185412406921,
+                  -0.7826607823371887,
+                  -0.2549860179424286,
+                  -1.179665207862854,
+                  -1.179665207862854,
+                  11.886645317077637,
+                  11.880398750305176,
+                  5.960328578948975,
+                  5.960328578948975,
+                  6.842950344085693,
+                  11.355284690856934,
+                  11.841104507446289,
+                  11.820147514343262,
+                  11.797664642333984,
+                  2.3845609723723715
                 ]
               ]
             }
@@ -829,11 +4447,19 @@
       ],
       [
         "en",
+        "hey there"
+      ],
+      [
+        "en",
         "salam"
       ],
       [
         "en",
         "assalam o alaikum"
+      ],
+      [
+        "en",
+        "aoa"
       ],
       [
         "en",
@@ -845,7 +4471,231 @@
       ],
       [
         "en",
-        "kese ho"
+        "kese ho aap"
+      ],
+      [
+        "en",
+        "good morning"
+      ],
+      [
+        "en",
+        "good evening"
+      ],
+      [
+        "en",
+        "namaste"
+      ],
+      [
+        "en",
+        "yo fanhub"
+      ],
+      [
+        "en",
+        "hey assistant"
+      ],
+      [
+        "en",
+        "kya haal chaal"
+      ],
+      [
+        "en",
+        "kese chal raha hai"
+      ],
+      [
+        "en",
+        "hello fanhub"
+      ],
+      [
+        "en",
+        "hi bot"
+      ],
+      [
+        "en",
+        "whats up"
+      ],
+      [
+        "en",
+        "sup"
+      ],
+      [
+        "en",
+        "show me some %genre% movies"
+      ],
+      [
+        "en",
+        "i want to watch an %genre% movie"
+      ],
+      [
+        "en",
+        "koi achi %genre% movie dikhao"
+      ],
+      [
+        "en",
+        "mujhe %genre% dekhni hai"
+      ],
+      [
+        "en",
+        "give me %genre% recommendations"
+      ],
+      [
+        "en",
+        "recommend some %genre% films"
+      ],
+      [
+        "en",
+        "best %genre% shows"
+      ],
+      [
+        "en",
+        "koi %genre% anime ya movie batao"
+      ],
+      [
+        "en",
+        "%genre% category dikhao"
+      ],
+      [
+        "en",
+        "top %genre% movies"
+      ],
+      [
+        "en",
+        "i love %genre%"
+      ],
+      [
+        "en",
+        "watch %genre%"
+      ],
+      [
+        "en",
+        "find %genre% movies"
+      ],
+      [
+        "en",
+        "%genre% recommendations please"
+      ],
+      [
+        "en",
+        "show %genre% list"
+      ],
+      [
+        "en",
+        "kuch %genre% content dikhao"
+      ],
+      [
+        "en",
+        "mujhe %genre% pasand hai"
+      ],
+      [
+        "en",
+        "suggest %genre% series"
+      ],
+      [
+        "en",
+        "explore %genre%"
+      ],
+      [
+        "en",
+        "any good %genre% to watch"
+      ],
+      [
+        "en",
+        "suggest some %genre% titles"
+      ],
+      [
+        "en",
+        "mujhe %genre% shows dekhne hain"
+      ],
+      [
+        "en",
+        "search %genre% movies"
+      ],
+      [
+        "en",
+        "search for %movie%"
+      ],
+      [
+        "en",
+        "find %movie%"
+      ],
+      [
+        "en",
+        "mujhe %movie% dekhni hai"
+      ],
+      [
+        "en",
+        "kya tumhare paas %movie% hai"
+      ],
+      [
+        "en",
+        "i want to watch %movie%"
+      ],
+      [
+        "en",
+        "play %movie%"
+      ],
+      [
+        "en",
+        "stream %movie%"
+      ],
+      [
+        "en",
+        "where can i watch %movie%"
+      ],
+      [
+        "en",
+        "show me %movie%"
+      ],
+      [
+        "en",
+        "kya %movie% available hai"
+      ],
+      [
+        "en",
+        "%movie% dhundo"
+      ],
+      [
+        "en",
+        "%movie% search karo"
+      ],
+      [
+        "en",
+        "look up %movie%"
+      ],
+      [
+        "en",
+        "is %movie% on fanhub"
+      ],
+      [
+        "en",
+        "can i stream %movie%"
+      ],
+      [
+        "en",
+        "open %movie%"
+      ],
+      [
+        "en",
+        "give me details on %movie%"
+      ],
+      [
+        "en",
+        "watch %movie% now"
+      ],
+      [
+        "en",
+        "%movie% film dikhao"
+      ],
+      [
+        "en",
+        "check %movie%"
+      ],
+      [
+        "en",
+        "mujhe %movie% movie chahie"
+      ],
+      [
+        "en",
+        "find title %movie%"
       ],
       [
         "en",
@@ -854,10 +4704,6 @@
       [
         "en",
         "show me trending movies"
-      ],
-      [
-        "en",
-        "trending"
       ],
       [
         "en",
@@ -877,27 +4723,63 @@
       ],
       [
         "en",
-        "recommend something"
+        "what is popular right now"
       ],
       [
         "en",
-        "movie recommendation"
+        "sabse popular movies"
       ],
       [
         "en",
-        "kuch acha batao"
+        "top rated content"
       ],
       [
         "en",
-        "koi achi movie batao"
+        "trending anime"
       ],
       [
         "en",
-        "anime recommend karo"
+        "trending movies and series"
       ],
       [
         "en",
-        "content recommendations"
+        "aaj kal kya chal raha hai"
+      ],
+      [
+        "en",
+        "what should i watch today"
+      ],
+      [
+        "en",
+        "hot releases"
+      ],
+      [
+        "en",
+        "latest releases on fanhub"
+      ],
+      [
+        "en",
+        "trending list"
+      ],
+      [
+        "en",
+        "popular titles"
+      ],
+      [
+        "en",
+        "kya trending hai"
+      ],
+      [
+        "en",
+        "batao aaj kya naya aaya hai"
+      ],
+      [
+        "en",
+        "show me whats hot"
+      ],
+      [
+        "en",
+        "what is trending this week"
       ],
       [
         "en",
@@ -905,15 +4787,7 @@
       ],
       [
         "en",
-        "help with features"
-      ],
-      [
-        "en",
         "what can you do"
-      ],
-      [
-        "en",
-        "features"
       ],
       [
         "en",
@@ -921,7 +4795,239 @@
       ],
       [
         "en",
+        "help with features"
+      ],
+      [
+        "en",
+        "features of fanhub"
+      ],
+      [
+        "en",
         "yeh website kya hai"
+      ],
+      [
+        "en",
+        "how does this work"
+      ],
+      [
+        "en",
+        "kaise use karein"
+      ],
+      [
+        "en",
+        "platform guide"
+      ],
+      [
+        "en",
+        "kya kya features hain"
+      ],
+      [
+        "en",
+        "what is fanhub plus"
+      ],
+      [
+        "en",
+        "can you guide me"
+      ],
+      [
+        "en",
+        "help me navigate"
+      ],
+      [
+        "en",
+        "madad chahiye"
+      ],
+      [
+        "en",
+        "fanhub guide"
+      ],
+      [
+        "en",
+        "assist me"
+      ],
+      [
+        "en",
+        "what are the fandoms"
+      ],
+      [
+        "en",
+        "tell me about fan hub"
+      ],
+      [
+        "en",
+        "system features"
+      ],
+      [
+        "en",
+        "options available"
+      ],
+      [
+        "en",
+        "tell me about characters"
+      ],
+      [
+        "en",
+        "character dossiers"
+      ],
+      [
+        "en",
+        "who is gojo"
+      ],
+      [
+        "en",
+        "johnny silverhand"
+      ],
+      [
+        "en",
+        "malenia lore"
+      ],
+      [
+        "en",
+        "anime lore"
+      ],
+      [
+        "en",
+        "fandom articles"
+      ],
+      [
+        "en",
+        "read lore"
+      ],
+      [
+        "en",
+        "characters kahan hain"
+      ],
+      [
+        "en",
+        "lore articles dikhao"
+      ],
+      [
+        "en",
+        "character powers and abilities"
+      ],
+      [
+        "en",
+        "community submissions"
+      ],
+      [
+        "en",
+        "tell me character stories"
+      ],
+      [
+        "en",
+        "music"
+      ],
+      [
+        "en",
+        "audio player"
+      ],
+      [
+        "en",
+        "soundtracks"
+      ],
+      [
+        "en",
+        "anime ost"
+      ],
+      [
+        "en",
+        "listen to songs"
+      ],
+      [
+        "en",
+        "gaming ost"
+      ],
+      [
+        "en",
+        "gaane sunne hain"
+      ],
+      [
+        "en",
+        "music player kahan hai"
+      ],
+      [
+        "en",
+        "turntable"
+      ],
+      [
+        "en",
+        "cyberpunk soundtrack"
+      ],
+      [
+        "en",
+        "bgm player"
+      ],
+      [
+        "en",
+        "conventions"
+      ],
+      [
+        "en",
+        "comic con"
+      ],
+      [
+        "en",
+        "events near me"
+      ],
+      [
+        "en",
+        "upcoming events"
+      ],
+      [
+        "en",
+        "anime convention"
+      ],
+      [
+        "en",
+        "events calendar"
+      ],
+      [
+        "en",
+        "events kahan hain"
+      ],
+      [
+        "en",
+        "comic con pakistan"
+      ],
+      [
+        "en",
+        "cosplay meetup"
+      ],
+      [
+        "en",
+        "find conventions"
+      ],
+      [
+        "en",
+        "blah blah"
+      ],
+      [
+        "en",
+        "asdfgh"
+      ],
+      [
+        "en",
+        "random stuff"
+      ],
+      [
+        "en",
+        "kuch bhi"
+      ],
+      [
+        "en",
+        "ye kya hai"
+      ],
+      [
+        "en",
+        "xyz"
+      ],
+      [
+        "en",
+        "gibberish"
+      ],
+      [
+        "en",
+        "qwerty"
       ]
     ]
   },
@@ -931,7 +5037,260 @@
       "entityPreffix": "%",
       "entitySuffix": "%"
     },
-    "rules": {}
+    "rules": {
+      "en": {
+        "movie": {
+          "name": "movie",
+          "type": "enum",
+          "rules": [
+            {
+              "option": "Arcane",
+              "texts": [
+                "arcane",
+                "Arcane"
+              ]
+            },
+            {
+              "option": "Cyberpunk: Edgerunners",
+              "texts": [
+                "cyberpunk: edgerunners",
+                "Cyberpunk: Edgerunners"
+              ]
+            },
+            {
+              "option": "Dune",
+              "texts": [
+                "dune",
+                "Dune"
+              ]
+            },
+            {
+              "option": "Elden Ring",
+              "texts": [
+                "elden ring",
+                "Elden Ring"
+              ]
+            },
+            {
+              "option": "Jujutsu Kaisen",
+              "texts": [
+                "jujutsu kaisen",
+                "Jujutsu Kaisen"
+              ]
+            },
+            {
+              "option": "Attack on Titan",
+              "texts": [
+                "attack on titan",
+                "Attack on Titan"
+              ]
+            },
+            {
+              "option": "Spider-Man",
+              "texts": [
+                "spider-man",
+                "Spider-Man"
+              ]
+            },
+            {
+              "option": "The Batman",
+              "texts": [
+                "the batman",
+                "The Batman"
+              ]
+            },
+            {
+              "option": "Demon Slayer",
+              "texts": [
+                "demon slayer",
+                "Demon Slayer"
+              ]
+            },
+            {
+              "option": "Solo Leveling",
+              "texts": [
+                "solo leveling",
+                "Solo Leveling"
+              ]
+            },
+            {
+              "option": "Interstellar",
+              "texts": [
+                "interstellar",
+                "Interstellar"
+              ]
+            },
+            {
+              "option": "Breaking Bad",
+              "texts": [
+                "breaking bad",
+                "Breaking Bad"
+              ]
+            },
+            {
+              "option": "Stranger Things",
+              "texts": [
+                "stranger things",
+                "Stranger Things"
+              ]
+            }
+          ]
+        },
+        "genre": {
+          "name": "genre",
+          "type": "enum",
+          "rules": [
+            {
+              "option": "action",
+              "texts": [
+                "action",
+                "action"
+              ]
+            },
+            {
+              "option": "anime",
+              "texts": [
+                "anime",
+                "anime"
+              ]
+            },
+            {
+              "option": "gaming",
+              "texts": [
+                "gaming",
+                "gaming"
+              ]
+            },
+            {
+              "option": "scifi",
+              "texts": [
+                "scifi",
+                "scifi"
+              ]
+            },
+            {
+              "option": "sci-fi",
+              "texts": [
+                "sci-fi",
+                "sci-fi"
+              ]
+            },
+            {
+              "option": "cyberpunk",
+              "texts": [
+                "cyberpunk",
+                "cyberpunk"
+              ]
+            },
+            {
+              "option": "fantasy",
+              "texts": [
+                "fantasy",
+                "fantasy"
+              ]
+            },
+            {
+              "option": "horror",
+              "texts": [
+                "horror",
+                "horror"
+              ]
+            },
+            {
+              "option": "thriller",
+              "texts": [
+                "thriller",
+                "thriller"
+              ]
+            },
+            {
+              "option": "adventure",
+              "texts": [
+                "adventure",
+                "adventure"
+              ]
+            },
+            {
+              "option": "comedy",
+              "texts": [
+                "comedy",
+                "comedy"
+              ]
+            },
+            {
+              "option": "drama",
+              "texts": [
+                "drama",
+                "drama"
+              ]
+            },
+            {
+              "option": "shonen",
+              "texts": [
+                "shonen",
+                "shonen"
+              ]
+            },
+            {
+              "option": "superhero",
+              "texts": [
+                "superhero",
+                "superhero"
+              ]
+            },
+            {
+              "option": "mystery",
+              "texts": [
+                "mystery",
+                "mystery"
+              ]
+            },
+            {
+              "option": "romance",
+              "texts": [
+                "romance",
+                "romance"
+              ]
+            },
+            {
+              "option": "animation",
+              "texts": [
+                "animation",
+                "animation"
+              ]
+            },
+            {
+              "option": "k-pop",
+              "texts": [
+                "k-pop",
+                "k-pop"
+              ]
+            },
+            {
+              "option": "comics",
+              "texts": [
+                "comics",
+                "comics"
+              ]
+            },
+            {
+              "option": "manga",
+              "texts": [
+                "manga",
+                "manga"
+              ]
+            },
+            {
+              "option": "cosplay",
+              "texts": [
+                "cosplay",
+                "cosplay"
+              ]
+            }
+          ]
+        }
+      }
+    }
   },
   "nlgManager": {
     "settings": {
@@ -941,7 +5300,7 @@
       "en": {
         "greeting": [
           {
-            "answer": "Hi there! 👋 I am FanHub AI. Kaise madad kar sakta hu aapki?"
+            "answer": "Hi there! 👋 I am FanHub AI, your entertainment assistant. Kaise madad kar sakta hu aapki?"
           },
           {
             "answer": "Hello! Welcome to FanHub Plus. What would you like to watch today?"
@@ -950,19 +5309,53 @@
             "answer": "Walaikum Assalam! Welcome to the Fandom Universe. Kaise hain aap?"
           }
         ],
-        "movie.trending": [
+        "movie.genre": [
           {
-            "answer": "Here are the latest trending movies on FanHub! 🍿||ACTION:FETCH_TRENDING"
+            "answer": "Here are some great %genre% titles for you! 🎬||ACTION:FETCH_GENRE"
+          },
+          {
+            "answer": "Found top-rated %genre% movies in the Fandom Universe! 🍿||ACTION:FETCH_GENRE"
           }
         ],
-        "movie.recommend": [
+        "movie.search": [
           {
-            "answer": "Looking for recommendations? Tell me your favorite genre or check out trending anime and movies in our Fandom Explorer!||ACTION:FETCH_TRENDING"
+            "answer": "Let me find %movie% for you. 🔍||ACTION:SEARCH_MOVIE"
+          },
+          {
+            "answer": "Searching our fandom vault for %movie%...||ACTION:SEARCH_MOVIE"
+          }
+        ],
+        "movie.trending": [
+          {
+            "answer": "Here are the latest trending movies and series on Fan Hub Plus! 🍿||ACTION:FETCH_TRENDING"
+          },
+          {
+            "answer": "These titles are blowing up right now in the fandom! 🔥||ACTION:FETCH_TRENDING"
           }
         ],
         "agent.help": [
           {
-            "answer": "I can recommend movies, show you what is trending, and help you navigate FanHub. Bas apni pasand batayein!"
+            "answer": "I am FanHub AI! ✨ I can search movies, recommend anime, filter by genres, show trending releases, and guide you through Character Dossiers, Audio Turntable, and Conventions. Bas apni pasand batayein!"
+          }
+        ],
+        "fandom.lore": [
+          {
+            "answer": "Dive into our Character Dossiers at '/characters' and Featured Lore Articles at '/articles' for full power breakdowns and backstory!"
+          }
+        ],
+        "fandom.audio": [
+          {
+            "answer": "Experience our animated vinyl turntable player at '/audio'! Stream Cyberpunk OSTs, Arcane themes, Elden Ring orchestral scores, and K-Pop hits."
+          }
+        ],
+        "fandom.events": [
+          {
+            "answer": "Check out our location-aware Convention Calendar at '/events'! It calculates live GPS distance to Comic-Con, Gamescom, Anime Expo, and local conventions."
+          }
+        ],
+        "fallback": [
+          {
+            "answer": "Sorry, main thoda samajh nahi paya. Try asking: 'Show trending movies', 'Find Cyberpunk', or 'Recommend action anime'!"
           }
         ]
       }
@@ -974,5 +5367,22 @@
     },
     "actions": {}
   },
-  "slotManager": {}
+  "slotManager": {
+    "movie.genre": {
+      "genre": {
+        "intent": "movie.genre",
+        "entity": "genre",
+        "mandatory": false,
+        "locales": {}
+      }
+    },
+    "movie.search": {
+      "movie": {
+        "intent": "movie.search",
+        "entity": "movie",
+        "mandatory": false,
+        "locales": {}
+      }
+    }
+  }
 }

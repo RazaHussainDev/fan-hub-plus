@@ -1,0 +1,232 @@
+{
+  "name": "FanHub AI Enterprise Corpus",
+  "locale": "en",
+  "data": [
+    {
+      "intent": "greeting",
+      "utterances": [
+        "hello",
+        "hi",
+        "hey",
+        "hey there",
+        "salam",
+        "assalam o alaikum",
+        "aoa",
+        "kya haal hai",
+        "kaise ho",
+        "kese ho aap",
+        "good morning",
+        "good evening",
+        "namaste",
+        "yo fanhub",
+        "hey assistant",
+        "kya haal chaal",
+        "kese chal raha hai",
+        "hello fanhub",
+        "hi bot",
+        "whats up",
+        "sup"
+      ],
+      "answers": [
+        "Hi there! 👋 I am FanHub AI, your entertainment assistant. Kaise madad kar sakta hu aapki?",
+        "Hello! Welcome to FanHub Plus. What would you like to watch today?",
+        "Walaikum Assalam! Welcome to the Fandom Universe. Kaise hain aap?"
+      ]
+    },
+    {
+      "intent": "movie.genre",
+      "utterances": [
+        "show me some %genre% movies",
+        "i want to watch an %genre% movie",
+        "koi achi %genre% movie dikhao",
+        "mujhe %genre% dekhni hai",
+        "give me %genre% recommendations",
+        "recommend some %genre% films",
+        "best %genre% shows",
+        "koi %genre% anime ya movie batao",
+        "%genre% category dikhao",
+        "top %genre% movies",
+        "i love %genre%",
+        "watch %genre%",
+        "find %genre% movies",
+        "%genre% recommendations please",
+        "show %genre% list",
+        "kuch %genre% content dikhao",
+        "mujhe %genre% pasand hai",
+        "suggest %genre% series",
+        "explore %genre%",
+        "any good %genre% to watch",
+        "suggest some %genre% titles",
+        "mujhe %genre% shows dekhne hain",
+        "search %genre% movies"
+      ],
+      "answers": [
+        "Here are some great %genre% titles for you! 🎬||ACTION:FETCH_GENRE",
+        "Found top-rated %genre% movies in the Fandom Universe! 🍿||ACTION:FETCH_GENRE"
+      ]
+    },
+    {
+      "intent": "movie.search",
+      "utterances": [
+        "search for %movie%",
+        "find %movie%",
+        "mujhe %movie% dekhni hai",
+        "kya tumhare paas %movie% hai",
+        "i want to watch %movie%",
+        "play %movie%",
+        "stream %movie%",
+        "where can i watch %movie%",
+        "show me %movie%",
+        "kya %movie% available hai",
+        "%movie% dhundo",
+        "%movie% search karo",
+        "look up %movie%",
+        "is %movie% on fanhub",
+        "can i stream %movie%",
+        "open %movie%",
+        "give me details on %movie%",
+        "watch %movie% now",
+        "%movie% film dikhao",
+        "check %movie%",
+        "mujhe %movie% movie chahie",
+        "find title %movie%"
+      ],
+      "answers": [
+        "Let me find %movie% for you. 🔍||ACTION:SEARCH_MOVIE",
+        "Searching our fandom vault for %movie%...||ACTION:SEARCH_MOVIE"
+      ]
+    },
+    {
+      "intent": "movie.trending",
+      "utterances": [
+        "whats trending",
+        "show me trending movies",
+        "aaj kya dekhu",
+        "top movies dikhao",
+        "naya kya hai",
+        "trending shows",
+        "what is popular right now",
+        "sabse popular movies",
+        "top rated content",
+        "trending anime",
+        "trending movies and series",
+        "aaj kal kya chal raha hai",
+        "what should i watch today",
+        "hot releases",
+        "latest releases on fanhub",
+        "trending list",
+        "popular titles",
+        "kya trending hai",
+        "batao aaj kya naya aaya hai",
+        "show me whats hot",
+        "what is trending this week"
+      ],
+      "answers": [
+        "Here are the latest trending movies and series on Fan Hub Plus! 🍿||ACTION:FETCH_TRENDING",
+        "These titles are blowing up right now in the fandom! 🔥||ACTION:FETCH_TRENDING"
+      ]
+    },
+    {
+      "intent": "agent.help",
+      "utterances": [
+        "help",
+        "what can you do",
+        "tum kya kar sakte ho",
+        "help with features",
+        "features of fanhub",
+        "yeh website kya hai",
+        "how does this work",
+        "kaise use karein",
+        "platform guide",
+        "kya kya features hain",
+        "what is fanhub plus",
+        "can you guide me",
+        "help me navigate",
+        "madad chahiye",
+        "fanhub guide",
+        "assist me",
+        "what are the fandoms",
+        "tell me about fan hub",
+        "system features",
+        "options available"
+      ],
+      "answers": [
+        "I am FanHub AI! ✨ I can search movies, recommend anime, filter by genres, show trending releases, and guide you through Character Dossiers, Audio Turntable, and Conventions. Bas apni pasand batayein!"
+      ]
+    },
+    {
+      "intent": "fandom.lore",
+      "utterances": [
+        "tell me about characters",
+        "character dossiers",
+        "who is gojo",
+        "johnny silverhand",
+        "malenia lore",
+        "anime lore",
+        "fandom articles",
+        "read lore",
+        "characters kahan hain",
+        "lore articles dikhao",
+        "character powers and abilities",
+        "community submissions",
+        "tell me character stories"
+      ],
+      "answers": [
+        "Dive into our Character Dossiers at '/characters' and Featured Lore Articles at '/articles' for full power breakdowns and backstory!"
+      ]
+    },
+    {
+      "intent": "fandom.audio",
+      "utterances": [
+        "music",
+        "audio player",
+        "soundtracks",
+        "anime ost",
+        "listen to songs",
+        "gaming ost",
+        "gaane sunne hain",
+        "music player kahan hai",
+        "turntable",
+        "cyberpunk soundtrack",
+        "bgm player"
+      ],
+      "answers": [
+        "Experience our animated vinyl turntable player at '/audio'! Stream Cyberpunk OSTs, Arcane themes, Elden Ring orchestral scores, and K-Pop hits."
+      ]
+    },
+    {
+      "intent": "fandom.events",
+      "utterances": [
+        "conventions",
+        "comic con",
+        "events near me",
+        "upcoming events",
+        "anime convention",
+        "events calendar",
+        "events kahan hain",
+        "comic con pakistan",
+        "cosplay meetup",
+        "find conventions"
+      ],
+      "answers": [
+        "Check out our location-aware Convention Calendar at '/events'! It calculates live GPS distance to Comic-Con, Gamescom, Anime Expo, and local conventions."
+      ]
+    },
+    {
+      "intent": "fallback",
+      "utterances": [
+        "blah blah",
+        "asdfgh",
+        "random stuff",
+        "kuch bhi",
+        "ye kya hai",
+        "xyz",
+        "gibberish",
+        "qwerty"
+      ],
+      "answers": [
+        "Sorry, main thoda samajh nahi paya. Try asking: 'Show trending movies', 'Find Cyberpunk', or 'Recommend action anime'!"
+      ]
+    }
+  ]
+}
