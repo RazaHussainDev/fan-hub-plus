@@ -9,6 +9,7 @@ export default function SitemapPage() {
     { name: 'Character Dossiers', href: '/characters' },
     { name: 'Featured Articles & Lore', href: '/articles' },
     { name: 'Merchandise & Upcoming Drops', href: '/merchandise' },
+    { name: 'Events & Convention Calendar', href: '/events' },
     { name: 'My List', href: '/mylist' },
     { name: 'Search', href: '/search', isAction: true },
     { name: 'Anime Universe', href: '/explore?category=Anime' },
