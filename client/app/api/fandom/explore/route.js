@@ -17,15 +17,32 @@ export async function GET(request) {
     if (res.ok) {
       const data = await res.json();
       if (data.success && Array.isArray(data.results)) {
-        dbResults = data.results.map(item => ({
-          ...item,
-          id: item._id || item.id,
-          poster_path: item.poster?.replace('https://image.tmdb.org/t/p/w500', '').replace('https://image.tmdb.org/t/p/w780', '') || item.poster
-        }));
+        dbResults = data.results.map(item => {
+          const posterUrl = item.poster || '';
+          let posterPath = item.poster_path || null;
+
+          if (!posterPath && posterUrl) {
+            if (posterUrl.includes('image.tmdb.org')) {
+              posterPath = posterUrl
+                .replace('https://image.tmdb.org/t/p/w500', '')
+                .replace('https://image.tmdb.org/t/p/w780', '')
+                .replace('https://image.tmdb.org/t/p/original', '');
+            }
+          }
+
+          return {
+            ...item,
+            id: item._id || item.id,
+            poster: posterUrl,
+            poster_path: posterPath,
+            backdrop: item.backdrop || '',
+            rating: item.rating || item.vote_average || 8.5
+          };
+        });
       }
     }
   } catch (e) {
-    // Proceed with TMDB catalog
+    // Proceed with TMDB catalog if backend is not reachable
   }
 
   try {

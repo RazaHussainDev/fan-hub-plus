@@ -100,10 +100,13 @@ export default function MyListPage() {
                     className="block relative w-full aspect-[2/3] rounded-t-2xl overflow-hidden"
                   >
                     <img
-                      src={`${BASE_IMG_URL}${item.poster_path}`}
+                      src={item.poster_path
+                        ? (item.poster_path.startsWith('http') ? item.poster_path : `${BASE_IMG_URL}${item.poster_path}`)
+                        : 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500&q=80'}
                       alt={item.title || item.name}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       loading="lazy"
+                      onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500&q=80'; }}
                     />
                     
                     {/* Hover Overlay Play Icon */}

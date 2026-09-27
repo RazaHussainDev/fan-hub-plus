@@ -53,7 +53,7 @@ const MovieRow = ({ title, fetchCategory, initialMovies = null, fallbackType = '
           ))
         ) : movies.length === 0 ? null : (
           movies.map((movie) => {
-            if (!movie.poster_path) return null;
+            if (!movie.poster_path && !movie.poster) return null;
             return <MovieCard key={movie.id} movie={movie} fallbackType={fallbackType} />;
           })
         )}
@@ -146,10 +146,13 @@ const MovieCard = ({ movie, fallbackType }) => {
       >
         <div className="relative w-full aspect-[2/3] rounded-t-2xl overflow-hidden">
           <img
-            src={`${BASE_IMG_URL}${movie.poster_path}`}
+            src={movie.poster_path
+              ? (movie.poster_path.startsWith('http') ? movie.poster_path : `${BASE_IMG_URL}${movie.poster_path}`)
+              : (movie.poster || 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500&q=80')}
             alt={movie.title || movie.name}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1"
             loading="lazy"
+            onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500&q=80'; }}
           />
           
           {/* Quick Action Top Icons (Watchlist, Download, Share) */}

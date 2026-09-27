@@ -55,15 +55,45 @@ const containerVariants = {
   }
 };
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 20, scale: 0.96 },
-  visible: { 
-    opacity: 1, 
-    y: 0, 
-    scale: 1, 
-    transition: { duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] } 
+const FALLBACK_POSTER = 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=800&q=80';
+const FALLBACK_BACKDROP = 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1920&q=80';
+
+export function getPosterUrl(item) {
+  if (!item) return FALLBACK_POSTER;
+  if (item.poster && (item.poster.startsWith('http://') || item.poster.startsWith('https://'))) {
+    return item.poster;
   }
-};
+  if (item.poster_path) {
+    if (item.poster_path.startsWith('http://') || item.poster_path.startsWith('https://')) {
+      return item.poster_path;
+    }
+    const cleanPath = item.poster_path.startsWith('/') ? item.poster_path : `/${item.poster_path}`;
+    return `https://image.tmdb.org/t/p/w500${cleanPath}`;
+  }
+  if (item.backdrop && (item.backdrop.startsWith('http://') || item.backdrop.startsWith('https://'))) {
+    return item.backdrop;
+  }
+  if (item.backdrop_path) {
+    const cleanPath = item.backdrop_path.startsWith('/') ? item.backdrop_path : `/${item.backdrop_path}`;
+    return `https://image.tmdb.org/t/p/w780${cleanPath}`;
+  }
+  return FALLBACK_POSTER;
+}
+
+export function getBackdropUrl(item) {
+  if (!item) return FALLBACK_BACKDROP;
+  if (item.backdrop && (item.backdrop.startsWith('http://') || item.backdrop.startsWith('https://'))) {
+    return item.backdrop;
+  }
+  if (item.backdrop_path) {
+    if (item.backdrop_path.startsWith('http://') || item.backdrop_path.startsWith('https://')) {
+      return item.backdrop_path;
+    }
+    const cleanPath = item.backdrop_path.startsWith('/') ? item.backdrop_path : `/${item.backdrop_path}`;
+    return `https://image.tmdb.org/t/p/original${cleanPath}`;
+  }
+  return getPosterUrl(item);
+}
 
 function ExploreContent() {
   const searchParams = useSearchParams();
@@ -443,9 +473,7 @@ function ExploreContent() {
               const itemId = String(item._id || item.id);
               const isSaved = isInWatchlist(itemId);
               const type = item.type === 'tv' ? 'tv' : 'movie';
-              const posterSrc = item.poster_path 
-                ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
-                : (item.poster || 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=800&q=80');
+              const posterSrc = getPosterUrl(item);
 
               return (
                 <motion.div
@@ -463,6 +491,7 @@ function ExploreContent() {
                       alt={item.title || item.name}
                       className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                       loading="lazy"
+                      onError={(e) => { e.currentTarget.src = FALLBACK_POSTER; }}
                     />
 
                     {/* Gradient Overlay */}
@@ -600,9 +629,10 @@ function ExploreContent() {
 
               <div className="relative w-full h-64 overflow-hidden">
                 <img
-                  src={activeModalItem.backdrop_path ? `https://image.tmdb.org/t/p/original${activeModalItem.backdrop_path}` : (activeModalItem.backdrop || activeModalItem.poster)}
+                  src={getBackdropUrl(activeModalItem)}
                   alt={activeModalItem.title || activeModalItem.name}
                   className="w-full h-full object-cover"
+                  onError={(e) => { e.currentTarget.src = getPosterUrl(activeModalItem); }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0e130c] via-[#0e130c]/40 to-transparent" />
                 <div className="absolute bottom-4 left-6 right-6 flex items-end justify-between">

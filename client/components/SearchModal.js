@@ -93,7 +93,7 @@ export default function SearchModal() {
                 {results.length > 0 ? (
                   <div className="max-h-[60vh] overflow-y-auto scrollbar-hide py-4 px-2">
                     {results.map((item) => {
-                      if (!item.poster_path) return null;
+                      if (!item.poster_path && !item.poster) return null;
                       const releaseYear = item.release_date?.split('-')[0] || item.first_air_date?.split('-')[0] || '';
                       
                       return (
@@ -105,9 +105,12 @@ export default function SearchModal() {
                         >
                           <div className="relative w-16 md:w-20 aspect-[2/3] shrink-0 rounded-lg overflow-hidden border border-black/5 dark:border-white/10 shadow-md">
                             <img
-                              src={`${BASE_IMG_URL}${item.poster_path}`}
+                              src={item.poster_path
+                                ? (item.poster_path.startsWith('http') ? item.poster_path : `${BASE_IMG_URL}${item.poster_path}`)
+                                : 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=300&q=80'}
                               alt={item.title || item.name}
                               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                              onError={(e) => { e.currentTarget.src = 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=300&q=80'; }}
                             />
                             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                <Play size={20} className="text-brand-primary ml-1" fill="currentColor" />
