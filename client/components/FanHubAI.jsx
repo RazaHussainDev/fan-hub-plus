@@ -75,7 +75,7 @@ export default function FanHubAI() {
     }
   }, [messages, isTyping, isOpen]);
 
-  const handleSendMessage = (textToSend) => {
+  const handleSendMessage = async (textToSend) => {
     const query = (textToSend || inputValue).trim();
     if (!query) return;
 
@@ -91,21 +91,20 @@ export default function FanHubAI() {
     if (!textToSend) setInputValue('');
     setIsTyping(true);
 
-    // Simulate smart bot response
-    setTimeout(() => {
-      let botReply = '';
-      const matchedAction = QUICK_ACTIONS.find(a => a.query.toLowerCase() === query.toLowerCase());
+    try {
+      const backendBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const res = await fetch(`${backendBase}/api/ai/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: query })
+      });
 
-      if (matchedAction) {
-        botReply = matchedAction.reply;
-      } else if (query.toLowerCase().includes('hello') || query.toLowerCase().includes('hi')) {
-        botReply = "Greetings, fellow fan! 🌟 How's your streaming journey going? You can ask me for recommendations, trending shows, or how to use any platform feature.";
-      } else if (query.toLowerCase().includes('movie') || query.toLowerCase().includes('watch') || query.toLowerCase().includes('stream')) {
-        botReply = "Head over to the '/explore' section to stream the highest-rated blockbusters, anime masterpieces, and TV series with zero buffering!";
-      } else if (query.toLowerCase().includes('character') || query.toLowerCase().includes('lore')) {
-        botReply = "Our Character Dossiers at '/characters' feature full power breakdowns, iconic quotes, and backstories for characters like Gojo Satoru, Johnny Silverhand, and Malenia!";
-      } else {
-        botReply = `Great question! As your FanHub AI guide, I'm here to help you navigate our 8 fandom categories, stream media, discover upcoming conventions, and collect fan gear. Let me know if you want specific recommendations for "${query}"!`;
+      const data = await res.json();
+      let botReply = data.reply || "Sorry, main thoda samajh nahi paya. Can you rephrase?";
+
+      if (botReply.includes('||ACTION:FETCH_TRENDING')) {
+        console.log("Ready for Phase 3: Fetch Movies");
+        botReply = botReply.split('||ACTION:FETCH_TRENDING')[0].trim();
       }
 
       setMessages(prev => [
@@ -117,8 +116,21 @@ export default function FanHubAI() {
           text: botReply
         }
       ]);
+    } catch (err) {
+      console.error('AI Chat Error:', err);
+      // Fallback response if server is offline
+      setMessages(prev => [
+        ...prev,
+        {
+          id: Date.now() + '-bot',
+          sender: 'bot',
+          type: 'text',
+          text: "Hi! I am currently running offline. You can explore trending fandom titles, character dossiers, and audio OSTs anytime!"
+        }
+      ]);
+    } finally {
       setIsTyping(false);
-    }, 900);
+    }
   };
 
   const handleKeyDown = (e) => {

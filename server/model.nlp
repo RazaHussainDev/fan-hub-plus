@@ -1,0 +1,978 @@
+{
+  "settings": {
+    "languages": [
+      "en"
+    ],
+    "forceNER": true,
+    "tag": "nlp",
+    "threshold": 0.5,
+    "autoLoad": true,
+    "autoSave": true,
+    "modelFileName": "model.nlp",
+    "executeActionsBeforeAnswers": false,
+    "calculateSentiment": true
+  },
+  "nluManager": {
+    "settings": {
+      "tag": "nlu-manager"
+    },
+    "locales": [
+      "en"
+    ],
+    "languageNames": {},
+    "domainManagers": {
+      "en": {
+        "settings": {
+          "locale": "en",
+          "trainByDomain": false,
+          "tag": "domain-manager-en",
+          "nluByDomain": {
+            "default": {
+              "className": "NeuralNlu",
+              "settings": {}
+            }
+          },
+          "useStemDict": true
+        },
+        "stemDict": {
+          "hello": {
+            "intent": "greeting",
+            "domain": "default"
+          },
+          "hi": {
+            "intent": "greeting",
+            "domain": "default"
+          },
+          "hey": {
+            "intent": "greeting",
+            "domain": "default"
+          },
+          "salam": {
+            "intent": "greeting",
+            "domain": "default"
+          },
+          "alaikum,assalam,o": {
+            "intent": "greeting",
+            "domain": "default"
+          },
+          "haal,hai,kya": {
+            "intent": "greeting",
+            "domain": "default"
+          },
+          "ho,kais": {
+            "intent": "greeting",
+            "domain": "default"
+          },
+          "ho,kese": {
+            "intent": "greeting",
+            "domain": "default"
+          },
+          "trend,what": {
+            "intent": "movie.trending",
+            "domain": "default"
+          },
+          "me,movi,show,trend": {
+            "intent": "movie.trending",
+            "domain": "default"
+          },
+          "trend": {
+            "intent": "movie.trending",
+            "domain": "default"
+          },
+          "aaj,dekhu,kya": {
+            "intent": "movie.trending",
+            "domain": "default"
+          },
+          "dikhao,movi,top": {
+            "intent": "movie.trending",
+            "domain": "default"
+          },
+          "hai,kya,naya": {
+            "intent": "movie.trending",
+            "domain": "default"
+          },
+          "show,trend": {
+            "intent": "movie.trending",
+            "domain": "default"
+          },
+          "recommend,someth": {
+            "intent": "movie.recommend",
+            "domain": "default"
+          },
+          "movi,recommend": {
+            "intent": "movie.recommend",
+            "domain": "default"
+          },
+          "acha,batao,kuch": {
+            "intent": "movie.recommend",
+            "domain": "default"
+          },
+          "achi,batao,koi,movi": {
+            "intent": "movie.recommend",
+            "domain": "default"
+          },
+          "anim,karo,recommend": {
+            "intent": "movie.recommend",
+            "domain": "default"
+          },
+          "content,recommend": {
+            "intent": "movie.recommend",
+            "domain": "default"
+          },
+          "help": {
+            "intent": "agent.help",
+            "domain": "default"
+          },
+          "featur,help,with": {
+            "intent": "agent.help",
+            "domain": "default"
+          },
+          "can,do,what,you": {
+            "intent": "agent.help",
+            "domain": "default"
+          },
+          "featur": {
+            "intent": "agent.help",
+            "domain": "default"
+          },
+          "ho,kar,kya,sakt,tum": {
+            "intent": "agent.help",
+            "domain": "default"
+          },
+          "hai,kya,websit,yeh": {
+            "intent": "agent.help",
+            "domain": "default"
+          }
+        },
+        "intentDict": {
+          "greeting": "default",
+          "movie.trending": "default",
+          "movie.recommend": "default",
+          "agent.help": "default"
+        },
+        "sentences": [
+          {
+            "domain": "default",
+            "utterance": "hello",
+            "intent": "greeting"
+          },
+          {
+            "domain": "default",
+            "utterance": "hi",
+            "intent": "greeting"
+          },
+          {
+            "domain": "default",
+            "utterance": "hey",
+            "intent": "greeting"
+          },
+          {
+            "domain": "default",
+            "utterance": "salam",
+            "intent": "greeting"
+          },
+          {
+            "domain": "default",
+            "utterance": "assalam o alaikum",
+            "intent": "greeting"
+          },
+          {
+            "domain": "default",
+            "utterance": "kya haal hai",
+            "intent": "greeting"
+          },
+          {
+            "domain": "default",
+            "utterance": "kaise ho",
+            "intent": "greeting"
+          },
+          {
+            "domain": "default",
+            "utterance": "kese ho",
+            "intent": "greeting"
+          },
+          {
+            "domain": "default",
+            "utterance": "whats trending",
+            "intent": "movie.trending"
+          },
+          {
+            "domain": "default",
+            "utterance": "show me trending movies",
+            "intent": "movie.trending"
+          },
+          {
+            "domain": "default",
+            "utterance": "trending",
+            "intent": "movie.trending"
+          },
+          {
+            "domain": "default",
+            "utterance": "aaj kya dekhu",
+            "intent": "movie.trending"
+          },
+          {
+            "domain": "default",
+            "utterance": "top movies dikhao",
+            "intent": "movie.trending"
+          },
+          {
+            "domain": "default",
+            "utterance": "naya kya hai",
+            "intent": "movie.trending"
+          },
+          {
+            "domain": "default",
+            "utterance": "trending shows",
+            "intent": "movie.trending"
+          },
+          {
+            "domain": "default",
+            "utterance": "recommend something",
+            "intent": "movie.recommend"
+          },
+          {
+            "domain": "default",
+            "utterance": "movie recommendation",
+            "intent": "movie.recommend"
+          },
+          {
+            "domain": "default",
+            "utterance": "kuch acha batao",
+            "intent": "movie.recommend"
+          },
+          {
+            "domain": "default",
+            "utterance": "koi achi movie batao",
+            "intent": "movie.recommend"
+          },
+          {
+            "domain": "default",
+            "utterance": "anime recommend karo",
+            "intent": "movie.recommend"
+          },
+          {
+            "domain": "default",
+            "utterance": "content recommendations",
+            "intent": "movie.recommend"
+          },
+          {
+            "domain": "default",
+            "utterance": "help",
+            "intent": "agent.help"
+          },
+          {
+            "domain": "default",
+            "utterance": "help with features",
+            "intent": "agent.help"
+          },
+          {
+            "domain": "default",
+            "utterance": "what can you do",
+            "intent": "agent.help"
+          },
+          {
+            "domain": "default",
+            "utterance": "features",
+            "intent": "agent.help"
+          },
+          {
+            "domain": "default",
+            "utterance": "tum kya kar sakte ho",
+            "intent": "agent.help"
+          },
+          {
+            "domain": "default",
+            "utterance": "yeh website kya hai",
+            "intent": "agent.help"
+          }
+        ],
+        "domains": {
+          "master_domain": {
+            "settings": {
+              "locale": "en",
+              "tag": "nlu-en",
+              "keepStopwords": true,
+              "nonefeatureValue": 1,
+              "nonedeltaMultiplier": 1.2,
+              "spellCheck": false,
+              "spellCheckDistance": 1,
+              "filterZeros": true,
+              "log": true
+            },
+            "features": {
+              "hello": 1,
+              "hi": 1,
+              "hey": 1,
+              "salam": 1,
+              "assalam": 1,
+              "o": 1,
+              "alaikum": 1,
+              "kya": 1,
+              "haal": 1,
+              "hai": 1,
+              "kais": 1,
+              "ho": 1,
+              "kese": 1,
+              "what": 1,
+              "trend": 1,
+              "show": 1,
+              "me": 1,
+              "movi": 1,
+              "aaj": 1,
+              "dekhu": 1,
+              "top": 1,
+              "dikhao": 1,
+              "naya": 1,
+              "recommend": 1,
+              "someth": 1,
+              "kuch": 1,
+              "acha": 1,
+              "batao": 1,
+              "koi": 1,
+              "achi": 1,
+              "anim": 1,
+              "karo": 1,
+              "content": 1,
+              "help": 1,
+              "with": 1,
+              "featur": 1,
+              "can": 1,
+              "you": 1,
+              "do": 1,
+              "tum": 1,
+              "kar": 1,
+              "sakt": 1,
+              "yeh": 1,
+              "websit": 1
+            },
+            "intents": {
+              "greeting": 1,
+              "movie.trending": 1,
+              "movie.recommend": 1,
+              "agent.help": 1
+            },
+            "intentFeatures": {
+              "greeting": {
+                "hello": 1,
+                "hi": 1,
+                "hey": 1,
+                "salam": 1,
+                "assalam": 1,
+                "o": 1,
+                "alaikum": 1,
+                "kya": 1,
+                "haal": 1,
+                "hai": 1,
+                "kais": 1,
+                "ho": 1,
+                "kese": 1
+              },
+              "movie.trending": {
+                "what": 1,
+                "trend": 1,
+                "show": 1,
+                "me": 1,
+                "movi": 1,
+                "aaj": 1,
+                "kya": 1,
+                "dekhu": 1,
+                "top": 1,
+                "dikhao": 1,
+                "naya": 1,
+                "hai": 1
+              },
+              "movie.recommend": {
+                "recommend": 1,
+                "someth": 1,
+                "movi": 1,
+                "kuch": 1,
+                "acha": 1,
+                "batao": 1,
+                "koi": 1,
+                "achi": 1,
+                "anim": 1,
+                "karo": 1,
+                "content": 1
+              },
+              "agent.help": {
+                "help": 1,
+                "with": 1,
+                "featur": 1,
+                "what": 1,
+                "can": 1,
+                "you": 1,
+                "do": 1,
+                "tum": 1,
+                "kya": 1,
+                "kar": 1,
+                "sakt": 1,
+                "ho": 1,
+                "yeh": 1,
+                "websit": 1,
+                "hai": 1
+              }
+            },
+            "featuresToIntent": {
+              "hello": [
+                "greeting"
+              ],
+              "hi": [
+                "greeting"
+              ],
+              "hey": [
+                "greeting"
+              ],
+              "salam": [
+                "greeting"
+              ],
+              "assalam": [
+                "greeting"
+              ],
+              "o": [
+                "greeting"
+              ],
+              "alaikum": [
+                "greeting"
+              ],
+              "kya": [
+                "greeting",
+                "movie.trending",
+                "agent.help"
+              ],
+              "haal": [
+                "greeting"
+              ],
+              "hai": [
+                "greeting",
+                "movie.trending",
+                "agent.help"
+              ],
+              "kais": [
+                "greeting"
+              ],
+              "ho": [
+                "greeting",
+                "agent.help"
+              ],
+              "kese": [
+                "greeting"
+              ],
+              "what": [
+                "movie.trending",
+                "agent.help"
+              ],
+              "trend": [
+                "movie.trending"
+              ],
+              "show": [
+                "movie.trending"
+              ],
+              "me": [
+                "movie.trending"
+              ],
+              "movi": [
+                "movie.trending",
+                "movie.recommend"
+              ],
+              "aaj": [
+                "movie.trending"
+              ],
+              "dekhu": [
+                "movie.trending"
+              ],
+              "top": [
+                "movie.trending"
+              ],
+              "dikhao": [
+                "movie.trending"
+              ],
+              "naya": [
+                "movie.trending"
+              ],
+              "recommend": [
+                "movie.recommend"
+              ],
+              "someth": [
+                "movie.recommend"
+              ],
+              "kuch": [
+                "movie.recommend"
+              ],
+              "acha": [
+                "movie.recommend"
+              ],
+              "batao": [
+                "movie.recommend"
+              ],
+              "koi": [
+                "movie.recommend"
+              ],
+              "achi": [
+                "movie.recommend"
+              ],
+              "anim": [
+                "movie.recommend"
+              ],
+              "karo": [
+                "movie.recommend"
+              ],
+              "content": [
+                "movie.recommend"
+              ],
+              "help": [
+                "agent.help"
+              ],
+              "with": [
+                "agent.help"
+              ],
+              "featur": [
+                "agent.help"
+              ],
+              "can": [
+                "agent.help"
+              ],
+              "you": [
+                "agent.help"
+              ],
+              "do": [
+                "agent.help"
+              ],
+              "tum": [
+                "agent.help"
+              ],
+              "kar": [
+                "agent.help"
+              ],
+              "sakt": [
+                "agent.help"
+              ],
+              "yeh": [
+                "agent.help"
+              ],
+              "websit": [
+                "agent.help"
+              ]
+            },
+            "neuralNetwork": {
+              "settings": {
+                "locale": "en",
+                "tag": "nlu-en",
+                "keepStopwords": true,
+                "nonefeatureValue": 1,
+                "nonedeltaMultiplier": 1.2,
+                "spellCheck": false,
+                "spellCheckDistance": 1,
+                "filterZeros": true,
+                "log": true
+              },
+              "features": [
+                "hello",
+                "hi",
+                "hey",
+                "salam",
+                "assalam",
+                "o",
+                "alaikum",
+                "kya",
+                "haal",
+                "hai",
+                "kais",
+                "ho",
+                "kese",
+                "what",
+                "trend",
+                "show",
+                "me",
+                "movi",
+                "aaj",
+                "dekhu",
+                "top",
+                "dikhao",
+                "naya",
+                "recommend",
+                "someth",
+                "kuch",
+                "acha",
+                "batao",
+                "koi",
+                "achi",
+                "anim",
+                "karo",
+                "content",
+                "help",
+                "with",
+                "featur",
+                "can",
+                "you",
+                "do",
+                "tum",
+                "kar",
+                "sakt",
+                "yeh",
+                "websit"
+              ],
+              "intents": [
+                "greeting",
+                "movie.trending",
+                "movie.recommend",
+                "agent.help"
+              ],
+              "perceptrons": [
+                [
+                  8.13673210144043,
+                  8.136613845825195,
+                  8.136140823364258,
+                  8.135580062866211,
+                  2.712355136871338,
+                  2.712355136871338,
+                  2.712355136871338,
+                  -2.7504336833953857,
+                  9.231954574584961,
+                  1.6542681455612183,
+                  3.594653606414795,
+                  4.542359828948975,
+                  3.594479560852051,
+                  -2.4331483840942383,
+                  -6.148654937744141,
+                  -1.349806547164917,
+                  -0.4418111741542816,
+                  -3.0865366458892822,
+                  -1.749435305595398,
+                  -1.749435305595398,
+                  -1.5605666637420654,
+                  -1.5605666637420654,
+                  -5.051626682281494,
+                  -4.609083652496338,
+                  -1.6412230730056763,
+                  -1.8900138139724731,
+                  -1.8900138139724731,
+                  -2.3891563415527344,
+                  -0.47931963205337524,
+                  -0.47931963205337524,
+                  -0.9287437796592712,
+                  -0.9287437796592712,
+                  -1.551446557044983,
+                  -6.147075653076172,
+                  -0.7994915246963501,
+                  -6.146317005157471,
+                  -1.2384967803955078,
+                  -1.2384967803955078,
+                  -1.2384967803955078,
+                  -2.6467864513397217,
+                  -2.6467864513397217,
+                  -2.6467864513397217,
+                  -2.5260884761810303,
+                  -2.5260884761810303,
+                  6.148473991660282
+                ],
+                [
+                  -1.7896034717559814,
+                  -1.7890981435775757,
+                  -1.7885658740997314,
+                  -1.7880057096481323,
+                  -0.597918689250946,
+                  -0.597918689250946,
+                  -0.597918689250946,
+                  3.511930465698242,
+                  -5.590759754180908,
+                  0.2861921191215515,
+                  -0.1817656308412552,
+                  -1.6370269060134888,
+                  -0.15960267186164856,
+                  0.33825403451919556,
+                  12.250783920288086,
+                  0.3253130614757538,
+                  -1.1563458442687988,
+                  1.0690994262695312,
+                  4.486605644226074,
+                  4.486605644226074,
+                  5.709395885467529,
+                  5.709395885467529,
+                  8.685169219970703,
+                  -3.3835573196411133,
+                  -0.5161631107330322,
+                  -0.5229973793029785,
+                  -0.5229973793029785,
+                  -1.836020588874817,
+                  -1.205353856086731,
+                  -1.205353856086731,
+                  -0.2634153664112091,
+                  -0.2634153664112091,
+                  -0.2341669797897339,
+                  -1.7912266254425049,
+                  -0.3951546847820282,
+                  -1.790817141532898,
+                  -1.299666404724121,
+                  -1.299666404724121,
+                  -1.299666404724121,
+                  -1.2463712692260742,
+                  -1.2463712692260742,
+                  -1.2463712692260742,
+                  -2.8074631690979004,
+                  -2.8074631690979004,
+                  1.796951311671058
+                ],
+                [
+                  -1.204573154449463,
+                  -1.196820855140686,
+                  -1.1918202638626099,
+                  -1.188860297203064,
+                  -0.5273758769035339,
+                  -0.5273758769035339,
+                  -0.5273758769035339,
+                  -1.1625133752822876,
+                  -0.1956949084997177,
+                  -0.6014828085899353,
+                  -0.4123011529445648,
+                  -1.1600815057754517,
+                  -0.36885032057762146,
+                  -0.742178201675415,
+                  -1.691373586654663,
+                  -1.1617237329483032,
+                  -1.084261178970337,
+                  2.7272706031799316,
+                  -0.19818131625652313,
+                  -0.19818131625652313,
+                  -1.9545129537582397,
+                  -1.9545129537582397,
+                  -0.03404565900564194,
+                  10.371806144714355,
+                  2.732592821121216,
+                  3.6163299083709717,
+                  3.6163299083709717,
+                  5.869610786437988,
+                  2.253279685974121,
+                  2.253279685974121,
+                  1.3656294345855713,
+                  1.3656294345855713,
+                  2.7320544719696045,
+                  -1.394421100616455,
+                  -0.3550100326538086,
+                  -1.3409574031829834,
+                  -0.46877145767211914,
+                  -0.46877145767211914,
+                  -0.46877145767211914,
+                  -0.27180215716362,
+                  -0.27180215716362,
+                  -0.27180215716362,
+                  -0.2741195857524872,
+                  -0.2741195857524872,
+                  1.1829112284805738
+                ],
+                [
+                  -3.308260202407837,
+                  -3.303318500518799,
+                  -3.2982821464538574,
+                  -3.293149709701538,
+                  -1.1188859939575195,
+                  -1.1188859939575195,
+                  -1.1188859939575195,
+                  0.7517644166946411,
+                  -3.2176856994628906,
+                  -0.9036248922348022,
+                  -2.354523181915283,
+                  -0.9979617595672607,
+                  -2.3510169982910156,
+                  0.4378480613231659,
+                  -3.781468391418457,
+                  -0.31628119945526123,
+                  -0.14427515864372253,
+                  -1.5484917163848877,
+                  -2.054159641265869,
+                  -2.054159641265869,
+                  -0.9021912813186646,
+                  -0.9021912813186646,
+                  -3.2066776752471924,
+                  -2.441602945327759,
+                  -0.9114730358123779,
+                  -1.029310941696167,
+                  -1.029310941696167,
+                  -1.291865587234497,
+                  -0.26118090748786926,
+                  -0.26118090748786926,
+                  -0.4597145617008209,
+                  -0.4597145617008209,
+                  -0.9041994214057922,
+                  10.31828784942627,
+                  -9.323476791381836,
+                  10.33786392211914,
+                  3.4943370819091797,
+                  3.4943370819091797,
+                  3.4943370819091797,
+                  3.7107272148132324,
+                  3.7107272148132324,
+                  3.7107272148132324,
+                  5.522190570831299,
+                  5.522190570831299,
+                  3.3932050103946163
+                ]
+              ]
+            }
+          }
+        }
+      }
+    },
+    "intentDomains": {},
+    "extraSentences": [
+      [
+        "en",
+        "hello"
+      ],
+      [
+        "en",
+        "hi"
+      ],
+      [
+        "en",
+        "hey"
+      ],
+      [
+        "en",
+        "salam"
+      ],
+      [
+        "en",
+        "assalam o alaikum"
+      ],
+      [
+        "en",
+        "kya haal hai"
+      ],
+      [
+        "en",
+        "kaise ho"
+      ],
+      [
+        "en",
+        "kese ho"
+      ],
+      [
+        "en",
+        "whats trending"
+      ],
+      [
+        "en",
+        "show me trending movies"
+      ],
+      [
+        "en",
+        "trending"
+      ],
+      [
+        "en",
+        "aaj kya dekhu"
+      ],
+      [
+        "en",
+        "top movies dikhao"
+      ],
+      [
+        "en",
+        "naya kya hai"
+      ],
+      [
+        "en",
+        "trending shows"
+      ],
+      [
+        "en",
+        "recommend something"
+      ],
+      [
+        "en",
+        "movie recommendation"
+      ],
+      [
+        "en",
+        "kuch acha batao"
+      ],
+      [
+        "en",
+        "koi achi movie batao"
+      ],
+      [
+        "en",
+        "anime recommend karo"
+      ],
+      [
+        "en",
+        "content recommendations"
+      ],
+      [
+        "en",
+        "help"
+      ],
+      [
+        "en",
+        "help with features"
+      ],
+      [
+        "en",
+        "what can you do"
+      ],
+      [
+        "en",
+        "features"
+      ],
+      [
+        "en",
+        "tum kya kar sakte ho"
+      ],
+      [
+        "en",
+        "yeh website kya hai"
+      ]
+    ]
+  },
+  "ner": {
+    "settings": {
+      "tag": "ner",
+      "entityPreffix": "%",
+      "entitySuffix": "%"
+    },
+    "rules": {}
+  },
+  "nlgManager": {
+    "settings": {
+      "tag": "nlg-manager"
+    },
+    "responses": {
+      "en": {
+        "greeting": [
+          {
+            "answer": "Hi there! 👋 I am FanHub AI. Kaise madad kar sakta hu aapki?"
+          },
+          {
+            "answer": "Hello! Welcome to FanHub Plus. What would you like to watch today?"
+          },
+          {
+            "answer": "Walaikum Assalam! Welcome to the Fandom Universe. Kaise hain aap?"
+          }
+        ],
+        "movie.trending": [
+          {
+            "answer": "Here are the latest trending movies on FanHub! 🍿||ACTION:FETCH_TRENDING"
+          }
+        ],
+        "movie.recommend": [
+          {
+            "answer": "Looking for recommendations? Tell me your favorite genre or check out trending anime and movies in our Fandom Explorer!||ACTION:FETCH_TRENDING"
+          }
+        ],
+        "agent.help": [
+          {
+            "answer": "I can recommend movies, show you what is trending, and help you navigate FanHub. Bas apni pasand batayein!"
+          }
+        ]
+      }
+    }
+  },
+  "actionManager": {
+    "settings": {
+      "tag": "action-manager"
+    },
+    "actions": {}
+  },
+  "slotManager": {}
+}

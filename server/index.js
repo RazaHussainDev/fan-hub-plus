@@ -16,6 +16,8 @@ const eventRoutes = require('./src/routes/eventRoutes');
 const audioRoutes = require('./src/routes/audioRoutes');
 const ratingRoutes = require('./src/routes/ratingRoutes');
 const feedbackRoutes = require('./src/routes/feedbackRoutes');
+const aiRoutes = require('./src/routes/aiRoutes');
+const { trainAI } = require('./src/ai/nlpManager');
 
 const app  = express();
 const PORT = process.env.PORT || 5000;
@@ -131,6 +133,7 @@ app.use('/api/events', eventRoutes);
 app.use('/api/audio', audioRoutes);
 app.use('/api/ratings', ratingRoutes);
 app.use('/api/feedback', feedbackRoutes);
+app.use('/api/ai', aiRoutes);
 
 // 404 catch-all
 app.use((req, res) => {
@@ -150,6 +153,9 @@ app.use((err, req, res, next) => {
 });
 
 // ─── Start Server ─────────────────────────────────────────────────────────────
+// Train and initialize offline NLP model
+trainAI().catch(err => console.error('AI Training Error:', err.message));
+
 const server = app.listen(PORT, "0.0.0.0", () => {
   console.log(`✅  Fan Hub Plus — Express server running on port ${PORT}`);
   console.log(`    CORS allowed origin: ${process.env.CLIENT_ORIGIN || 'http://localhost:3000'}`);
