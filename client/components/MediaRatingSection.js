@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Star, ThumbsUp, ThumbsDown, MessageSquare, Send, CheckCircle, User } from 'lucide-react';
+import { Star, ThumbsUp, ThumbsDown, Send, MessageSquare } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { apiFetch } from '@/utils/apiClient';
 import toast from 'react-hot-toast';
@@ -13,245 +13,263 @@ export default function MediaRatingSection({ mediaId, mediaType = 'movie', title
     totalReviews: 0,
     thumbsUp: 0,
     thumbsDown: 0,
-    reviews: []
+    reviews: [],
+    distribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
   });
 
-  const [hoverStar, setHoverStar] = useState(0);
-  const [selectedStars, setSelectedStars] = useState(5);
-  const [selectedThumb, setSelectedThumb] = useState('up');
-  const [reviewText, setReviewText] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hoverStar,      setHoverStar]      = useState(0);
+  const [selectedStars,  setSelectedStars]  = useState(5);
+  const [selectedThumb,  setSelectedThumb]  = useState('up');
+  const [reviewText,     setReviewText]     = useState('');
+  const [isSubmitting,   setIsSubmitting]   = useState(false);
   const [userHasReviewed, setUserHasReviewed] = useState(false);
 
   const fetchRatings = async () => {
     if (!mediaId) return;
     try {
-      const res = await fetch(`/api/ratings/${mediaId}`);
+      const res  = await fetch(`/api/ratings/${mediaId}`);
       const data = await res.json();
       if (data.success) {
+        const dist = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+        (data.reviews || []).forEach(r => { if (dist[r.stars] !== undefined) dist[r.stars]++; });
         setRatingData({
-          avgStars: data.avgStars || 4.8,
+          avgStars:    data.avgStars    || 4.8,
           totalReviews: data.totalReviews || 0,
-          thumbsUp: data.thumbsUp || 0,
-          thumbsDown: data.thumbsDown || 0,
-          reviews: data.reviews || []
+          thumbsUp:    data.thumbsUp    || 0,
+          thumbsDown:  data.thumbsDown  || 0,
+          reviews:     data.reviews     || [],
+          distribution: dist,
         });
-
         if (user && data.reviews) {
           const found = data.reviews.some(r => r.userId === user._id || r.userName === user.name);
           if (found) setUserHasReviewed(true);
         }
       }
-    } catch (e) {
-      console.error(e);
-    }
+    } catch (e) { console.error(e); }
   };
 
-  useEffect(() => {
-    fetchRatings();
-  }, [mediaId, user]);
+  useEffect(() => { fetchRatings(); }, [mediaId, user]);
 
   const handleSubmitRating = async (e) => {
     e.preventDefault();
-    if (!user) {
-      toast.error("Please sign in to leave a rating and review!");
-      return;
-    }
-
+    if (!user) { toast.error('Please sign in to leave a rating!'); return; }
     setIsSubmitting(true);
     try {
       const res = await apiFetch(`/api/ratings/${mediaId}`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          stars: selectedStars,
-          thumbs: selectedThumb,
-          review: reviewText,
-          mediaType
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ stars: selectedStars, thumbs: selectedThumb, review: reviewText, mediaType }),
       });
-
       const data = await res.json();
       if (data.success) {
-        toast.success("Rating submitted! Thank you for supporting the fandom.", {
-          style: { background: '#0b0f0a', color: '#a7c957', border: '1px solid #a7c957' }
+        toast.success('Rating submitted! Thank you!', {
+          style: { background: '#0b0f0a', color: '#a7c957', border: '1px solid #a7c957' },
         });
         setReviewText('');
         setUserHasReviewed(true);
         fetchRatings();
       } else {
-        toast.error(data.message || "Failed to submit rating");
+        toast.error(data.message || 'Failed to submit rating');
       }
     } catch (err) {
-      toast.error("Submission failed");
+      toast.error('Submission failed');
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const maxDist = Math.max(...Object.values(ratingData.distribution), 1);
+
   return (
-    <section className="w-full mt-10 p-6 md:p-8 rounded-3xl bg-white/70 dark:bg-[#0c100a]/80 border border-black/5 dark:border-white/10 backdrop-blur-2xl shadow-xl">
+    <section className="w-full rounded-3xl bg-white/4 border border-white/8 overflow-hidden">
+
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-black/5 dark:border-white/10">
+      <div className="px-6 md:px-8 pt-7 pb-5 border-b border-white/8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <span className="text-[11px] font-bold text-[#a7c957] uppercase tracking-widest block mb-1">
-            Community Feedback & Audience Score
+            Community Feedback
           </span>
-          <h3 className="text-2xl font-heading font-black text-gray-900 dark:text-white">
-            Fan Ratings & Reviews
-          </h3>
+          <h3 className="text-2xl font-black text-white">Fan Ratings & Reviews</h3>
+          <p className="text-gray-400 text-sm mt-0.5">
+            See what other fans think about {title}
+          </p>
         </div>
 
-        {/* Score Summary Badge */}
-        <div className="flex items-center gap-4 bg-black/5 dark:bg-white/5 px-4 py-2.5 rounded-2xl border border-black/5 dark:border-white/10">
-          <div className="flex items-center gap-1.5">
-            <Star size={24} className="text-[#a7c957]" fill="currentColor" />
-            <span className="text-2xl font-black font-heading text-gray-900 dark:text-white">
-              {ratingData.avgStars}
-            </span>
-            <span className="text-xs text-gray-500 font-semibold self-end mb-1">/ 5.0</span>
+        {/* Score badge */}
+        <div className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl px-5 py-3">
+          <div>
+            <div className="flex items-end gap-1">
+              <span className="text-5xl font-black text-white leading-none">{ratingData.avgStars}</span>
+              <span className="text-gray-400 text-sm mb-1">/5</span>
+            </div>
+            <div className="flex items-center gap-0.5 mt-1">
+              {[1,2,3,4,5].map(s => (
+                <Star key={s} size={12} className="text-[#a7c957]"
+                  fill={s <= Math.round(ratingData.avgStars) ? 'currentColor' : 'none'} />
+              ))}
+            </div>
+            <p className="text-gray-400 text-xs mt-1">from {ratingData.totalReviews} verified ratings</p>
           </div>
 
-          <div className="h-6 w-px bg-white/10" />
-
-          <div className="text-xs text-gray-400">
-            <strong className="text-white block font-bold">{ratingData.totalReviews}</strong>
-            <span>Verified Ratings</span>
+          {/* Distribution bars */}
+          <div className="space-y-1 min-w-[110px]">
+            {[5,4,3,2,1].map(star => (
+              <div key={star} className="flex items-center gap-2">
+                <span className="text-[10px] text-gray-400 w-3">{star}</span>
+                <Star size={9} className="text-[#a7c957]" fill="currentColor" />
+                <div className="flex-1 h-1.5 bg-white/8 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-[#a7c957] rounded-full transition-all duration-700"
+                    style={{ width: `${(ratingData.distribution[star] / maxDist) * 100}%` }}
+                  />
+                </div>
+                <span className="text-[10px] text-gray-500 w-3">{ratingData.distribution[star]}%</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Submit Rating Form */}
-      <form onSubmit={handleSubmitRating} className="mt-6 p-5 rounded-2xl bg-black/5 dark:bg-white/[0.03] border border-black/5 dark:border-white/5 space-y-4">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div>
-            <label className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">
-              Your Rating (1 to 5 Stars)
-            </label>
-            <div className="flex items-center gap-1.5">
-              {[1, 2, 3, 4, 5].map((star) => (
+      {/* Two-column layout: reviews list + post form */}
+      <div className="grid md:grid-cols-2 gap-0 divide-y md:divide-y-0 md:divide-x divide-white/8">
+
+        {/* Left: reviews list */}
+        <div className="px-6 md:px-8 py-6 space-y-4">
+          <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
+            <MessageSquare size={13} />
+            Recent Reviews ({ratingData.reviews.length})
+          </h4>
+
+          {ratingData.reviews.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-10 text-center">
+              <MessageSquare size={40} className="text-white/10 mb-3" />
+              <p className="text-gray-500 text-sm font-medium">No reviews yet.</p>
+              <p className="text-gray-600 text-xs mt-1">Be the first to review {title} and help other fans!</p>
+            </div>
+          ) : (
+            ratingData.reviews.map((rev, i) => (
+              <div key={i} className="flex items-start gap-3 p-4 rounded-2xl bg-white/[0.03] border border-white/5">
+                <div className="w-9 h-9 rounded-full bg-[#a7c957]/15 border border-[#a7c957]/30 text-[#a7c957] font-black text-sm flex items-center justify-center flex-shrink-0">
+                  {rev.userName ? rev.userName[0].toUpperCase() : 'U'}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-bold text-white">{rev.userName}</span>
+                      {rev.thumbs === 'up' && (
+                        <span className="text-[10px] text-[#a7c957] flex items-center gap-0.5">
+                          <ThumbsUp size={9} /> Recommends
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center text-[#a7c957]">
+                      {Array.from({ length: rev.stars }).map((_, si) => (
+                        <Star key={si} size={10} fill="currentColor" />
+                      ))}
+                    </div>
+                  </div>
+                  {rev.review && (
+                    <p className="text-xs text-gray-400 leading-relaxed">{rev.review}</p>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Right: post review form */}
+        <div className="px-6 md:px-8 py-6">
+          <div className="flex items-center gap-2 mb-5">
+            <div className="w-7 h-7 rounded-lg bg-[#a7c957]/15 border border-[#a7c957]/30 flex items-center justify-center">
+              <Star size={13} className="text-[#a7c957]" />
+            </div>
+            <div>
+              <h4 className="text-sm font-black text-white">Share Your Thoughts</h4>
+              <p className="text-gray-400 text-xs">Rate this movie and let other fans know what you think.</p>
+            </div>
+          </div>
+
+          <form onSubmit={handleSubmitRating} className="space-y-5">
+            {/* Star picker */}
+            <div>
+              <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-2">
+                Your Rating
+              </label>
+              <div className="flex items-center gap-2">
+                {[1,2,3,4,5].map(star => (
+                  <button
+                    type="button"
+                    key={star}
+                    onMouseEnter={() => setHoverStar(star)}
+                    onMouseLeave={() => setHoverStar(0)}
+                    onClick={() => setSelectedStars(star)}
+                    className="transition-transform hover:scale-125 focus:outline-none cursor-pointer"
+                  >
+                    <Star
+                      size={26}
+                      className={(hoverStar || selectedStars) >= star ? 'text-[#a7c957]' : 'text-gray-600'}
+                      fill={(hoverStar || selectedStars) >= star ? 'currentColor' : 'none'}
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Thumbs */}
+            <div>
+              <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-2">
+                Recommendation
+              </label>
+              <div className="flex gap-2">
                 <button
                   type="button"
-                  key={star}
-                  onMouseEnter={() => setHoverStar(star)}
-                  onMouseLeave={() => setHoverStar(0)}
-                  onClick={() => setSelectedStars(star)}
-                  className="p-1 transition-transform hover:scale-125 focus:outline-none"
+                  onClick={() => setSelectedThumb('up')}
+                  className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer border ${
+                    selectedThumb === 'up'
+                      ? 'bg-[#a7c957] text-[#0b0f0a] border-[#a7c957]'
+                      : 'bg-white/5 text-gray-400 border-white/10 hover:text-white hover:bg-white/10'
+                  }`}
                 >
-                  <Star
-                    size={22}
-                    className={
-                      (hoverStar || selectedStars) >= star
-                        ? 'text-[#a7c957]'
-                        : 'text-gray-600'
-                    }
-                    fill={(hoverStar || selectedStars) >= star ? 'currentColor' : 'none'}
-                  />
+                  <ThumbsUp size={14} /> Recommend
                 </button>
-              ))}
-              <span className="ml-2 text-xs font-bold text-[#a7c957]">
-                {selectedStars} Star{selectedStars > 1 ? 's' : ''}
-              </span>
-            </div>
-          </div>
-
-          {/* Quick Thumbs Reaction */}
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-gray-400 mr-1">Recommendation:</span>
-            <button
-              type="button"
-              onClick={() => setSelectedThumb('up')}
-              className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
-                selectedThumb === 'up'
-                  ? 'bg-[#a7c957] text-[#0b0f0a]'
-                  : 'bg-white/5 text-gray-400 hover:text-white'
-              }`}
-            >
-              <ThumbsUp size={13} /> Recommended
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setSelectedThumb('down')}
-              className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
-                selectedThumb === 'down'
-                  ? 'bg-rose-500 text-white'
-                  : 'bg-white/5 text-gray-400 hover:text-white'
-              }`}
-            >
-              <ThumbsDown size={13} /> Skip
-            </button>
-          </div>
-        </div>
-
-        {/* Optional Review Text */}
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={reviewText}
-            onChange={(e) => setReviewText(e.target.value)}
-            placeholder={`Share your thoughts on ${title}... (optional)`}
-            className="flex-1 px-4 py-2.5 rounded-xl bg-black/10 dark:bg-black/30 border border-black/10 dark:border-white/10 text-xs md:text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#a7c957]/50"
-          />
-
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="px-5 py-2.5 rounded-xl bg-[#a7c957] text-[#0b0f0a] font-bold text-xs md:text-sm hover:scale-105 transition-all shadow-md flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
-          >
-            <Send size={14} /> {isSubmitting ? 'Posting...' : 'Post Rating'}
-          </button>
-        </div>
-      </form>
-
-      {/* Reviews Stream */}
-      <div className="mt-8 space-y-3">
-        <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
-          Recent Community Reviews ({ratingData.reviews.length})
-        </h4>
-
-        {ratingData.reviews.length === 0 ? (
-          <p className="text-xs text-gray-500 py-4 italic text-center">
-            No text reviews yet. Be the first to rate and review!
-          </p>
-        ) : (
-          ratingData.reviews.map((rev, i) => (
-            <div key={i} className="p-4 rounded-2xl bg-black/[0.02] dark:bg-white/[0.02] border border-black/5 dark:border-white/5 flex items-start gap-3">
-              <div className="w-8 h-8 rounded-full bg-[#a7c957]/20 border border-[#a7c957]/40 text-[#a7c957] font-bold text-xs flex items-center justify-center flex-shrink-0">
-                {rev.userName ? rev.userName[0].toUpperCase() : 'U'}
-              </div>
-
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-2 mb-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-gray-900 dark:text-white">
-                      {rev.userName}
-                    </span>
-                    {rev.thumbs === 'up' && (
-                      <span className="text-[10px] text-[#a7c957] font-semibold flex items-center gap-0.5">
-                        <ThumbsUp size={10} /> Recommends
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="flex items-center text-[#a7c957]">
-                    {Array.from({ length: rev.stars }).map((_, si) => (
-                      <Star key={si} size={11} fill="currentColor" />
-                    ))}
-                  </div>
-                </div>
-
-                {rev.review && (
-                  <p className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed">
-                    {rev.review}
-                  </p>
-                )}
+                <button
+                  type="button"
+                  onClick={() => setSelectedThumb('down')}
+                  className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-xl text-sm font-bold transition-all cursor-pointer border ${
+                    selectedThumb === 'down'
+                      ? 'bg-rose-500 text-white border-rose-500'
+                      : 'bg-white/5 text-gray-400 border-white/10 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  <ThumbsDown size={14} /> Skip
+                </button>
               </div>
             </div>
-          ))
-        )}
+
+            {/* Review text */}
+            <div>
+              <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-2">
+                Write a Review (optional)
+              </label>
+              <textarea
+                rows={3}
+                value={reviewText}
+                onChange={(e) => setReviewText(e.target.value)}
+                placeholder={`Share your thoughts on ${title}…`}
+                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-[#a7c957]/40 resize-none"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full py-3.5 rounded-xl bg-[#a7c957] text-[#0b0f0a] font-black text-sm tracking-wide hover:bg-[#95b347] hover:scale-[1.02] transition-all shadow-[0_0_20px_rgba(167,201,87,0.3)] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed active:scale-95"
+            >
+              <Send size={14} />
+              {isSubmitting ? 'Posting…' : 'Post Review'}
+            </button>
+          </form>
+        </div>
       </div>
     </section>
   );

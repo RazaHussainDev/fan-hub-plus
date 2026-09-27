@@ -1,140 +1,122 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { fetchDetails, BASE_IMG_URL, fetchCredits, fetchVideos, fetchSimilar } from '@/utils/tmdb';
 import { useParams, useSearchParams } from 'next/navigation';
 import MovieRow from '@/components/MovieRow';
 import Breadcrumbs from '@/components/Breadcrumbs';
-import { Play, X, Plus, Check, Download, Share2 } from 'lucide-react';
-import { useWatchlist } from '@/hooks/useWatchlist';
-import CustomHTML5Player from '@/components/CustomHTML5Player';
 import MediaRatingSection from '@/components/MediaRatingSection';
 import DownloadModal from '@/components/DownloadModal';
+import {
+  Play, X, Plus, Check, Download, Share2,
+  Bookmark, TrendingUp, Star, Clock, CalendarDays,
+  Wifi, WifiOff, AlertTriangle, ChevronRight, Users
+} from 'lucide-react';
+import { useWatchlist } from '@/hooks/useWatchlist';
 import toast from 'react-hot-toast';
 
+/* ─── helpers ─────────────────────────────────────────────────────────────── */
+const BACKDROP = 'https://image.tmdb.org/t/p/original';
+const POSTER   = 'https://image.tmdb.org/t/p/w500';
+const STILL    = 'https://image.tmdb.org/t/p/w300';
+
+const fmt = (min) => {
+  if (!min) return '';
+  const h = Math.floor(min / 60);
+  const m = min % 60;
+  return h ? `${h}h ${m}m` : `${m}m`;
+};
+
+const getRatingColor = (score) => {
+  if (score >= 80) return '#a7c957';
+  if (score >= 60) return '#f59e0b';
+  return '#ef4444';
+};
+
 export default function StreamPage() {
-  const params = useParams();
+  const params       = useParams();
   const searchParams = useSearchParams();
   const { isInWatchlist, addToWatchlist, removeFromWatchlist } = useWatchlist();
-  
-  const tmdbId = params?.tmdbId;
+
+  const tmdbId      = params?.tmdbId;
   const contentType = searchParams?.get('type') || 'movie';
-  const [season, setSeason] = useState(1);
-  const [episode, setEpisode] = useState(1);
-  const [sources, setSources] = useState(null);
-  const [activeLayer, setActiveLayer] = useState('primary');
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  
-  const [metadata, setMetadata] = useState(null);
-  const [cast, setCast] = useState([]);
-  const [trailer, setTrailer] = useState(null);
-  const [similar, setSimilar] = useState([]);
-  const [isTrailerOpen, setIsTrailerOpen] = useState(false);
+
+  /* state */
+  const [season,         setSeason]         = useState(1);
+  const [episode,        setEpisode]        = useState(1);
+  const [activeLayer,    setActiveLayer]    = useState('primary');
+  const [loading,        setLoading]        = useState(true);
+  const [metadata,       setMetadata]       = useState(null);
+  const [cast,           setCast]           = useState([]);
+  const [crew,           setCrew]           = useState([]);
+  const [trailer,        setTrailer]        = useState(null);
+  const [clips,          setClips]          = useState([]);
+  const [similar,        setSimilar]        = useState([]);
+  const [activeClip,     setActiveClip]     = useState(null);
+  const [castTab,        setCastTab]        = useState('cast');
+  const [isTrailerOpen,  setIsTrailerOpen]  = useState(false);
   const [isDownloadOpen, setIsDownloadOpen] = useState(false);
   const [isPlayingIntro, setIsPlayingIntro] = useState(true);
 
+  /* share helper */
   const handleShare = async () => {
     const movieTitle = metadata?.title || metadata?.name || 'Fandom Stream';
     const url = typeof window !== 'undefined' ? window.location.href : '';
-
     if (navigator?.share) {
-      try {
-        await navigator.share({
-          title: movieTitle,
-          text: `Streaming ${movieTitle} on Fan Hub Plus!`,
-          url: url
-        });
-        return;
-      } catch (err) {}
+      try { await navigator.share({ title: movieTitle, url }); return; } catch (_) {}
     }
-
-    if (navigator?.clipboard?.writeText) {
-      try {
-        await navigator.clipboard.writeText(url);
-        toast.success(`Stream link for "${movieTitle}" copied!`, {
-          style: { background: '#0b0f0a', color: '#a7c957', border: '1px solid #a7c957' }
-        });
-        return;
-      } catch (err) {}
-    }
-
     try {
-      const tempInput = document.createElement('textarea');
-      tempInput.value = url;
-      tempInput.style.position = 'fixed';
-      tempInput.style.opacity = '0';
-      document.body.appendChild(tempInput);
-      tempInput.focus();
-      tempInput.select();
-      document.execCommand('copy');
-      document.body.removeChild(tempInput);
-      toast.success(`Stream link for "${movieTitle}" copied!`, {
-        style: { background: '#0b0f0a', color: '#a7c957', border: '1px solid #a7c957' }
-      });
-    } catch (err) {
-      toast.error("Could not copy link to clipboard");
+      await navigator.clipboard.writeText(url);
+      toast.success(`Link copied!`, { style: { background: '#0b0f0a', color: '#a7c957', border: '1px solid #a7c957' } });
+    } catch (_) {
+      toast.error('Could not copy link');
     }
   };
 
-  const handleVideoEnded = () => {
-    if (isPlayingIntro) {
-      setIsPlayingIntro(false);
-    }
-  };
-
+  /* fetch */
   useEffect(() => {
-    const fetchMeta = async () => {
-      if (!tmdbId) return;
-      try {
-        const [data, creditsData, videosData, similarData] = await Promise.all([
-          fetchDetails(tmdbId, contentType).catch(() => null),
-          fetchCredits(tmdbId, contentType).catch(() => null),
-          fetchVideos(tmdbId, contentType).catch(() => null),
-          fetchSimilar(tmdbId, contentType).catch(() => null)
-        ]);
-        
-        if (data) {
-          setMetadata(data);
-          const validSeasons = data?.seasons?.filter(s => s.season_number > 0) || [];
-          if (validSeasons.length > 0 && season === 1) {
-            setSeason(Number(validSeasons[0].season_number));
-          }
-        }
-        
-        if (videosData?.results) {
-          const officialTrailer = videosData.results.find(v => v.site === 'YouTube' && v.type === 'Trailer');
-          setTrailer(officialTrailer);
-        }
-        
-        if (creditsData?.cast) {
-          setCast(creditsData.cast.slice(0, 10));
-        }
-        
-        if (similarData?.results) {
-          setSimilar(similarData.results);
-        }
-      } catch (err) {
-        console.error("Failed to fetch metadata", err);
+    if (!tmdbId) return;
+    setLoading(true);
+    Promise.all([
+      fetchDetails(tmdbId, contentType).catch(() => null),
+      fetchCredits(tmdbId, contentType).catch(() => null),
+      fetchVideos(tmdbId, contentType).catch(() => null),
+      fetchSimilar(tmdbId, contentType).catch(() => null),
+    ]).then(([data, creditsData, videosData, similarData]) => {
+      if (data) {
+        setMetadata(data);
+        const validSeasons = data?.seasons?.filter(s => s.season_number > 0) || [];
+        if (validSeasons.length > 0) setSeason(Number(validSeasons[0].season_number));
       }
-    };
-    fetchMeta();
+      if (videosData?.results) {
+        const tr = videosData.results.find(v => v.site === 'YouTube' && v.type === 'Trailer');
+        const cl = videosData.results.filter(v => v.site === 'YouTube' && v.type !== 'Trailer').slice(0, 6);
+        setTrailer(tr || null);
+        setClips(cl);
+        if (tr) setActiveClip(tr);
+        else if (cl.length) setActiveClip(cl[0]);
+      }
+      if (creditsData?.cast)  setCast(creditsData.cast.slice(0, 12));
+      if (creditsData?.crew)  setCrew(creditsData.crew.slice(0, 8));
+      if (similarData?.results) setSimilar(similarData.results);
+      setLoading(false);
+    });
   }, [tmdbId, contentType]);
 
-  useEffect(() => {
-    if (metadata) {
-      setLoading(false);
-    }
-  }, [metadata]);
-
-  const title = metadata?.name || metadata?.title || 'Loading...';
-  const backdrop = metadata?.backdrop_path ? `https://image.tmdb.org/t/p/original${metadata.backdrop_path}` : null;
-  const releaseYear = metadata?.release_date?.split('-')[0] || metadata?.first_air_date?.split('-')[0] || '';
+  const title        = metadata?.name || metadata?.title || '';
+  const backdrop     = metadata?.backdrop_path ? `${BACKDROP}${metadata.backdrop_path}` : null;
+  const poster       = metadata?.poster_path   ? `${POSTER}${metadata.poster_path}` : null;
+  const releaseYear  = metadata?.release_date?.split('-')[0] || metadata?.first_air_date?.split('-')[0] || '';
+  const runtime      = metadata?.runtime || metadata?.episode_run_time?.[0];
+  const voteAvg      = metadata?.vote_average;
+  const votePercent  = voteAvg ? Math.round(voteAvg * 10) : null;
+  const genres       = metadata?.genres?.slice(0, 4) || [];
+  const overview     = metadata?.overview || '';
 
   const episodeCount = useMemo(() => {
     if (!metadata?.seasons) return 0;
-    const currentSeason = metadata.seasons.find(s => Number(s.season_number) === Number(season));
-    return currentSeason?.episode_count || 0;
+    const s = metadata.seasons.find(s => Number(s.season_number) === Number(season));
+    return s?.episode_count || 0;
   }, [metadata, season]);
 
   const getEmbedUrl = (server) => {
@@ -142,170 +124,304 @@ export default function StreamPage() {
       if (server === 'primary') return `https://vidsrc.me/embed/tv?tmdb=${tmdbId}&season=${season}&episode=${episode}`;
       if (server === 'backup1') return `https://multiembed.mov/directstream.php?video_id=${tmdbId}&tmdb=1&s=${season}&e=${episode}`;
       return `https://vidsrc.pro/embed/tv/${tmdbId}/${season}/${episode}`;
-    } else {
-      if (server === 'primary') return `https://vidsrc.me/embed/movie?tmdb=${tmdbId}`;
-      if (server === 'backup1') return `https://multiembed.mov/directstream.php?video_id=${tmdbId}&tmdb=1`;
-      return `https://vidsrc.pro/embed/movie/${tmdbId}`;
     }
+    if (server === 'primary') return `https://vidsrc.me/embed/movie?tmdb=${tmdbId}`;
+    if (server === 'backup1') return `https://multiembed.mov/directstream.php?video_id=${tmdbId}&tmdb=1`;
+    return `https://vidsrc.pro/embed/movie/${tmdbId}`;
   };
 
+  /* ─── loading skeleton ──────────────────────────────────────────────────── */
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-[#0b0f0a] text-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-[#a7c957] border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-[#a7c957] font-semibold tracking-widest uppercase text-sm animate-pulse">Loading Stream…</p>
+        </div>
+      </main>
+    );
+  }
+
+  /* ─── render ────────────────────────────────────────────────────────────── */
   return (
-    <main className="relative min-h-screen bg-[#FBFBFD] dark:bg-brand-bg text-[#1d1d1f] dark:text-gray-50 p-6 md:p-12 font-body flex flex-col items-center overflow-hidden transition-colors duration-500">
-      {/* Cinematic Faded Background */}
-      {backdrop && (
-        <div
-          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-10 dark:opacity-20"
-          style={{ backgroundImage: `url('${backdrop}')` }}
-        />
-      )}
-      <div className="absolute inset-0 z-0 bg-gradient-to-t from-[#FBFBFD] dark:from-brand-bg via-[#FBFBFD]/80 dark:via-brand-bg/80 to-transparent transition-colors duration-500" />
+    <main className="min-h-screen bg-[#0b0f0a] text-white">
 
-      <div className="relative z-10 max-w-5xl w-full">
-        <Breadcrumbs />
-        
-        {/* Header */}
-        <header className="mb-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-heading font-bold text-[#1d1d1f] dark:text-white tracking-tight mb-2 drop-shadow-lg transition-colors duration-300">
-            {title} {releaseYear && `(${releaseYear})`} {contentType === 'tv' ? `- S${season < 10 ? '0'+season : season} E${episode < 10 ? '0'+episode : episode}` : ''}
-          </h1>
-          <p className="text-brand-primary font-medium mb-4">Hydra Cascade Engine Active</p>
-          
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            {trailer && (
-              <button
-                onClick={() => setIsTrailerOpen(true)}
-                className="inline-flex items-center gap-2 px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-full font-bold transition-all shadow-lg hover:shadow-red-900/50 cursor-pointer active:scale-95"
-              >
-                <Play size={18} fill="currentColor" /> Watch Trailer
-              </button>
-            )}
+      {/* ══════════════════════════════════════════════════════════════
+          HERO — full-width backdrop with gradient overlay
+      ══════════════════════════════════════════════════════════════ */}
+      <div className="relative w-full min-h-[92vh] flex flex-col justify-end overflow-hidden">
+        {/* Backdrop */}
+        {backdrop && (
+          <img
+            src={backdrop}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover object-top"
+          />
+        )}
+        {/* Gradient overlays */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0b0f0a] via-[#0b0f0a]/70 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0b0f0a] via-[#0b0f0a]/20 to-transparent" />
 
-            {metadata && (
-              <button
-                onClick={() => isInWatchlist(metadata.id) ? removeFromWatchlist(metadata.id) : addToWatchlist({...metadata, media_type: contentType})}
-                className={`inline-flex items-center gap-2 px-5 py-2 rounded-full font-bold transition-all shadow-lg cursor-pointer active:scale-95 ${
-                  isInWatchlist(metadata?.id)
-                    ? 'bg-brand-primary/20 text-brand-primary border border-brand-primary hover:bg-brand-primary/30'
-                    : 'bg-gray-800 hover:bg-gray-700 text-white'
-                }`}
-              >
-                {isInWatchlist(metadata?.id) ? (
-                  <><Check size={18} /> Remove from List</>
-                ) : (
-                  <><Plus size={18} /> Add to List</>
-                )}
-              </button>
-            )}
+        {/* Breadcrumbs */}
+        <div className="absolute top-6 left-6 z-20">
+          <Breadcrumbs />
+        </div>
 
-            {metadata && (
-              <button
-                onClick={() => setIsDownloadOpen(true)}
-                className="inline-flex items-center gap-2 px-5 py-2 rounded-full font-bold transition-all shadow-lg bg-black/40 dark:bg-white/10 hover:bg-[#a7c957] hover:text-[#0b0f0a] text-gray-800 dark:text-white border border-black/10 dark:border-white/15 cursor-pointer active:scale-95"
-                title="Download for offline viewing"
-              >
-                <Download size={18} /> Download
-              </button>
-            )}
+        {/* Hero Content */}
+        <div className="relative z-10 max-w-7xl mx-auto w-full px-6 md:px-12 pb-16 pt-32 flex gap-10 items-end">
 
-            <button
-              onClick={handleShare}
-              className="inline-flex items-center gap-2 px-5 py-2 rounded-full font-bold transition-all shadow-lg bg-black/40 dark:bg-white/10 hover:bg-[#a7c957] hover:text-[#0b0f0a] text-gray-800 dark:text-white border border-black/10 dark:border-white/15 cursor-pointer active:scale-95"
-              title="Share stream link"
-            >
-              <Share2 size={18} /> Share
-            </button>
-          </div>
-        </header>
-
-        {/* Video Player Container */}
-        <div className="mb-8 w-full relative z-20">
-          {loading ? (
-            <div className="w-full aspect-video bg-gray-200 dark:bg-gray-900 rounded-2xl flex flex-col gap-4 items-center justify-center border border-gray-300 dark:border-gray-800 shadow-2xl transition-colors duration-500">
-              <div className="w-10 h-10 border-4 border-brand-primary border-t-transparent rounded-full animate-spin"></div>
-              <span className="text-gray-500 dark:text-gray-400 font-medium">Fetching Stream...</span>
-            </div>
-          ) : error ? (
-            <div className="w-full aspect-video bg-red-50 dark:bg-gray-900 rounded-2xl flex items-center justify-center border border-red-200 dark:border-red-800 shadow-2xl transition-colors duration-500">
-              <span className="text-red-500 dark:text-red-400 font-medium">{error}</span>
-            </div>
-          ) : (
-            <div className="relative w-full aspect-video bg-white dark:bg-[#0b0f0a] rounded-2xl overflow-hidden border border-black/10 dark:border-[#a7c957]/30 shadow-2xl dark:shadow-[0_0_40px_rgba(167,201,87,0.15)] group transition-colors duration-500">
-              {isPlayingIntro ? (
-                <div className="relative w-full h-full bg-black flex items-center justify-center">
-                  <video
-                    src="/intro.mp4"
-                    autoPlay
-                    playsInline
-                    onEnded={handleVideoEnded}
-                    onError={handleVideoEnded}
-                    className="w-full h-full object-contain"
-                  />
-                  <button
-                    onClick={handleVideoEnded}
-                    className="absolute top-4 right-4 z-20 px-3.5 py-1.5 rounded-full bg-black/60 border border-white/20 text-white text-xs font-bold uppercase tracking-wider backdrop-blur-md hover:bg-white/20 transition-all active:scale-95 cursor-pointer shadow-lg"
-                  >
-                    Skip Intro
-                  </button>
-                </div>
-              ) : (
-                <iframe
-                  src={getEmbedUrl(activeLayer)}
-                  className="w-full h-full"
-                  frameBorder="0"
-                  allowFullScreen
-                  allow="autoplay; fullscreen"
-                ></iframe>
-              )}
-              {/* Subtle glow overlay that ignores pointer events */}
-              <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_20px_rgba(0,0,0,0.05)] dark:shadow-[inset_0_0_20px_rgba(167,201,87,0.1)] rounded-2xl transition-shadow duration-500"></div>
+          {/* Poster */}
+          {poster && (
+            <div className="hidden lg:block flex-shrink-0 w-52 rounded-2xl overflow-hidden shadow-[0_0_60px_rgba(167,201,87,0.2)] border border-white/10">
+              <img src={poster} alt={title} className="w-full h-full object-cover" />
             </div>
           )}
 
-          {/* Server Switching UI */}
-          <div className="mt-4 flex flex-wrap gap-3 justify-center">
-              <span className="text-sm text-gray-500 dark:text-gray-400 font-medium flex items-center mr-2 transition-colors duration-500">If video is buffering, change server:</span>
+          {/* Info column */}
+          <div className="flex-1 max-w-3xl">
+            {/* Trending badge */}
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#a7c957]/15 border border-[#a7c957]/40 text-[#a7c957] text-xs font-bold uppercase tracking-widest mb-4">
+              <TrendingUp size={13} />
+              #1 Trending
+            </div>
+
+            {/* Title */}
+            <h1 className="text-5xl md:text-6xl font-black tracking-tight leading-none mb-2">
+              <span className="text-white">{title.replace(/\(\d{4}\)/, '').trim()}</span>
+              {releaseYear && <span className="text-[#a7c957]"> ({releaseYear})</span>}
+            </h1>
+
+            {/* Tagline / Engine label */}
+            <p className="text-[#a7c957] font-semibold text-sm mb-4 tracking-wide">
+              {metadata?.tagline || 'Hydra Cascade Engine Active'}
+            </p>
+
+            {/* Meta strip */}
+            <div className="flex flex-wrap items-center gap-3 mb-4">
+              <span className="text-gray-300 text-sm">{releaseYear}</span>
+              {runtime && (
+                <>
+                  <span className="text-gray-600">·</span>
+                  <span className="flex items-center gap-1 text-gray-300 text-sm">
+                    <Clock size={13} /> {fmt(runtime)}
+                  </span>
+                </>
+              )}
+              {genres.map(g => (
+                <span key={g.id} className="px-2.5 py-0.5 rounded-full bg-white/8 border border-white/12 text-gray-300 text-xs font-medium">
+                  {g.name}
+                </span>
+              ))}
+              {votePercent && (
+                <div className="flex items-center gap-1.5 ml-auto">
+                  <Star size={15} className="text-yellow-400" fill="currentColor" />
+                  <span className="font-bold text-white">{voteAvg?.toFixed(1)}/10</span>
+                  {votePercent && (
+                    <span className="px-2 py-0.5 rounded text-xs font-bold" style={{ background: '#1a2a0a', color: getRatingColor(votePercent) }}>
+                      IMDb {votePercent}%
+                    </span>
+                  )}
+                  <span className="text-[#a7c957] font-bold text-xs ml-1">{votePercent}%</span>
+                </div>
+              )}
+            </div>
+
+            {/* Overview */}
+            <p className="text-gray-300 text-sm leading-relaxed max-w-2xl mb-7 line-clamp-4">
+              {overview}
+            </p>
+
+            {/* CTA buttons */}
+            <div className="flex flex-wrap items-center gap-3">
+              {trailer && (
+                <button
+                  onClick={() => setIsTrailerOpen(true)}
+                  className="inline-flex items-center gap-2.5 px-7 py-3 bg-[#a7c957] hover:bg-[#95b347] text-[#0b0f0a] font-black rounded-full transition-all shadow-[0_0_30px_rgba(167,201,87,0.35)] hover:shadow-[0_0_40px_rgba(167,201,87,0.5)] active:scale-95 cursor-pointer"
+                >
+                  <Play size={18} fill="currentColor" />
+                  Watch Trailer
+                </button>
+              )}
+
+              {metadata && (
+                <button
+                  onClick={() => isInWatchlist(metadata.id)
+                    ? removeFromWatchlist(metadata.id)
+                    : addToWatchlist({ ...metadata, media_type: contentType })}
+                  className={`inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold transition-all active:scale-95 cursor-pointer border ${
+                    isInWatchlist(metadata?.id)
+                      ? 'bg-[#a7c957]/15 text-[#a7c957] border-[#a7c957]/50 hover:bg-[#a7c957]/25'
+                      : 'bg-white/8 text-white border-white/20 hover:bg-white/15'
+                  }`}
+                >
+                  {isInWatchlist(metadata?.id)
+                    ? <><Check size={16} /> Added</>
+                    : <><Plus size={16} /> Add to List</>}
+                </button>
+              )}
+
+              {metadata && (
+                <button
+                  onClick={() => setIsDownloadOpen(true)}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold transition-all active:scale-95 cursor-pointer bg-white/8 text-white border border-white/20 hover:bg-white/15"
+                >
+                  <Download size={16} /> Download
+                </button>
+              )}
+
               <button
-                onClick={() => setActiveLayer('primary')}
-                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 ${
-                  activeLayer === 'primary' ? 'bg-brand-primary text-white shadow-lg' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-transparent'
-                }`}
+                onClick={handleShare}
+                className="p-3 rounded-full bg-white/8 text-white border border-white/20 hover:bg-white/15 transition-all active:scale-95 cursor-pointer"
               >
-                Server 1 (Primary)
-              </button>
-              <button
-                onClick={() => setActiveLayer('backup1')}
-                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 ${
-                  activeLayer === 'backup1' ? 'bg-brand-primary text-white shadow-lg' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-transparent'
-                }`}
-              >
-                Server 2 (Backup)
-              </button>
-              <button
-                onClick={() => setActiveLayer('backup2')}
-                className={`px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 ${
-                  activeLayer === 'backup2' ? 'bg-brand-primary text-white shadow-lg' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-transparent'
-                }`}
-              >
-                Server 3 (Alt)
+                <Share2 size={16} />
               </button>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════════════════════════════
+          PLAYER + CLIPS ROW
+      ══════════════════════════════════════════════════════════════ */}
+      <section className="max-w-7xl mx-auto px-6 md:px-12 py-10 space-y-6">
+
+        {/* Main embed player */}
+        <div className="w-full relative rounded-2xl overflow-hidden border border-[#a7c957]/20 shadow-[0_0_60px_rgba(167,201,87,0.1)] bg-black aspect-video">
+          {isPlayingIntro ? (
+            <div className="relative w-full h-full bg-black flex items-center justify-center">
+              <video
+                src="/intro.mp4"
+                autoPlay
+                playsInline
+                onEnded={() => setIsPlayingIntro(false)}
+                onError={() => setIsPlayingIntro(false)}
+                className="w-full h-full object-contain"
+              />
+              <button
+                onClick={() => setIsPlayingIntro(false)}
+                className="absolute top-4 right-4 z-20 px-4 py-1.5 rounded-full bg-black/70 border border-white/20 text-white text-xs font-bold uppercase tracking-wider backdrop-blur-md hover:bg-white/20 transition-all active:scale-95 cursor-pointer"
+              >
+                Skip Intro →
+              </button>
+            </div>
+          ) : (
+            <iframe
+              src={getEmbedUrl(activeLayer)}
+              className="w-full h-full"
+              frameBorder="0"
+              allowFullScreen
+              allow="autoplay; fullscreen"
+            />
+          )}
+          {/* Glow overlay */}
+          <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_30px_rgba(167,201,87,0.08)] rounded-2xl" />
         </div>
 
-        {/* Controls Section */}
-        {contentType === 'tv' && (
-          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-6 shadow-lg space-y-6 mb-40 relative z-20 transition-colors duration-500">
-            {/* SEASON SELECTOR */}
+        {/* Clips thumbnail row */}
+        {(trailer || clips.length > 0) && (
+          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-1">
+            {/* Trailer thumb */}
+            {trailer && (
+              <button
+                onClick={() => { setActiveClip(trailer); setIsPlayingIntro(false); }}
+                className={`flex-shrink-0 relative w-40 rounded-xl overflow-hidden border-2 transition-all cursor-pointer group ${
+                  activeClip?.key === trailer.key
+                    ? 'border-[#a7c957] shadow-[0_0_20px_rgba(167,201,87,0.4)]'
+                    : 'border-white/10 hover:border-white/30'
+                }`}
+              >
+                <img
+                  src={`https://img.youtube.com/vi/${trailer.key}/mqdefault.jpg`}
+                  alt="Trailer"
+                  className="w-full aspect-video object-cover"
+                />
+                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all flex items-center justify-center">
+                  <Play size={22} className="text-white drop-shadow-lg" fill="currentColor" />
+                </div>
+                <div className="absolute bottom-0 inset-x-0 px-2 py-1 bg-gradient-to-t from-black/90 to-transparent">
+                  <p className="text-white text-[10px] font-bold">Trailer</p>
+                  <p className="text-gray-400 text-[9px]">2:18</p>
+                </div>
+              </button>
+            )}
+            {/* Other clips */}
+            {clips.map((clip, i) => (
+              <button
+                key={clip.key}
+                onClick={() => { setActiveClip(clip); setIsPlayingIntro(false); }}
+                className={`flex-shrink-0 relative w-40 rounded-xl overflow-hidden border-2 transition-all cursor-pointer group ${
+                  activeClip?.key === clip.key
+                    ? 'border-[#a7c957] shadow-[0_0_20px_rgba(167,201,87,0.4)]'
+                    : 'border-white/10 hover:border-white/30'
+                }`}
+              >
+                <img
+                  src={`https://img.youtube.com/vi/${clip.key}/mqdefault.jpg`}
+                  alt={clip.name}
+                  className="w-full aspect-video object-cover"
+                />
+                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all flex items-center justify-center">
+                  <Play size={22} className="text-white drop-shadow-lg" fill="currentColor" />
+                </div>
+                <div className="absolute bottom-0 inset-x-0 px-2 py-1 bg-gradient-to-t from-black/90 to-transparent">
+                  <p className="text-white text-[10px] font-bold line-clamp-1">Clip {i + 1}</p>
+                  <p className="text-gray-400 text-[9px]">1:0{i + 2}</p>
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Server switcher */}
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="text-gray-400 text-sm font-medium flex items-center gap-2">
+            <Wifi size={14} />
+            If video is buffering, change server:
+          </span>
+          {[
+            { id: 'primary', label: 'Server 1 (Primary)' },
+            { id: 'backup1', label: 'Server 2 (Backup)' },
+            { id: 'backup2', label: 'Server 3 (Alt)' },
+          ].map(s => (
+            <button
+              key={s.id}
+              onClick={() => { setActiveLayer(s.id); setIsPlayingIntro(false); }}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
+                activeLayer === s.id
+                  ? 'bg-[#a7c957] text-[#0b0f0a] shadow-[0_0_20px_rgba(167,201,87,0.3)]'
+                  : 'bg-white/6 text-gray-300 border border-white/10 hover:bg-white/12'
+              }`}
+            >
+              {activeLayer === s.id
+                ? <Wifi size={13} />
+                : <WifiOff size={13} />}
+              {s.label}
+            </button>
+          ))}
+          <button className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-red-400 border border-red-400/20 bg-red-400/5 hover:bg-red-400/10 transition-all cursor-pointer ml-auto">
+            <AlertTriangle size={12} /> Report Issue
+          </button>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════
+          TV — Season / Episode Selectors
+      ══════════════════════════════════════════════════════════════ */}
+      {contentType === 'tv' && (
+        <section className="max-w-7xl mx-auto px-6 md:px-12 pb-10">
+          <div className="rounded-2xl bg-white/4 border border-white/8 p-6 space-y-6">
             <div>
-              <h3 className="text-sm font-bold text-gray-500 dark:text-gray-400 mb-2 transition-colors duration-500">SELECT SEASON</h3>
+              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Select Season</h3>
               <div className="flex flex-wrap gap-2">
                 {metadata?.seasons?.filter(s => s.season_number > 0).map((s) => (
                   <button
                     key={`season-${s.season_number}`}
-                    onClick={() => {
-                      setSeason(Number(s.season_number));
-                      setEpisode(1);
-                    }}
-                    className={`px-4 py-2 rounded-md transition-all duration-200 ${Number(season) === Number(s.season_number) ? 'bg-brand-primary text-white shadow-md' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'}`}
+                    onClick={() => { setSeason(Number(s.season_number)); setEpisode(1); }}
+                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
+                      Number(season) === Number(s.season_number)
+                        ? 'bg-[#a7c957] text-[#0b0f0a] shadow-md'
+                        : 'bg-white/6 text-gray-300 border border-white/10 hover:bg-white/12'
+                    }`}
                   >
                     Season {s.season_number}
                   </button>
@@ -313,15 +429,18 @@ export default function StreamPage() {
               </div>
             </div>
 
-            {/* EPISODE SELECTOR */}
-            <div className="mb-40">
-              <h3 className="text-sm font-bold text-gray-500 dark:text-gray-400 mb-2 transition-colors duration-500">SELECT EPISODE</h3>
+            <div>
+              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Select Episode</h3>
               <div key={`ep-container-${season}`} className="flex flex-wrap gap-2">
                 {Array.from({ length: episodeCount }, (_, i) => i + 1).map((ep) => (
                   <button
-                    key={`ep-btn-${season}-${ep}`}
+                    key={`ep-${season}-${ep}`}
                     onClick={() => setEpisode(ep)}
-                    className={`px-4 py-2 rounded-md transition-all duration-200 ${Number(episode) === ep ? 'bg-red-600 text-white font-bold shadow-md' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'}`}
+                    className={`w-11 h-11 rounded-lg text-sm font-bold transition-all cursor-pointer ${
+                      Number(episode) === ep
+                        ? 'bg-[#a7c957] text-[#0b0f0a] shadow-md'
+                        : 'bg-white/6 text-gray-300 border border-white/10 hover:bg-white/12'
+                    }`}
                   >
                     {ep}
                   </button>
@@ -329,64 +448,108 @@ export default function StreamPage() {
               </div>
             </div>
           </div>
-        )}
-
-        {/* Cast & Crew Section */}
-        {cast.length > 0 && (
-          <div className="mt-12 w-full relative z-20">
-            <h2 className="text-xl md:text-2xl font-heading font-bold text-gray-900 dark:text-gray-100 mb-4 px-2 transition-colors duration-500">Cast & Crew</h2>
-            <div className="flex overflow-x-auto gap-4 scrollbar-hide px-2 pb-4">
-              {cast.map((actor) => {
-                if (!actor.profile_path) return null;
-                return (
-                  <div key={actor.id} className="flex flex-col items-center shrink-0 w-28 text-center">
-                    <img 
-                      src={`${BASE_IMG_URL}${actor.profile_path}`} 
-                      alt={actor.name}
-                      className="w-24 h-24 rounded-full object-cover shadow-lg border border-gray-200 dark:border-gray-700 mb-2 transition-colors duration-500"
-                    />
-                    <p className="text-sm font-bold text-gray-800 dark:text-gray-200 line-clamp-1 transition-colors duration-500">{actor.name}</p>
-                    <p className="text-xs text-brand-primary line-clamp-1">{actor.character}</p>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* 5-Star Media Rating & Community Feedback Section (SRS 1.6) */}
-        <MediaRatingSection mediaId={tmdbId} mediaType={contentType} title={title} />
-      </div>
-
-      {/* You May Also Like Row */}
-      {similar.length > 0 && (
-        <div className="w-full max-w-[1400px] mt-8 mb-40">
-          <MovieRow movies={similar} title="You May Also Like" fallbackType={contentType} />
-        </div>
+        </section>
       )}
 
-      {/* Trailer Modal */}
+      {/* ══════════════════════════════════════════════════════════════
+          CAST & CREW
+      ══════════════════════════════════════════════════════════════ */}
+      {(cast.length > 0 || crew.length > 0) && (
+        <section className="max-w-7xl mx-auto px-6 md:px-12 pb-10">
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="text-2xl font-black text-white">Cast & Crew</h2>
+            {/* Tab switcher */}
+            <div className="flex gap-1 bg-white/6 rounded-full p-1 border border-white/8">
+              {['cast', 'crew'].map(tab => (
+                <button
+                  key={tab}
+                  onClick={() => setCastTab(tab)}
+                  className={`px-5 py-1.5 rounded-full text-sm font-bold transition-all cursor-pointer capitalize ${
+                    castTab === tab
+                      ? 'bg-[#a7c957] text-[#0b0f0a]'
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex overflow-x-auto gap-4 scrollbar-hide pb-2">
+            {castTab === 'cast'
+              ? cast.filter(a => a.profile_path).map(actor => (
+                <div key={actor.id} className="flex-shrink-0 w-28 text-center group">
+                  <div className="relative w-24 h-24 mx-auto mb-2 rounded-full overflow-hidden ring-2 ring-white/10 group-hover:ring-[#a7c957]/60 transition-all">
+                    <img
+                      src={`${POSTER}${actor.profile_path}`}
+                      alt={actor.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  <p className="text-sm font-bold text-white line-clamp-1">{actor.name}</p>
+                  <p className="text-xs text-[#a7c957] line-clamp-1 mt-0.5">{actor.character}</p>
+                </div>
+              ))
+              : crew.filter(c => c.profile_path).map(member => (
+                <div key={`${member.id}-${member.job}`} className="flex-shrink-0 w-28 text-center group">
+                  <div className="relative w-24 h-24 mx-auto mb-2 rounded-full overflow-hidden ring-2 ring-white/10 group-hover:ring-[#a7c957]/60 transition-all">
+                    <img
+                      src={`${POSTER}${member.profile_path}`}
+                      alt={member.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  <p className="text-sm font-bold text-white line-clamp-1">{member.name}</p>
+                  <p className="text-xs text-[#a7c957] line-clamp-1 mt-0.5">{member.job}</p>
+                </div>
+              ))}
+          </div>
+        </section>
+      )}
+
+      {/* ══════════════════════════════════════════════════════════════
+          FAN RATINGS & REVIEWS
+      ══════════════════════════════════════════════════════════════ */}
+      <section className="max-w-7xl mx-auto px-6 md:px-12 pb-10">
+        <MediaRatingSection mediaId={tmdbId} mediaType={contentType} title={title} />
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════════
+          YOU MAY ALSO LIKE
+      ══════════════════════════════════════════════════════════════ */}
+      {similar.length > 0 && (
+        <section className="max-w-7xl mx-auto px-6 md:px-12 pb-20">
+          <MovieRow movies={similar} title="You May Also Like" fallbackType={contentType} />
+        </section>
+      )}
+
+      {/* ══════════════════════════════════════════════════════════════
+          TRAILER MODAL
+      ══════════════════════════════════════════════════════════════ */}
       {isTrailerOpen && trailer && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4 md:p-12">
-          <button 
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-lg p-4 md:p-12">
+          <button
             onClick={() => setIsTrailerOpen(false)}
-            className="absolute top-6 right-6 text-gray-400 hover:text-white transition-colors"
+            className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all cursor-pointer"
           >
-            <X size={32} />
+            <X size={24} />
           </button>
-          <div className="w-full max-w-5xl aspect-video bg-black rounded-xl overflow-hidden shadow-2xl border border-gray-800 relative">
+          <div className="w-full max-w-5xl aspect-video rounded-2xl overflow-hidden shadow-2xl border border-[#a7c957]/20">
             <iframe
               src={`https://www.youtube.com/embed/${trailer.key}?autoplay=1`}
               title="Official Trailer"
               className="w-full h-full border-0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
-            ></iframe>
+            />
           </div>
         </div>
       )}
 
-      {/* Offline Download Modal */}
+      {/* ══════════════════════════════════════════════════════════════
+          DOWNLOAD MODAL
+      ══════════════════════════════════════════════════════════════ */}
       {metadata && (
         <DownloadModal
           isOpen={isDownloadOpen}
@@ -395,7 +558,7 @@ export default function StreamPage() {
             id: tmdbId,
             title: metadata.title || metadata.name,
             poster_path: metadata.poster_path,
-            media_type: contentType
+            media_type: contentType,
           }}
         />
       )}

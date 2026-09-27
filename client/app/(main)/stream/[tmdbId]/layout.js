@@ -1,8 +1,9 @@
 import { fetchDetails, BASE_IMG_URL } from '@/utils/tmdb';
 
 export async function generateMetadata({ params, searchParams }) {
-  const { tmdbId } = params;
-  const contentType = searchParams?.type || 'movie';
+  const { tmdbId } = await params;
+  const resolvedSearchParams = await searchParams;
+  const contentType = resolvedSearchParams?.type || 'movie';
 
   try {
     const data = await fetchDetails(tmdbId, contentType);
