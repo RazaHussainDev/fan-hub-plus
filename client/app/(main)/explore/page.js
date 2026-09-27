@@ -55,6 +55,16 @@ const containerVariants = {
   }
 };
 
+const itemVariants = {
+  hidden: { opacity: 0, y: 25, scale: 0.96 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] }
+  }
+};
+
 const FALLBACK_POSTER = 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=800&q=80';
 const FALLBACK_BACKDROP = 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1920&q=80';
 
