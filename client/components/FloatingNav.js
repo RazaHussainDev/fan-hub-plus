@@ -68,9 +68,9 @@ export default function FloatingNav() {
   const [fontSize, setFontSize] = useState(16);
   const [mounted, setMounted] = useState(false);
 
-  // Do not render floating dock on auth portals or admin command center
-  const isAuthOrAdminPage = pathname === '/login' || pathname === '/register' || pathname?.startsWith('/admin');
-  if (isAuthOrAdminPage) {
+  // Do not render floating dock on auth portals, admin command center, or video stream cinema
+  const isAuthOrAdminOrStream = pathname === '/login' || pathname === '/register' || pathname?.startsWith('/admin') || pathname?.startsWith('/stream');
+  if (isAuthOrAdminOrStream) {
     return null;
   }
 
