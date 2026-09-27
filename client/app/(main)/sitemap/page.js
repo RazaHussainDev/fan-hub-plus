@@ -8,6 +8,7 @@ export default function SitemapPage() {
     { name: 'Fandom Explorer', href: '/explore' },
     { name: 'Character Dossiers', href: '/characters' },
     { name: 'Featured Articles & Lore', href: '/articles' },
+    { name: 'Merchandise & Upcoming Drops', href: '/merchandise' },
     { name: 'My List', href: '/mylist' },
     { name: 'Search', href: '/search', isAction: true },
     { name: 'Anime Universe', href: '/explore?category=Anime' },

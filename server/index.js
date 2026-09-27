@@ -11,6 +11,7 @@ const authRoutes = require('./src/routes/authRoutes');
 const adminRoutes = require('./src/routes/adminRoutes');
 const contentRoutes = require('./src/routes/contentRoutes');
 const fandomRoutes = require('./src/routes/fandomRoutes');
+const merchRoutes = require('./src/routes/merchRoutes');
 
 const app  = express();
 const PORT = process.env.PORT || 5000;
@@ -121,6 +122,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/content', contentRoutes);
 app.use('/api/fandom', fandomRoutes);
+app.use('/api/merchandise', merchRoutes);
 
 // 404 catch-all
 app.use((req, res) => {
