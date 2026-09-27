@@ -368,7 +368,6 @@ export default function StreamPage() {
               webkitallowfullscreen="true"
               mozallowfullscreen="true"
               allow="autoplay; fullscreen"
-              sandbox="allow-scripts allow-same-origin allow-presentation"
               referrerPolicy="origin"
             />
           )}
